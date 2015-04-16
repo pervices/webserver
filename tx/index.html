@@ -1,0 +1,1290 @@
+<html>
+
+<script>
+// when the page loads, populate the fields based on XML
+window.onload = function() {
+	load_xml('A');
+// 	if ( get_uhd() == 0 )
+// 		load_xml('A');
+// 	else {
+// 		document.getElementById("chan_en").src="../images/off.svg";
+// 		document.getElementById("chan_en").disabled=true;
+// 		chan_pwr(0);
+// 	}
+}
+
+// checking to see if UHD mode is enabled
+// enabled - all buttons and fields will be greyed output
+// disabled - normal operation for all webpages
+function get_uhd() {
+	var xmlDoc;
+	var xmlload;
+	var ele;
+	if (window.XMLHttpRequest) {
+		xmlload=new XMLHttpRequest();
+	} else {
+		xmlload=new ActiveXObject("Microsoft.XMLHTTP");
+	}
+	xmlload.onreadystatechange=function() {
+	   if (xmlload.readyState==4 && xmlload.status==200) {
+	      xmlDoc = xmlload.responseXML;
+	      ele=xmlDoc.getElementsByTagName("opr");
+	      if (ele[i].childNodes[(2*2)+1].firstChild.nodeValue == "ON")
+					return 1;
+				else 
+					return 0;
+	   }
+	}
+	
+	xmlload.open("GET","../dig/state_current.xml",true);
+	xmlload.send();
+} 
+
+
+// for each channel
+function populate_fields(chan, ele) {
+	var i;
+	for (i = 0; i < ele.length; i++) {
+		if (ele[i].childNodes[1].firstChild.nodeValue == "CHAN_EN" + chan) {
+			if (ele[i].childNodes[(1*2)+1].firstChild.nodeValue == "ON") {
+				document.getElementById("chan_en").src="../images/on.svg";
+				chan_pwr(1);
+			} else {
+				document.getElementById("chan_en").src="../images/off.svg";
+				chan_pwr(0);
+				break;
+			}
+		}		
+		else if (ele[i].childNodes[1].firstChild.nodeValue == "DAC38J84_CH" + chan) {
+			populate_dac_ch();
+			document.getElementById("dac_e").value=ele[i].childNodes[(2*2)+1].firstChild.nodeValue;
+			document.getElementById("dac_n").value=ele[i].childNodes[(4*2)+1].firstChild.nodeValue;
+			document.getElementById("dac_p").checked=ele[i].childNodes[(5*2)+1].firstChild.nodeValue;
+			if (ele[i].childNodes[(1*2)+1].firstChild.nodeValue == "ON") {
+					document.getElementById("pwr_dac").src="../images/on.svg";
+					document.getElementById("dac_e").disabled=false;
+					document.getElementById("dac_n").disabled=false;
+					document.getElementById("dac_p").disabled=false;
+					document.getElementById("set_dac_n").disabled=false;
+			} else {
+					document.getElementById("pwr_dac").src="../images/off.svg";
+					document.getElementById("dac_e").disabled=true;
+					document.getElementById("dac_n").disabled=true;
+					document.getElementById("dac_p").disabled=true;
+					document.getElementById("set_dac_n").disabled=true;
+			}
+		}
+		else if (ele[i].childNodes[1].firstChild.nodeValue == "IQ_BIASI" + chan) {
+			document.getElementById("rf_mxri").value=ele[i].childNodes[(2*2)+1].firstChild.nodeValue;
+		}
+		else if (ele[i].childNodes[1].firstChild.nodeValue == "IQ_BIASQ" + chan) {
+			document.getElementById("rf_mxrq").value=ele[i].childNodes[(2*2)+1].firstChild.nodeValue;
+		}
+		else if (ele[i].childNodes[1].firstChild.nodeValue == "RFSA_H_CH" + chan) {
+			document.getElementById("rf_vh").value=ele[i].childNodes[(2*2)+1].firstChild.nodeValue;
+			/*if (ele[i].childNodes[(1*2)+1].firstChild.nodeValue == "ON") {
+					document.getElementById("pwr_vcah").src="../images/on.svg";
+					document.getElementById("rf_vh").disabled=false;
+					document.getElementById("set_rf_vh").disabled=false;
+			} else {
+					document.getElementById("pwr_vcah").src="../images/off.svg";
+					document.getElementById("rf_vh").disabled=true;
+					document.getElementById("set_rf_vh").disabled=true;
+			}*/
+		}
+		else if (ele[i].childNodes[1].firstChild.nodeValue == "RFSA_L_CH" + chan) {
+			document.getElementById("rf_vl").value=ele[i].childNodes[(2*2)+1].firstChild.nodeValue;
+			/*if (ele[i].childNodes[(1*2)+1].firstChild.nodeValue == "ON") {
+					document.getElementById("pwr_vcal").src="../images/on.svg";
+					document.getElementById("rf_vl").disabled=false;
+					document.getElementById("set_rf_vl").disabled=false;
+			} else {
+					document.getElementById("pwr_vcal").src="../images/off.svg";
+					document.getElementById("rf_vl").disabled=true;
+					document.getElementById("set_rf_vl").disabled=true;
+			}*/
+		}
+		else if (ele[i].childNodes[1].firstChild.nodeValue == "BAND_SW_CH" + chan) {
+			if (ele[i].childNodes[(2*2)+1].firstChild.nodeValue == "HIGH") {
+		       		document.getElementById("rf_b1").checked="true";
+		       		document.getElementById("rf_b3").checked="true";
+		       		document.getElementById("img_band_sw").src="../images/tx_high.svg";
+			} else {
+		       		document.getElementById("rf_b2").checked="true";
+		       		document.getElementById("rf_b4").checked="true";
+		       		document.getElementById("img_band_sw").src="../images/tx_low.svg";
+			}
+		}
+		else if (ele[i].childNodes[1].firstChild.nodeValue == "HMC_CH" + chan) {
+			document.getElementById("rf_f").value=ele[i].childNodes[(2*2)+1].firstChild.nodeValue;
+			if (ele[i].childNodes[(1*2)+1].firstChild.nodeValue == "ON") {
+					document.getElementById("pwr_hmc").src="../images/on.svg";
+					document.getElementById("rf_f").disabled		=false;
+					document.getElementById("set_rf_f").disabled=false;
+			} else {
+					document.getElementById("pwr_hmc").src="../images/off.svg";
+					document.getElementById("rf_f").disabled		=true;
+					document.getElementById("set_rf_f").disabled=true;
+			}
+		}
+		else if (ele[i].childNodes[1].firstChild.nodeValue == "INT_FACT" + chan) {
+			populate_interp();
+			document.getElementById("interp").value=ele[i].childNodes[(1*2)+1].firstChild.nodeValue;
+		}
+		else if (ele[i].childNodes[1].firstChild.nodeValue == "SRC_UDP" + chan) {
+			document.getElementById("udp_port").value=ele[i].childNodes[(1*2)+1].firstChild.nodeValue;
+		}
+		else if (ele[i].childNodes[1].firstChild.nodeValue == "SRC_PORT" + chan) {
+			if (chan == "A" || chan == "C")
+					document.getElementById("sfp_port").innerHTML = "10GbE SFP+ Port A";
+			else
+					document.getElementById("sfp_port").innerHTML = "10GbE SFP+ Port B";
+					
+		
+			if (ele[i].childNodes[(1*2)+1].firstChild.nodeValue == "SFPA") {
+					document.getElementById("dsp_s1").checked="true";
+					if (document.getElementById("chan_en").src.indexOf("on.svg") > -1) {
+						document.getElementById("udp_port").disabled	=false;
+						document.getElementById("set_srcip").disabled	=false;
+					}
+					document.getElementById("img_src_sw").src="../images/tx_sfpa.svg";
+			} else if (ele[i].childNodes[(1*2)+1].firstChild.nodeValue == "SFPB") {
+					document.getElementById("dsp_s1").checked="true";
+					if (document.getElementById("chan_en").src.indexOf("on.svg") > -1) {
+						document.getElementById("udp_port").disabled	=false;
+						document.getElementById("set_srcip").disabled	=false;
+					}
+					document.getElementById("img_src_sw").src="../images/tx_sfpa.svg";
+			} else {
+					document.getElementById("dsp_s2").checked="true";
+					if (document.getElementById("chan_en").src.indexOf("off.svg") > -1) {
+						document.getElementById("udp_port").disabled	=true;
+						document.getElementById("set_srcip").disabled	=true;
+					}
+					document.getElementById("img_src_sw").src="../images/tx_rxlpbk.svg";
+			}
+		}
+		else if (ele[i].childNodes[1].firstChild.nodeValue == "FREQ_ADJ" + chan) {
+			if (ele[i].childNodes[(1*2)+1].firstChild.nodeValue == "-") {
+					document.getElementById("dsp_p").value = "00002000";
+			} else {
+					document.getElementById("dsp_p").value = "00000000";
+			}
+			document.getElementById("dsp_f").value=ele[i].childNodes[(2*2)+1].firstChild.nodeValue;
+		}
+		else if (ele[i].childNodes[1].firstChild.nodeValue == "SAMPLE_RATE" + chan) {
+			document.getElementById("msps").innerHTML=ele[i].childNodes[(1*2)+1].firstChild.nodeValue;
+		}
+	}
+}
+
+
+// load the xml
+function load_xml(chan, mode) {
+	var xmlDoc;
+	var xmlload;
+	var ele;
+	if (window.XMLHttpRequest) {
+		xmlload=new XMLHttpRequest();
+	} else {
+		xmlload=new ActiveXObject("Microsoft.XMLHTTP");
+	}
+	xmlload.onreadystatechange=function() {
+	   if (xmlload.readyState==4 && xmlload.status==200) {
+	      xmlDoc = xmlload.responseXML;
+	      ele=xmlDoc.getElementsByTagName("radio");
+	      populate_fields(chan, ele);
+	      ele=xmlDoc.getElementsByTagName("fpga");
+	      populate_fields(chan, ele);
+	   }
+	}
+	
+	xmlload.open("GET","state_current.xml",true);
+	xmlload.send();
+}
+
+
+// writing states to xml
+function write_xml(ft, attr, val) {
+	
+	// perl script takes this param = brd, chain, name, chan, attr, val
+	// @brd = rx
+	// @ft = name of state to be changed (ie. SAMPLE_RATE, FREQ_ADJ...)
+	// @attr = attribute to be changed
+	// @val = new state value
+	
+	var channel = document.getElementsByName("chan");
+	var sel_ch;
+	for (var i = 0; i < channel.length; i++) {
+		if (channel[i].checked){
+			sel_ch = channel[i].value;
+		}
+	}
+	sel_ch = sel_ch.toUpperCase();
+	var sep = ",";
+	var brd = "tx";
+	var param = brd.concat(sep,ft,sel_ch,sep,attr,sep,val);
+	
+	runscript("invoke_xmlprsr.sh", param, "dump_out", "box");
+	
+	// When turning off the DAC, channels A/B are together, channels C/D are together
+	if ( ft == "DAC38J84_CH" && attr == "pwr" && val == "OFF" ){
+			if ( sel_ch == "A" ){
+					param = brd.concat(sep,ft,"B",sep,attr,sep,val);
+			} else if ( sel_ch == "B" ){
+					param = brd.concat(sep,ft,"A",sep,attr,sep,val);
+			} else if ( sel_ch == "C" ){
+					param = brd.concat(sep,ft,"D",sep,attr,sep,val);
+			} else if ( sel_ch == "D" ){
+					param = brd.concat(sep,ft,"C",sep,attr,sep,val);
+			}
+			
+			setTimeout(function() { runscript("invoke_xmlprsr.sh", param, "dump_out", "box"); }, 	250);
+	}
+			
+}
+
+
+// send a single command to the board
+function sendcmd(board, str, mode) {
+	var xmlhttp;
+	if (str.length==0) return;
+	document.getElementById("dump_out").innerHTML="";
+
+	// code for IE7+, Firefox, Chrome, Opera, Safari
+	if (window.XMLHttpRequest) { xmlhttp=new XMLHttpRequest();
+		xmlhttp=new XMLHttpRequest();
+	// code for IE6, IE5
+	} else {
+		xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+	}
+
+	xmlhttp.onreadystatechange=function() {
+		if (xmlhttp.readyState==4 && xmlhttp.status==200) {
+			document.getElementById("dump_out").innerHTML+=xmlhttp.responseText;
+		}
+	}
+
+	if((str.indexOf("-c a") > -1) && (mode != "spec")) {
+		var elements = document.getElementsByName("chan");
+		for (var i = 0; i < elements.length; i++) {
+			if (elements[i].checked) {
+				str = str.replace("-c a", "-c "+elements[i].value);
+			}
+		}
+	}
+
+	if (board == "DIG") {
+		xmlhttp.open("POST","../cgi-bin/cmd_mcu.sh", true);
+		xmlhttp.send(str);
+	} else if (board == "SYNTH") {
+		xmlhttp.open("POST","../cgi-bin/fcmd_mcu.sh", true);
+		xmlhttp.send("fwd -b 2 -m \'"+str+"\'");
+	} else if (board == "TX") {
+		xmlhttp.open("POST","../cgi-bin/fcmd_mcu.sh", true);
+		xmlhttp.send("fwd -b 1 -m \'"+str+"\'");
+	} else if (board == "RX") {
+		xmlhttp.open("POST","../cgi-bin/fcmd_mcu.sh", true);
+		xmlhttp.send("fwd -b 0 -m \'"+str+"\'");
+	}
+}
+
+
+// update an image on the screen
+function new_img(str, img) {
+	document.getElementById(str).src=img;
+}
+
+
+// invoke shell script
+function runscript(script, param, output, type) {
+	var xmlhttp;
+	if (type == "box")
+		document.getElementById(output).innerHTML="";
+	else
+		document.getElementById(output).value="";
+
+	if (window.XMLHttpRequest)
+		xmlhttp=new XMLHttpRequest();
+	else
+		xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+
+	xmlhttp.onreadystatechange=function() {
+		if (xmlhttp.readyState==4 && xmlhttp.status==200) {
+			if (type == "box")
+				document.getElementById(output).innerHTML += xmlhttp.responseText;
+			else
+				document.getElementById(output).value += xmlhttp.responseText;
+		}
+	}
+
+	xmlhttp.open("POST","../cgi-bin/"+script, true);
+	xmlhttp.send(param);
+}
+
+// ==========================
+// Channel Power functions
+// ==========================
+tx_en = [];	// indicates which tx channel is enabled
+rx_en = [];	// indicates which rx channel is enabled
+
+// when someone presses the power button which does register manipulation
+/* TX channel Disable:
+/*		- everything greys
+/*		- demo mode
+/*		- mem wr defaults
+/*				> txa0 - 0x0 phase
+/*				> txa1 - 0xff interp
+/*				> txa4 - 0x0
+/*		- copy xml file to reset
+/* TX channel Enable:
+/*		- everything ungreys
+/*		- (already in demo mode): 
+/*				> scan which TX/RX channels are enabled
+/*				> set all ADCs to demo mode 
+/*				> mem wr disable rx channels
+/*				> mem wr disable tx channels
+/*				> set all DACs to demo mode  
+/*				> send sysref
+/*		- mem wr EN to all channels which were enabled
+*/
+function chpwr_button(board, reg_num, mask, val_on, val_off) {
+	
+	var mode, sel_ch, channel, i;
+	
+	// Checking for current channel
+	channel = document.getElementsByName("chan");
+	for (i = 0; i < channel.length; i++) {
+		if (channel[i].checked){
+			sel_ch = channel[i].value;
+		}
+	}
+	sel_ch = sel_ch.toUpperCase();
+	
+	
+	// Disabling the Channel
+	if (document.getElementById("chan_en").src.indexOf("on.svg") > -1) {
+			mode = 0;
+			
+			// Grey out features
+			document.getElementById("chan_en").src="../images/off.svg";
+			chan_pwr(0);
+
+			var sep = ",";	// declaring seperator
+			var param = "tx".concat(sep,sel_ch,sep,mode);
+			setTimeout(function() { runscript("channel_pwr.sh", param, "dump_out", "box"); }, 	250);	
+			
+	} 
+
+	// Enabling the Channel
+	else {
+			mode = 1;
+			
+			document.getElementById("chan_en").src="../images/on.svg";
+			
+			var sep = ",";	// declaring seperator
+			var param = "tx".concat(sep,sel_ch,sep,mode);
+			
+			setTimeout(function() { runscript("channel_pwr.sh", param, "dump_out", "box"); }, 	500);	
+			
+			// Finally, un-grey features
+			setTimeout(function() { load_xml(sel_ch); }, 	2000);
+			
+	}
+}
+
+
+// enable/disable entire channel (includes radio/dsp)
+function chan_pwr(mode) {
+	// Mode: 1-enable; 0-disable;
+	if (mode) {
+		// Radio Chain
+		document.getElementById("rf_b1").disabled			=false;
+		document.getElementById("rf_b2").disabled			=false;
+		document.getElementById("rf_b3").disabled			=false;
+		document.getElementById("rf_b4").disabled			=false;
+		
+		document.getElementById("pwr_dac").src="../images/on.svg";
+		document.getElementById("pwr_dac").disabled		=false;
+		document.getElementById("dac_e").disabled			=false;
+		document.getElementById("dac_n").disabled			=false;
+		document.getElementById("dac_p").disabled			=false;
+		document.getElementById("set_dac_n").disabled	=false;
+		
+		document.getElementById("pwr_hmc").src="../images/on.svg";
+		document.getElementById("pwr_hmc").disabled		=false;
+		document.getElementById("rf_f").disabled			=false;
+		document.getElementById("set_rf_f").disabled	=false;
+		
+		//document.getElementById("pwr_vcal").src="../images/on.svg";
+		//document.getElementById("pwr_vcal").disabled	=false;
+		document.getElementById("rf_vl").disabled			=false;
+		document.getElementById("set_rf_vl").disabled	=false;
+		
+		//document.getElementById("pwr_vcah").src="../images/on.svg";
+		//document.getElementById("pwr_vcah").disabled	=false;
+		document.getElementById("rf_vh").disabled			=false;
+		document.getElementById("set_rf_vh").disabled	=false;
+		
+		document.getElementById("rf_mxri").disabled		=false;
+		document.getElementById("rf_mxrq").disabled		=false;
+		document.getElementById("set_rf_mxr").disabled=false;
+		
+		// DSP
+		document.getElementById("dsp_rst").disabled		=false;
+		
+		document.getElementById("dsp_p").disabled			=false;
+		document.getElementById("dsp_f").disabled			=false;
+		document.getElementById("set_nco_f").disabled	=false;
+		
+		document.getElementById("interp").disabled		=false;
+		document.getElementById("set_interp").disabled=false;
+		
+		document.getElementById("unpkr_rst").disabled	=false;
+		document.getElementById("dsp_s1").disabled		=false;
+		document.getElementById("dsp_s2").disabled		=false;
+		document.getElementById("udp_port").disabled	=false;
+		document.getElementById("set_srcip").disabled=false;
+		
+		// Board Control
+		document.getElementById("jesd_sync").disabled	=false;
+		
+		document.getElementById("dac_test").disabled	=false;
+		document.getElementById("dac_dump").disabled	=false;
+		document.getElementById("gpio_test").disabled	=false;
+		document.getElementById("gpio_dump").disabled	=false;
+		
+		document.getElementById("b_init").disabled		=false;
+		document.getElementById("b_demo").disabled		=false;
+		document.getElementById("b_diag").disabled		=false;
+		document.getElementById("b_mute").disabled		=false;
+		document.getElementById("b_rst").disabled			=false;
+		document.getElementById("b_kill").disabled		=false;
+		document.getElementById("b_panic").disabled		=false;
+		
+// 		write_xml("CHAN_EN", "pwr", "ON");
+	
+	} else {
+		// chain is disabled, grey out everything
+		
+		// Radio Chain
+		document.getElementById("rf_b1").disabled			=true;
+		document.getElementById("rf_b2").disabled			=true;
+		document.getElementById("rf_b3").disabled			=true;
+		document.getElementById("rf_b4").disabled			=true;
+		
+		document.getElementById("pwr_dac").src="../images/off.svg";
+		document.getElementById("pwr_dac").disabled		=true;
+		document.getElementById("dac_e").disabled			=true;
+		document.getElementById("dac_n").disabled			=true;
+		document.getElementById("dac_p").disabled			=true;
+		document.getElementById("set_dac_n").disabled	=true;
+		
+		document.getElementById("pwr_hmc").src="../images/off.svg";
+		document.getElementById("pwr_hmc").disabled		=true;
+		document.getElementById("rf_f").disabled			=true;
+		document.getElementById("set_rf_f").disabled	=true;
+		
+		//document.getElementById("pwr_vcal").src="../images/off.svg";
+		//document.getElementById("pwr_vcal").disabled	=true;
+		document.getElementById("rf_vl").disabled			=true;
+		document.getElementById("set_rf_vl").disabled	=true;
+		
+		//document.getElementById("pwr_vcah").src="../images/off.svg";
+		//document.getElementById("pwr_vcah").disabled	=true;
+		document.getElementById("rf_vh").disabled			=true;
+		document.getElementById("set_rf_vh").disabled	=true;
+		
+		document.getElementById("rf_mxri").disabled		=true;
+		document.getElementById("rf_mxrq").disabled		=true;
+		document.getElementById("set_rf_mxr").disabled=true;
+		
+		// DSP
+		document.getElementById("dsp_rst").disabled		=true;
+		
+		document.getElementById("dsp_p").disabled			=true;
+		document.getElementById("dsp_f").disabled			=true;
+		document.getElementById("set_nco_f").disabled	=true;
+		
+		document.getElementById("interp").disabled		=true;
+		document.getElementById("set_interp").disabled=true;
+		
+		document.getElementById("unpkr_rst").disabled	=true;
+		document.getElementById("dsp_s1").disabled		=true;
+		document.getElementById("dsp_s2").disabled		=true;
+		document.getElementById("udp_port").disabled	=true;
+		document.getElementById("set_srcip").disabled	=true;
+		
+		// Board Control
+		document.getElementById("jesd_sync").disabled	=true;
+		
+		document.getElementById("dac_test").disabled	=true;
+		document.getElementById("dac_dump").disabled	=true;
+		document.getElementById("gpio_test").disabled	=true;
+		document.getElementById("gpio_dump").disabled	=true;
+		
+		document.getElementById("b_init").disabled		=true;
+		document.getElementById("b_demo").disabled		=true;
+		document.getElementById("b_diag").disabled		=true;
+		document.getElementById("b_mute").disabled		=true;
+		document.getElementById("b_rst").disabled			=true;
+		document.getElementById("b_kill").disabled		=true;
+		document.getElementById("b_panic").disabled		=true;
+	
+// 		write_xml("CHAN_EN", "pwr", "OFF");
+	}
+
+}
+
+// ==========================
+// Radio Specific functions
+// ==========================
+// when someone presses the power button
+function pwr_button(board, id, str_on, str_off) {
+	if (document.getElementById(id).src.indexOf("on.svg") > -1) {
+		if ( id == "pwr_hmc" ) {
+			document.getElementById("rf_f").disabled=true;
+			document.getElementById("set_rf_f").disabled=true;
+			write_xml("HMC_CH", "pwr", "OFF");
+		/*} else if ( id == "pwr_vcal" ) {
+			document.getElementById("rf_vl").disabled=true;
+			document.getElementById("set_rf_vl").disabled=true;
+			write_xml("RFSA_L_CH", "pwr", "OFF");
+		} else if ( id == "pwr_vcah" ) {
+			document.getElementById("rf_vh").disabled=true;
+			document.getElementById("set_rf_vh").disabled=true;
+			write_xml("RFSA_H_CH", "pwr", "OFF");*/
+		} else if (id == "pwr_dac" ){
+			document.getElementById("dac_e").disabled=true;
+			document.getElementById("dac_n").disabled=true;
+			document.getElementById("dac_p").disabled=true;
+			document.getElementById("set_dac_n").disabled=true;
+			write_xml("DAC38J84_CH", "pwr", "OFF");
+		}
+		document.getElementById(id).src="../images/off.svg";
+		setTimeout(function() { sendcmd(board, str_off); }, 500);
+	} else {
+		if ( id == "pwr_hmc" ) {
+			document.getElementById("rf_f").disabled=false;
+			document.getElementById("set_rf_f").disabled=false;
+			write_xml("HMC_CH", "pwr", "ON");
+			setTimeout(function() { set_rf_freq() }, 350);
+		/*} else if ( id == "pwr_vcal" ) {
+			document.getElementById("rf_vl").disabled=false;
+			document.getElementById("set_rf_vl").disabled=false;
+			set_vca('rf_vl');
+			write_xml("RFSA_L_CH", "pwr", "ON");
+		} else if ( id == "pwr_vcah" ) {
+			document.getElementById("rf_vh").disabled=false;
+			document.getElementById("set_rf_vh").disabled=false;
+			set_vca('rf_vh');
+			write_xml("RFSA_H_CH", "pwr", "ON");*/
+		} else if (id == "pwr_dac" ){
+			document.getElementById("dac_e").disabled=false;
+			document.getElementById("dac_n").disabled=false;
+			document.getElementById("dac_p").disabled=false;
+			document.getElementById("set_dac_n").disabled=false;
+			write_xml("DAC38J84_CH", "pwr", "ON");
+		}
+		document.getElementById(id).src="../images/on.svg";
+		setTimeout(function() { sendcmd(board, str_on); }, 500);
+		
+		// after powering on the DAC, JESD Sync pulse needs to be sent
+		if (id == "pwr_dac" )
+				setTimeout(function() { sendcmd('DIG', 'fpga -o'); }, 700);
+		
+	}
+}
+
+
+// synchronize two radio buttons
+function rad_sync(str1, str2) {
+	if (str1.indexOf("1") > -1 || str1.indexOf("3") > -1) {
+		document.getElementById("img_band_sw").src="../images/tx_high.svg";
+		write_xml("BAND_SW_CH", "band", "HIGH");
+	} else {
+		document.getElementById("img_band_sw").src="../images/tx_low.svg";
+		write_xml("BAND_SW_CH", "band", "LOW");
+	}
+	document.getElementById(str2).checked = document.getElementById(str1).checked;
+}
+
+
+// setting DAC PA protection
+function set_dac_pap() {
+	if (document.getElementById("dac_p").checked) {
+			write_xml("DAC38J84_CH", "pap", "true");
+			setTimeout(function() { sendcmd("TX", "dac -c a -p 1"); }, 250);
+	} else {
+			write_xml("DAC38J84_CH", "pap", "false");
+			setTimeout(function() { sendcmd("TX", "dac -c a -p 0"); }, 250);
+	}
+}
+
+
+// poplate DAC channels
+function populate_dac_ch() {
+	var channel = document.getElementsByName("chan");
+	var sel_ch;
+	var real = document.getElementById('dac_e');
+	for (var i = 0; i < channel.length; i++) {
+		if (channel[i].checked){
+				sel_ch = channel[i].value;
+				if ( sel_ch == "a" || sel_ch == "c") {
+						real.options[0] = new Option('A', '0');
+						real.options[1] = new Option('B', '1');
+				} else {  
+						real.options[0] = new Option('C', '2');
+						real.options[1] = new Option('D', '3');
+				} 
+		}
+	}
+}
+
+
+// setting DAC NCO frequency
+function set_dac_freq() {
+	var dac_freq = document.getElementById("dac_n").value;
+	var dac_ch = document.getElementById("dac_e");
+	var dac_ch_val = dac_ch.options[dac_ch.selectedIndex].value;
+	write_xml("DAC38J84_CH", "nco_freq", dac_freq);
+	setTimeout(function() { write_xml("DAC38J84_CH", "chan", dac_ch_val); }, 250);
+	setTimeout(function() { sendcmd("TX", "dac -c a -d "+dac_ch_val+" -n "+dac_freq); }, 500);
+}
+
+
+// setting RF Frequency Synthesizer
+function set_rf_freq() {
+	var rf_freq = document.getElementById("rf_f").value;
+	var channel = document.getElementsByName("chan");
+	var sel_ch;
+	for (var i = 0; i < channel.length; i++) {
+		if (channel[i].checked){
+			sel_ch = channel[i].value;
+		}
+	}
+	sel_ch = sel_ch.toUpperCase();
+	var sep = ".";	// declaring seperator
+	var param = "tx".concat(sep,sel_ch,sep,rf_freq);
+	runscript("freq_synth.sh", param, "dump_out", "box");
+	//write_xml("HMC_CH", "freq", rf_freq);
+	setTimeout(function() { load_xml(sel_ch); }, 250);
+}
+
+
+// setting RF Variable Attenuator
+function set_vca(id) {
+	var vca_atten = document.getElementById(id).value;
+	
+	var ft;
+	if ( id == "rf_vh" ) 
+		ft = "RFSA_H_CH";
+	else ( id == "rf_vl" ) 
+		ft = "RFSA_L_CH";
+	
+	write_xml(ft, "atten", vca_atten);
+	setTimeout(function() { sendcmd("TX", "rf -c a -v "+vca_atten); }, 250);
+}
+
+
+// setting RF IQ Modulator Voltage Bias
+function set_mxr() {
+	var ibias = document.getElementById("rf_mxri");
+	var ibias_val = ibias.options[ibias.selectedIndex].value;
+	var qbias = document.getElementById("rf_mxrq");
+	var qbias_val = qbias.options[qbias.selectedIndex].value;
+	
+	write_xml("IQ_BIASI", "mv", ibias_val);
+	setTimeout(function() { write_xml("IQ_BIASQ", "mv", qbias_val); }, 250);
+	var param = ibias_val.concat(" -q ", qbias_val, " -m");
+	setTimeout(function() { sendcmd("TX", "rf -c a -i "+param); }, 500);
+}
+
+// putting the board in demo mode
+function board_demo() {
+
+	var sel_ch;
+	var channel = document.getElementsByName("chan");
+	for (var i = 0; i < channel.length; i++) {
+		if (channel[i].checked){
+			sel_ch = channel[i].value;
+		}
+	}
+
+	document.getElementById("rf_mxri").value = 17;
+	document.getElementById("rf_mxrq").value = 17;
+	document.getElementById("rf_mxri").disabled = false;
+	document.getElementById("rf_mxrq").disabled = false;
+	document.getElementById("set_rf_mxr").disabled = false;
+	
+	document.getElementById("rf_vh").value = 14;
+	//document.getElementById("pwr_vcah").src = "../images/on.svg";
+	document.getElementById("rf_vh").disabled = false;
+	document.getElementById("set_rf_vh").disabled = false;
+	
+	document.getElementById("rf_vl").value = 14;
+	//document.getElementById("pwr_vcal").src = "../images/on.svg";
+	document.getElementById("rf_vl").disabled = false;
+	document.getElementById("set_rf_vl").disabled = false;
+	
+	document.getElementById("pwr_hmc").src = "../images/on.svg";
+	document.getElementById("rf_f").disabled = false;
+	document.getElementById("set_rf_f").disabled = false;
+	
+	
+	write_xml("IQ_BIASI", "mv", "17");
+	setTimeout(function() { write_xml("IQ_BIASQ", "mv", "17"); }, 100);
+	setTimeout(function() { write_xml("RFSA_H_CH", "pwr", "ON"); }, 200);
+	setTimeout(function() { write_xml("RFSA_H_CH", "atten", "14"); }, 300);
+	setTimeout(function() { write_xml("RFSA_L_CH", "pwr", "ON"); }, 400);
+	setTimeout(function() { write_xml("RFSA_L_CH", "atten", "14"); }, 500);
+	setTimeout(function() { write_xml("HMC_CH", "pwr", "ON"); }, 600);
+	setTimeout(function() { sendcmd('TX', 'board -c a -d'); }, 700);
+
+
+}
+
+
+// ==========================
+// FPGA/DSP functions
+// ==========================
+// writing to register
+function reg_wr(board, reg_num, mask, value, output, spec_ch){
+	
+	var sel_ch;
+	if (spec_ch == "a" || spec_ch == "b" || spec_ch == "c" || spec_ch == "d") { 
+			sel_ch = spec_ch;
+	} else {
+		var channel = document.getElementsByName("chan");
+		for (var i = 0; i < channel.length; i++) {
+			if (channel[i].checked){
+				sel_ch = channel[i].value;
+			}
+		}
+	}
+	
+	
+	var reg_name = board.concat(sel_ch, reg_num);
+	var sep = ".";	// declaring seperator
+	var param = reg_name.concat(sep,mask,sep,value);
+	runscript("reg_write.sh", param, "dump_out", "box");
+}
+
+
+// when someone presses the power button which does register manipulation
+function pwr_button_reg(board, reg_num, mask, val_on, val_off, id) {
+	if (document.getElementById(id).src.indexOf("on.svg") > -1) {
+			document.getElementById(id).src="../images/off.svg";
+			setTimeout(function() { reg_wr(board, reg_num, mask, val_off, id); }, 500);
+	} 
+	else {
+			document.getElementById(id).src="../images/on.svg";
+			setTimeout(function() { reg_wr(board, reg_num, mask, val_on, id); }, 500);
+	}
+}
+
+
+// setting DSP NCO phase increment
+function set_dsp_nco_f() {
+	var p_inc = document.getElementById("dsp_f").value;
+	
+	var sel_ch;
+	var channel = document.getElementsByName("chan");
+	for (var i = 0; i < channel.length; i++) {
+		if (channel[i].checked){
+			sel_ch = channel[i].value;
+		}
+	}
+	
+	var f_dac;
+	if ( sel_ch == "a" || sel_ch == "b" ) {
+		f_dac = 322265625;
+	} else if ( sel_ch == "c" || sel_ch == "d" ) {
+		f_dac = 322265625/4;
+  }
+	var mult = Math.pow(2,32);
+	var f_nco = Math.round((p_inc * mult) / f_dac);
+	var f_ncox = f_nco.toString(16);
+	// setting the nco phase increment
+	write_xml("FREQ_ADJ", "value", p_inc);
+	setTimeout(function() { reg_wr("tx", "0", "00000000", f_ncox, "dsp_f"); }, 500);
+	
+	// setting the reverse phase
+	var rev = document.getElementById("dsp_p");
+	var rev_val = rev.options[rev.selectedIndex].value;
+	setTimeout(function() { reg_wr("tx", "4", "ffffdfff", rev_val, "dsp_p"); }, 750);
+	
+	if ( rev_val == "00000000" )
+		setTimeout(function() { write_xml("FREQ_ADJ", "dir", "-"); }, 1000);
+	else
+		setTimeout(function() { write_xml("FREQ_ADJ", "dir", "+"); }, 1000);
+		
+}
+
+
+// populate the drop-down menu for interpolation:
+// A/B - 2..256..8192
+// C/D - 4..256..8192
+function populate_interp(){
+	var channel = document.getElementsByName("chan");
+	var sel_ch;
+	var max=256;
+	var real = document.getElementById('interp');
+	
+	for (var i = 0; i < channel.length; i++) {
+		if (channel[i].checked){
+				sel_ch = channel[i].value;
+				if ( sel_ch == "a" || sel_ch == "b") {
+						real.options[0] = new Option('2', '2');
+						real.options[1] = new Option('3', '3');
+						for (var j = 2; j<max-1; j++) {
+							real.options[j] = new Option(j+2,j+2);
+						}
+				} else {  
+						init_len = 0;
+						for (var j = 4; j<=max; j++) {
+							real.options[j-4] = new Option(j,j);
+						}
+				} 
+				
+// 	var dum = document.getElementById('interp_dum');
+// 				if ( sel_ch == "a" || sel_ch == "b") {
+// 						real.options[0] = new Option('2', '2');
+// 						real.options[1] = new Option('3', '3');
+// 						init_len = 2;
+// 						for (var j = 0; j<dum.options.length; j++) {
+// 							real.options[init_len+j] = new Option(dum.options[j].text, dum.options[j].value);
+// 						}
+// 				} else {  
+// 						init_len = 0;
+// 						for (var j = 0; j<dum.options.length; j++) {
+// 							real.options[init_len+j] = new Option(dum.options[j].text, dum.options[j].value);
+// 						}
+// 				} 
+		}
+	}
+}
+
+
+// writing to interpolation register
+function set_interp(){
+	
+	var channel = document.getElementsByName("chan");
+	var sel_ch;
+	for (var i = 0; i < channel.length; i++) {
+		if (channel[i].checked){
+			sel_ch = channel[i].value; 
+		}
+	}
+	
+	var d = document.getElementById("interp").value;
+
+	var curr_msps = 322.265625/d;
+	curr_msps = curr_msps.toFixed(9);
+	document.getElementById("msps").innerHTML = curr_msps;
+	write_xml("SAMPLE_RATE", "value", curr_msps);
+
+	
+	var reg_name = "tx".concat(sel_ch, "1");
+	var sep = ".";	// declaring seperator
+	var param = reg_name.concat(sep,d);
+	setTimeout(function () { write_xml("INT_FACT", "value", d); }, 250);
+	setTimeout(function () { runscript("dsp_reg_write.sh", param, "dump_out", "box"); }, 500);
+}
+
+
+// handling DSP source port switching
+function src_port_handler() {
+
+	var channel = document.getElementsByName("chan");
+	var sel_ch;
+	for (var i = 0; i < channel.length; i++) {
+		if (channel[i].checked){
+			sel_ch = channel[i].value; 
+		}
+	}
+	
+	if (document.getElementsByName("dsp_s")[0].checked) {
+		document.getElementById("img_src_sw").src="../images/tx_sfpa.svg"
+		document.getElementById("udp_port").disabled=false;
+		document.getElementById("set_srcip").disabled=false;
+		
+		if ( sel_ch == "a" || sel_ch == "c") {
+				write_xml("SRC_PORT", "port", "SFPA");
+				setTimeout(function() { reg_wr("tx", "4", "ffffe1ff", "00000000", "dsp_s1"); }, 300);
+		} else if ( sel_ch == "b" || sel_ch == "d") {
+				write_xml("SRC_PORT", "port", "SFPB");
+				setTimeout(function() { reg_wr("tx", "4", "ffffe1ff", "00000200", "dsp_s1"); }, 300);
+		}
+		
+	} else if (document.getElementsByName("dsp_s")[1].checked) {
+		document.getElementById("img_src_sw").src="../images/tx_rxlpbk.svg";
+		document.getElementById("udp_port").disabled=true;
+		document.getElementById("set_srcip").disabled=true;
+		write_xml("SRC_PORT", "port", "LPBK");
+		// Only the RX destination port register is used (rx?4)
+		setTimeout(function() { reg_wr("rx", "4", "ffffe1ff", "00000400", "dsp_s2"); }, 300);
+		
+	}
+}
+
+
+// setting source
+function set_src() {
+	var channel=document.getElementsByName("chan");
+	var sel_ch;
+	for (var i = 0; i < channel.length; i++) {
+		if (channel[i].checked){
+			sel_ch = channel[i].value;
+		}
+	}
+	
+	// Setting UDP port
+	var reg_udp = "tx".concat(sel_ch, "5");
+	var sep = ".";	// declaring seperator
+	var port = document.getElementById("udp_port").value;
+	var param = reg_udp.concat(sep, port);
+	write_xml("SRC_UDP", "port", port);
+	setTimeout(function() { runscript("set_udp.sh", param, "dump_out", "box"); }, 200);
+}
+
+</script>
+
+
+<!-- =============================== -->
+<!-- HTML Code                       -->
+<!-- =============================== -->
+<!-- Header to switch to other pages -->
+<head>
+	<link rel="stylesheet" type="text/css" href="../pvstyle.css">
+	<div id="head">
+		<h1>
+			<a href = "../"><input type="image" src="../images/PV1.png"></a>
+			<a href = "../">Per Vices: TX Chain</a>
+		</h1>
+	</div>
+	<div id="menu">
+		<ul>
+			<li><a href = "../rx">RX Chain</a></li>
+			<li><a href = "../tx">TX Chain</a></li>
+			<li><a href = "../synth">Clock</a></li>
+			<li><a href = "../dig">Configuration</a></li>
+			<li><a href = "../debug">Debug</a></li>
+		</ul>
+	</div>
+</head>
+<hr>
+
+<body>
+
+<p>This page allows the configuration of the entire transmit chain from the digital backend to the RF frontend. Select the channel that is being configured.</p>
+<p>The digital signal comes from the FPGA and gets interpolated through the DSP chain on the FPGA. The interpolation can go up to a maximum of 322 MSPS and can be frequency adjusted prior to DAC conversion. The digital signal is sent to the RF frontend using the JESD serial interface, providing the DAC with both IQ channel values. The analog signal passes through an RF switch for high band and low band selection. The high band is reserved for signals greater than 500 MHz and the low band is reserved for signals under 500 MHz. The high band offers a frequency mixer for up-conversion up to a maximum of 6 GHz.</p>
+
+<table style="width:25%;">
+	<!-- Channel Selection -->
+	<tr><td>
+		<b>Channel Selection:</b>
+	</td><td>
+		A <input id="chanA" type="radio" name="chan" value="a" onclick="load_xml('A')" checked="true">
+	</td><td>
+		B <input id="chanB" type="radio" name="chan" value="b" onclick="load_xml('B')">
+	</td><td>
+		C <input id="chanC" type="radio" name="chan" value="c" onclick="load_xml('C')">
+	</td><td>
+		D <input id="chanD" type="radio" name="chan" value="d" onclick="load_xml('D')">
+	</td></tr>
+	<tr><td>
+		<!-- Enable TX Radio Chain -->
+		<b>Channel Enable:</b>
+	</td><td>	
+		<input type="image" id="chan_en" src="../images/on.svg" 
+		onclick="chpwr_button();">
+	</td></tr>
+</table>
+
+
+<table>
+	<!-- DSP CONFIGURATION -->
+	<tr><td style="position: relative;">
+		<h2>TX DSP Chain</h2></br>
+
+		<img src="../dig/vaunt_dsp_tx.svg" alt="Per Vices" width="1500" height="198.6">
+				
+		<div style="position: absolute; left: 1px; top: 76px; z-index:-1;">
+			<img id="img_src_sw">
+		</div>
+
+		<!-- DSP Reset -->
+		<div style="position: absolute; left: 175px; top: 4px;">
+			<button type="button" id="dsp_rst" style="width:52;"
+				onclick="reg_wr('tx', '4', 'fffffffd', '00000002', 'dsp_rst');
+				setTimeout(function(){reg_wr('tx', '4', 'fffffffd', '00000000', 'dsp_rst')}, 500);">
+				Reset</button></br>
+		</div>
+		
+		<!-- DSP source port switch -->
+		<div action="" style="position: absolute; left: 100px; top: 74px; ">
+			Source Port:</br>
+			<input id="dsp_s1" onclick="src_port_handler();"
+				type="radio" name="dsp_s" value="0" checked="true">
+			<div id="sfp_port" style="display:inline;"></div></br></br>
+			<input id="dsp_s2" onclick="src_port_handler();"
+				type="radio" name="dsp_s" value="2">Rx Chain (Loop Back)</br></br>
+				UDP Port: <input type="text" id="udp_port" size="7" maxlength="5"> <button type="button" id="set_srcip" style="width:42;"
+				onclick="set_src();">Set</button>
+		</div>
+		
+
+		<!-- Data Unpacker Reset -->
+		<div style="position: absolute; left: 450px; top: 145px;">
+			<button type="button" id="unpkr_rst" style="width:52;"
+				onclick="reg_wr('tx', '4', 'fffffffe', '00000001', 'unpkr_rst');
+				setTimeout(function(){reg_wr('tx', '4', 'fffffffe', '00000000', 'unpkr_rst')}, 500);" hidden>
+				Reset</button>
+		</div>
+		
+		<!-- Interpolation -->
+		<div style="position: absolute; left: 640px; top: 105;">
+			Effective Input Sample Rate:</br>
+			322.265625/ 
+			<select id="interp">
+				<option value="0">0</option>
+			</select></br>
+			<button type="button" id="set_interp" style="width:25;" onclick="set_interp();">=</button>
+			<div id="msps" style="display:inline;"></div> MSPS</div></br>
+		</div>
+		
+		<div style="position: absolute; left: 640px; top: 169">
+			<p style="font-size:14px"><b>NOTE:</b></br>
+			Please ensure that the actual</br>
+			input sample rate corresponds</br>
+			<i><b>exactly</b></i> to the above.</p>
+		</div>
+
+		<!-- DSP NCO reverse phase -->
+		<div style="position: absolute; left: 1200px; top: 270px;">
+			Phase Increment:</br>
+			<select id="dsp_p">
+				<option value="00002000">-</option>
+				<option value="00000000">+</option>
+			</select>
+			<input type="text" id="dsp_f" size="10" maxlength="10">Hz
+			<button type="button" id="set_nco_f" style="width:52;"
+				onclick="set_dsp_nco_f();">Set</button>
+		</div>
+	
+		</br></br></br></br>
+	</td></tr>
+	<!-- RADIO CONFIGURATION -->
+	<tr><td style="position: relative;">
+		<h2>TX Radio Chain</h2>
+		<img src="tx_chain.svg" alt="Per Vices">
+		
+		<!-- DAC options -->
+		<div action="" style="position: absolute; left: 90px; top: 330px; ">
+			<input type="image" id="pwr_dac" src="../images/on.svg" onclick="pwr_button('TX', 'pwr_dac', 'power -c a -d 1', 'power -c a -d 0');">
+			DAC Channel:
+			<select id="dac_e">
+				<option value="0">0</option>
+			</select></br>
+			NCO Freq: <input id="dac_n" type="text" name="dac_n" size="4" maxlength="10">Hz </br>
+			<input id="dac_p" type="checkbox" name="dac_p" value="1" onclick="set_dac_pap();">PA enable</br>
+			<button type="button" id="set_dac_n" style="width:52;" onclick="set_dac_freq();">Set</button></br>
+		</div>
+		
+		<!-- RF switch animation -->
+		<div style="position: absolute; left: 0px; top: 50px; z-index:-1;">
+			<img id="img_band_sw">
+		</div>
+
+		<!-- RF band switch -->
+		<div action="" style="position: absolute; left: 420px; top: 320px; ">
+			<input id="rf_b1" onclick="reg_wr('tx', '4', 'ffffff1f', '00000000', 'band_but');
+			rad_sync('rf_b1', 'rf_b3');sendcmd('TX', 'rf -c a -b 1');" 
+			type="radio" name="rf_b" value="1">High Band</br>
+			<input id="rf_b2" onclick="reg_wr('tx', '4', 'ffffff1f', '00000020', 'band_but');
+			rad_sync('rf_b2', 'rf_b4');sendcmd('TX', 'rf -c a -b 0');" 
+			type="radio" name="rf_b" value="0">Low Band
+		</div>
+		<div action="" style="position: absolute; left: 1320px; top: 310px; ">
+			<input id="rf_b3" onclick="reg_wr('tx', '4', 'ffffff1f', '00000000', 'band_but');
+			rad_sync('rf_b3', 'rf_b1');sendcmd('TX', 'rf -c a -b 1');" 
+			type="radio" name="rf_nb" value="1">High Band</br>
+			<input id="rf_b4" onclick="reg_wr('tx', '4', 'ffffff1f', '00000020', 'band_but');
+			rad_sync('rf_b4', 'rf_b2');sendcmd('TX', 'rf -c a -b 0');" 
+			type="radio" name="rf_nb" value="0">Low Band</br>
+		</div><button type="button" id="band_but" style="width:52;" hidden="hidden"></button></br>
+
+		<!-- IQ Modulator -->
+		<div action="" style="position: absolute; left: 675; top: 0px; ">
+		IQ Voltage Bias:</br>
+		<table>
+				<tr>
+						<td>
+								I:
+						</td><td>
+								<select id="rf_mxri">
+									<option value="0">0</option>
+									<option value="1">100</option>
+									<option value="2">200</option>
+									<option value="3">300</option>
+									<option value="4">400</option>
+									<option value="5">500</option>
+									<option value="6">600</option>
+									<option value="7">700</option>
+									<option value="8">800</option>
+									<option value="9">900</option>
+									<option value="10">1000</option>
+									<option value="11">1100</option>
+									<option value="12">1200</option>
+									<option value="13">1300</option>
+									<option value="14">1400</option>
+									<option value="15">1500</option>
+									<option value="16">1600</option>
+									<option value="17">1700</option>
+									<option value="18">1800</option>
+									<option value="19">1900</option>
+									<option value="20">2000</option>
+									<option value="21">2100</option>
+									<option value="22">2200</option>
+									<option value="23">2300</option>
+									<option value="24">2400</option>
+								</select>mV
+						</td>
+				</tr>
+				<tr>
+						<td>
+								Q:
+						</td><td>
+								<select id="rf_mxrq">
+									<option value="0">0</option>
+									<option value="1">100</option>
+									<option value="2">200</option>
+									<option value="3">300</option>
+									<option value="4">400</option>
+									<option value="5">500</option>
+									<option value="6">600</option>
+									<option value="7">700</option>
+									<option value="8">800</option>
+									<option value="9">900</option>
+									<option value="10">1000</option>
+									<option value="11">1100</option>
+									<option value="12">1200</option>
+									<option value="13">1300</option>
+									<option value="14">1400</option>
+									<option value="15">1500</option>
+									<option value="16">1600</option>
+									<option value="17">1700</option>
+									<option value="18">1800</option>
+									<option value="19">1900</option>
+									<option value="20">2000</option>
+									<option value="21">2100</option>
+									<option value="22">2200</option>
+									<option value="23">2300</option>
+									<option value="24">2400</option>
+								</select>mV
+						</td><td>
+								<button type="button" id="set_rf_mxr" style="width:52;" onclick="set_mxr()">Set</button>
+						</td>
+				</tr>
+		</table>
+			
+		</div>
+		
+		<!-- VCA options -->
+		<div action="" style="position: absolute; left: 845px; top: 190px; ">
+			<!--<input type="image" id="pwr_vcah" src="../images/on.svg" onclick="pwr_button('TX', 'pwr_vcah', 'power -c a -v 1', 'power -c a -v 0')">-->
+			-<input id="rf_vh" type="text" name="rf_vh" size="3" maxlength="2">dB
+			<button type="button" id="set_rf_vh" style="width:52;" onclick="set_vca('rf_vh')">Set</button></br>
+		</div>
+		<div action="" style="position: absolute; left: 760px; top: 450px; ">
+			<!--<input type="image" id="pwr_vcal" src="../images/on.svg" onclick="pwr_button('TX', 'pwr_vcal', 'power -c a -w 1', 'power -c a -w 0');">-->
+			-<input id="rf_vl" type="text" name="rf_vl" size="3" maxlength="2">dB
+			<button type="button" id="set_rf_vl" style="width:52;" onclick="set_vca('rf_vl')">Set</button></br>
+		</div>
+
+		<!-- HMC frequency synthesizers -->
+		<div action="" style="position: absolute; left: 570px; top: 322px; ">
+			<input type="image" id="pwr_hmc" src="../images/on.svg" onclick="pwr_button('TX', 'pwr_hmc', 'power -c a -s 1', 'power -c a -s 0')">
+			<input type="text" id="rf_f" name="rf_f" size="12" maxlength="7">KHz
+			<button type="button" id="set_rf_f" style="width:42;" onclick="set_rf_freq();">Set</button></br>
+		</div>
+
+		<!-- Predefined gains -->
+		<div style="position: absolute; left: 940px; top: 450px;">+21 dB</div>
+		<div style="position: absolute; left: 1090px; top: 450px;">+15.7 dB</div>
+		<div style="position: absolute; left: 1013px; top: 190px;">+15.7 dB</div>
+		<div style="position: absolute; left: 1150px; top: 190px;">+13.5 dB</div>
+		</br></br></br>
+	</td></tr>
+
+
+
+	<!-- BOARD CONFIGURATION -->
+	<tr><td style="position: relative;">
+		<h2>TX Board Control</h2>
+
+		<table style="width:100%;">
+			<tr><td valign="top">
+				<b>JESD Sync.</b>
+				<table>
+					<tr>
+						<td>
+						<button type="button" id="jesd_sync" style="width:52;" onclick="sendcmd('DIG', 'fpga -o');">Sync</button>
+						</td>
+					</tr>
+				</table></br>
+		
+				<b>Channel IC's</b>
+				<table>
+					<tr>
+						<td>DAC</td>
+						<td>GPIOX</td>
+						<td>LED</td>
+					</tr> <tr>
+						<td><button type="button" id="dac_test" onclick="sendcmd('TX', 'test -c a -d')" style="width:60;">Test</button></td>
+						<td><button type="button" id="gpio_test" onclick="sendcmd('TX', 'test -c a -g')" style="width:60;">Test</button></td>
+						<td><button type="button" id="led_test" onclick="sendcmd('TX', 'board -l 5')" style="width:60;">Test</button></td>
+					</tr> <tr>
+						<td><button type="button" id="dac_dump" onclick="sendcmd('TX', 'dump -c a -d')" style="width:60;">Dump</button></td>
+						<td><button type="button" id="gpio_dump" onclick="sendcmd('TX', 'dump -c a -g')" style="width:60;">Dump</button></td>
+					</tr>
+				</table> </br>
+
+				<b>Channel State</b>
+				<table>
+					<tr>
+						<td><button type="button" id="b_init" onclick="sendcmd('TX', 'board -c a -i')" style="width:60;">Init</button></td>
+						<td><button type="button" id="b_demo" onclick="board_demo()" style="width:60;">Demo</button></td>
+						<td><button type="button" id="b_diag" onclick="sendcmd('TX', 'board -c a -e')" style="width:60;">Diag</button></td>
+						<td><button type="button" id="b_mute" onclick="sendcmd('TX', 'board -c a -m')" style="width:60;">Mute</button></td>
+					</tr> <tr>
+						<td><button type="button" id="b_rst" onclick="sendcmd('TX', 'board -c a -r')" style="width:60;">Reset</button></td>
+						<td><button type="button" id="b_kill" onclick="sendcmd('TX', 'board -c a -k')" style="width:60;">Kill</button></td>
+						<td><button type="button" id="b_panic" onclick="sendcmd('TX', 'board -c a -p')" style="width:60;">Panic</button></td>
+					</tr>
+				</table> </br>
+			</td><td valign="top">
+				<b>Board Version</b></br>
+				<button type="button" onclick="sendcmd('TX', 'board -v')" style="width:60;">Get</button>&nbsp;&nbsp;
+				Version: <div id="version_out"></div> </br>
+
+				<b>Board Temperature</b></br>
+				<button type="button" onclick="sendcmd('TX', 'board -c a -t')" style="width:60;">Get</button>&nbsp;&nbsp;
+				Temperature (&deg;C): <div id="temp_out"></div>
+			</td> <td valign="top">
+				<b>Console Output</b></br>
+				<textarea id="dump_out" rows="17" cols="90"></textarea></br>
+			</td> </tr>
+		</table></br>
+	</td></tr>
+
+</table>
+
+</body>
+
+<!-- Footer -->
+<div id="footer">
+	<span style="font-size:11px;"> Copyright Per Vices 2014. All rights reserved.</span>
+</div>
+</html>

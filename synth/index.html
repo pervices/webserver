@@ -1,0 +1,393 @@
+<html>
+
+<script>
+// when the page loads, populate the fields based on XML
+window.onload = function() {
+	load_xml();
+// 	if ( get_uhd() == 0 )
+// 		load_xml();
+// 	else 
+// 		chan_pwr(0);
+}
+
+
+// checking to see if UHD mode is enabled
+// enabled - all buttons and fields will be greyed output
+// disabled - normal operation for all webpages
+function get_uhd() {
+	var xmlDoc;
+	var xmlload;
+	var ele;
+	if (window.XMLHttpRequest) {
+		xmlload=new XMLHttpRequest();
+	} else {
+		xmlload=new ActiveXObject("Microsoft.XMLHTTP");
+	}
+	xmlload.onreadystatechange=function() {
+	   if (xmlload.readyState==4 && xmlload.status==200) {
+	      xmlDoc = xmlload.responseXML;
+	      ele=xmlDoc.getElementsByTagName("opr");
+	      if (ele[i].childNodes[(2*2)+1].firstChild.nodeValue == "ON")
+					return 1;
+				else 
+					return 0;
+	   }
+	}
+	
+	xmlload.open("GET","../dig/state_current.xml",true);
+	xmlload.send();
+}
+
+
+// enable/disable entire channel (includes radio/dsp)
+function chan_pwr(mode) {
+	// Mode: 1-enable; 0-disable;
+	if (mode) {
+		
+		document.getElementById("extref1").disabled	=false;
+		document.getElementById("extref2").disabled	=false;
+		document.getElementById("pwr_hmc987").disabled	=false;
+		document.getElementById("pwr_lmk").disabled	=false;
+		document.getElementById("extvco").disabled	=false;
+		document.getElementById("extsync").disabled	=false;
+		document.getElementById("hmc_test").disabled=false;
+		document.getElementById("lmk_test").disabled=false;
+		document.getElementById("hmc_dump").disabled=false;
+		document.getElementById("lmk_test").disabled=false;
+		
+		document.getElementById("b_init").disabled	=false;
+		document.getElementById("b_demo").disabled	=false;
+		document.getElementById("b_diag").disabled	=false;
+		document.getElementById("b_mute").disabled	=false;
+		document.getElementById("b_rst").disabled		=false;
+		document.getElementById("b_kill").disabled	=false;
+		document.getElementById("b_panic").disabled	=false;
+		
+		document.getElementById("lk_detect").disabled	=false;
+	
+	} else {
+		// chain is disabled, grey out everything
+		
+		document.getElementById("extref1").disabled	=true;
+		document.getElementById("extref2").disabled	=true;
+		document.getElementById("pwr_hmc987").disabled	=true;
+		document.getElementById("pwr_lmk").disabled	=true;
+		document.getElementById("extvco").disabled	=true;
+		document.getElementById("extsync").disabled	=true;
+		document.getElementById("hmc_test").disabled=true;
+		document.getElementById("lmk_test").disabled=true;
+		document.getElementById("hmc_dump").disabled=true;
+		document.getElementById("lmk_test").disabled=true;
+		
+		document.getElementById("b_init").disabled	=true;
+		document.getElementById("b_demo").disabled	=true;
+		document.getElementById("b_diag").disabled	=true;
+		document.getElementById("b_mute").disabled	=true;
+		document.getElementById("b_rst").disabled		=true;
+		document.getElementById("b_kill").disabled	=true;
+		document.getElementById("b_panic").disabled	=true;
+			
+		document.getElementById("lk_detect").disabled	=true;
+	}
+}
+
+// populate the fields with current state
+function populate_fields(ele) {
+	var i;
+	for (i = 0; i < ele.length; i++) {
+		if (ele[i].childNodes[1].firstChild.nodeValue == "EXTREF") {
+			if (ele[i].childNodes[(2*2)+1].firstChild.nodeValue == "INT") {
+				document.getElementById("extref2").checked="true";
+				document.getElementById("img_extref").src="synth_int.svg";
+			} else {
+				document.getElementById("extref1").checked="true";
+				document.getElementById("img_extref").src="synth_ext.svg";
+			}
+		}
+		if (ele[i].childNodes[1].firstChild.nodeValue == "HMC987") {
+			if (ele[i].childNodes[(1*2)+1].firstChild.nodeValue == "ON")
+				document.getElementById("pwr_hmc987").src="../images/on.svg";
+			else
+				document.getElementById("pwr_hmc987").src="../images/off.svg";
+		}
+		if (ele[i].childNodes[1].firstChild.nodeValue == "LMK04828") {
+			if (ele[i].childNodes[(1*2)+1].firstChild.nodeValue == "ON")
+				document.getElementById("pwr_lmk").src="../images/on.svg";
+			else
+				document.getElementById("pwr_lmk").src="../images/off.svg";
+		}
+		if (ele[i].childNodes[1].firstChild.nodeValue == "EXTVCO") {
+			if (ele[i].childNodes[(1*2)+1].firstChild.nodeValue == "ON")
+				document.getElementById("extvco").src="../images/on.svg";
+			else
+				document.getElementById("extvco").src="../images/off.svg";
+		}
+		if (ele[i].childNodes[1].firstChild.nodeValue == "EXTSYNC") {
+			if (ele[i].childNodes[(1*2)+1].firstChild.nodeValue == "ON")
+				document.getElementById("extsync").src="../images/on.svg";
+			else
+				document.getElementById("extsync").src="../images/off.svg";
+		}
+	}
+}
+
+// load the xml
+function load_xml() {
+	var xmlload;
+	var ele, i;
+	if (window.XMLHttpRequest) {
+		xmlload=new XMLHttpRequest();
+	} else {
+		xmlload=new ActiveXObject("Microsoft.XMLHTTP");
+	}
+	xmlload.onreadystatechange=function() {
+		if (xmlload.readyState==4 && xmlload.status==200) {
+			xmlDoc = xmlload.responseXML;
+			ele=xmlDoc.getElementsByTagName("radio");
+		      	populate_fields(ele);
+		}
+	}
+	
+	xmlload.open("GET","state_current.xml",true);
+	xmlload.send();
+}
+
+
+// writing states to xml
+function write_xml(ft, attr, val) {
+	
+	// perl script takes this param = brd, chain, name, attr, val
+	// @brd = rx
+	// @ft = name of state to be changed (ie. EXTREF, EXTSYNC...)
+	// @attr = attribute to be changed
+	// @val = new state value
+	
+	var sep = ",";
+	var brd = "synth";
+	var param = brd.concat(sep,ft,sep,attr,sep,val);
+	
+	runscript("invoke_xmlprsr.sh", param);
+}
+
+
+//invoke shell script
+function runscript(script, param) {
+	var xmlhttp;
+	document.getElementById("dump_out").innerHTML="";
+
+	if (window.XMLHttpRequest)
+		xmlhttp=new XMLHttpRequest();
+	else
+		xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+
+	xmlhttp.onreadystatechange=function() {
+		if (xmlhttp.readyState==4 && xmlhttp.status==200) {
+			document.getElementById("dump_out").innerHTML+=xmlhttp.responseText;
+		}
+	}
+
+	xmlhttp.open("POST","../cgi-bin/"+script, true);
+	xmlhttp.send(param);
+}
+
+
+// send command to MCU
+function sendcmd(board, str) {
+	var xmlhttp;
+	if (str.length==0) return;
+	document.getElementById("dump_out").innerHTML="";
+
+	if (window.XMLHttpRequest)
+		xmlhttp=new XMLHttpRequest();
+	else
+		xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+
+	xmlhttp.onreadystatechange=function() {
+		if (xmlhttp.readyState==4 && xmlhttp.status==200) {
+			document.getElementById("dump_out").innerHTML+=xmlhttp.responseText;
+		}
+	}
+
+	if(str.indexOf("-c a") > -1) {
+		var elements = document.getElementsByName("chan");
+		for (var i = 0; i < elements.length; i++) {
+			if (elements[i].checked) {
+				str = str.replace("-c a", "-c "+elements[i].value);
+			}
+		}
+	}
+
+	if (board == "DIG") {
+		xmlhttp.open("POST","../cgi-bin/cmd_mcu.sh", true);
+		xmlhttp.send(str);
+	} else if (board == "SYNTH") {
+		xmlhttp.open("POST","../cgi-bin/fcmd_mcu.sh", true);
+		xmlhttp.send("fwd -b 2 -m \'"+str+"\'");
+	} else if (board == "TX") {
+		xmlhttp.open("POST","../cgi-bin/fcmd_mcu.sh", true);
+		xmlhttp.send("fwd -b 1 -m \'"+str+"\'");
+	} else if (board == "RX") {
+		xmlhttp.open("POST","../cgi-bin/fcmd_mcu.sh", true);
+		xmlhttp.send("fwd -b 0 -m \'"+str+"\'");
+	} 
+}
+
+// update an image on the screen
+function new_img(str, img) {
+	document.getElementById(str).src=img;
+}
+
+// when someone presses the power button
+function pwr_button(board, id, str_on, str_off) {
+	if (document.getElementById(id).src.indexOf("on.svg") > -1) {
+		if ( id == "pwr_hmc987" ) {
+			write_xml("HMC987", "pwr", "OFF");
+		} else if ( id == "pwr_lmk" ) {
+			write_xml("LMK04828", "pwr", "OFF");
+		} else if ( id == "extvco" ) {
+			write_xml("EXTVCO", "pwr", "OFF");
+		} else if ( id == "extsync" ) {
+			write_xml("EXTSYNC", "pwr", "OFF");
+		}
+		document.getElementById(id).src="../images/off.svg";
+		setTimeout(function() { sendcmd(board, str_off); }, 250);
+	} else {
+		if ( id == "pwr_hmc987" ) {
+			write_xml("HMC987", "pwr", "ON");
+		} else if ( id == "pwr_lmk" ) {
+			write_xml("LMK04828", "pwr", "ON");
+		} else if ( id == "extvco" ) {
+			write_xml("EXTVCO", "pwr", "ON");
+		} else if ( id == "extsync" ) {
+			write_xml("EXTSYNC", "pwr", "ON");
+		}
+		document.getElementById(id).src="../images/on.svg";
+		setTimeout(function() { sendcmd(board, str_on); }, 250);
+	}
+}
+
+</script>
+
+
+<head>
+	<link rel="stylesheet" type="text/css" href="../pvstyle.css">
+	<div id="head">
+		<h1>
+			<a href = "../"><input type="image" src="../images/PV1.png"></a>
+			<a href = "../">Per Vices: Clock</a>
+		</h1>
+	</div>
+	<div id="menu">
+		<ul>
+			<li><a href = "../rx">RX Chain</a></li>
+			<li><a href = "../tx">TX Chain</a></li>
+			<li><a href = "../synth">Clock</a></li>
+			<li><a href = "../dig">Configuration</a></li>
+			<li><a href = "../debug">Debug</a></li>
+		</ul>
+	</div>
+</head>
+<hr>
+
+<body>
+	<p>The synth board is used for generating all of the clocks for the Digital, TX, and RX boards. This includes the on board IC clocks, JESD sysref clock, and synthesizer clocks. As shown in the block diagram above, there are a couple of configurations that are possible with the synth board. The 10MHz clock reference can be chosen between an internal or external SMA source. Moving along to the right side of the chain, the 10MHz steps up to 100MHz with a feedback circuit. This architecture maintains the high 10MHz source precision with low phase noise associated with the 100MHz PLL. The fanout buffer will propagate the 100MHz signal to the other boards (RX, TX, and Digital), and feed the LMK04828 to generate the JESD compliant signals.</p>
+
+	<!-- block diagram overlays -->
+	<h2>Clock Chain</h2>
+	<div style="position: relative;">
+		<img src="vaunt_synth.svg" alt="Per Vices" width="1500" height="274.4">
+		<div style="position: absolute; left: 0px; top: 0px; z-index:-1;">
+			<img id="img_extref" width="1500" height="274.4">		
+		</div>
+
+		<div action="" style="position: absolute; left: 265px; top: 132px; ">
+			<input id="extref1" onclick="new_img('img_extref', 'synth_ext.svg');
+			write_xml('EXTREF', 'ref', 'EXT');
+			setTimeout(function(){ sendcmd('SYNTH', 'clk -t 1') }, 250);" 
+			type="radio" name="extref" value="0">Ext. Ref</br>
+			<input id="extref2" onclick="new_img('img_extref', 'synth_int.svg');
+			write_xml('EXTREF', 'ref', 'INT');
+			setTimeout(function(){ sendcmd('SYNTH', 'clk -t 0') }, 250);" 
+			type="radio" name="extref" value="1">Int. Ref
+		</div>
+
+		<div style="position: absolute; left: 912px; top: 23px;">
+			<input type="image" id="pwr_hmc987" src="../images/on.svg" onclick="pwr_button('SYNTH', 'pwr_hmc987', 'power -f 1', 'power -f 0')">
+		</div>
+
+		<div style="position: absolute; left: 1311px; top: 1px;">
+			<input type="image" id="pwr_lmk" src="../images/on.svg" onclick="pwr_button('SYNTH', 'pwr_lmk', 'power -c 1', 'power -c 0')">
+		</div>
+
+		<div style="position: absolute; left: 1160px; top: 162.5px;">
+			<input type="image" id="extvco" src="../images/on.svg" onclick="pwr_button('SYNTH', 'extvco', 'clk -v 1', 'clk -v 0')">
+		</div>
+
+		<div style="position: absolute; left: 1160px; top: 218px;">
+			<input type="image" id="extsync" src="../images/on.svg" onclick="pwr_button('SYNTH', 'extsync', 'clk -n 1', 'clk -n 0')">
+		</div>
+
+	</div></br>
+
+	<!-- BOARD CONFIGURATION -->
+	<h2>Clock Board Control</h2>	
+	<table style="width:1500;">
+		<tr><td valign="top">
+			<b>Board IC's</b>
+			<table>
+				<tr>
+					<td>HMC987</td>
+					<td>LMK</td>
+					<td>LED</td>
+				</tr><tr>
+					<td><button type="button" id="hmc_test" onclick="sendcmd('SYNTH', 'test -e')"   style="width:60;">Test</button></td>
+					<td><button type="button" id="lmk_test" onclick="sendcmd('SYNTH', 'test -g')"   style="width:60;">Test</button></td>
+					<td><button type="button" id="led_test" onclick="sendcmd('SYNTH', 'board -l 5')"style="width:60;">Test</button></td>
+				</tr><tr>
+					<td><button type="button" id="hmc_dump" onclick="sendcmd('SYNTH', 'dump -f')" style="width:60;">Dump</button></td>
+					<td><button type="button" id="lmk_test" onclick="sendcmd('SYNTH', 'dump -c')" style="width:60;">Dump</button></td>
+				</tr>
+			</table></br>
+
+			<b>Board State</b>
+			<table>
+				<tr>
+					<td><button type="button" id="b_init" onclick="sendcmd('SYNTH', 'board -i')" style="width:60;">Init</button></td>
+					<td><button type="button" id="b_demo" onclick="sendcmd('SYNTH', 'board -d')" style="width:60;">Demo</button></td>
+					<td><button type="button" id="b_diag" onclick="sendcmd('SYNTH', 'board -e')" style="width:60;">Diag</button></td>
+					<td><button type="button" id="b_mute" onclick="sendcmd('SYNTH', 'board -m')" style="width:60;">Mute</button></td>
+				</tr><tr>
+					<td><button type="button" id="b_rst" onclick="sendcmd('SYNTH', 'board -r')" style="width:60;">Reset</button></td>
+					<td><button type="button" id="b_kill" onclick="sendcmd('SYNTH', 'board -k')" style="width:60;">Kill</button></td>
+					<td><button type="button" id="b_panic" onclick="sendcmd('SYNTH', 'board -p')" style="width:60;">Panic</button></td>
+				</tr>
+			</table>
+		</td><td valign="top">
+			<b>Board Version</b></br>
+			<button type="button" onclick="sendcmd('SYNTH', 'board -v');">Get</button>&nbsp;&nbsp;
+			Version: <div id="version_out"></div></br>
+
+			<b>Board Temperature</b></br>
+			<button type="button" id="lk_detect" onclick="sendcmd('SYNTH', 'board -t')">Get</button>&nbsp;&nbsp;
+			Temperature (&deg;C): <div id="temp_out"></div></br>
+
+			<b>Lock Detect</b></br>
+			<table>
+				<tr>
+					<td><button type="button" onclick="sendcmd('SYNTH', 'status -c')">Get</button></td>
+					<td>&nbsp;&nbsp<img src="../images/on.svg"> 10 MHz</td>
+				</tr><tr>
+					<td></td>
+					<td>&nbsp;&nbsp<img src="../images/on.svg"> 100 MHz</td>
+				</tr>
+			</table>
+		</td><td valign="top">
+			<b>Console Output</b></br>
+			<textarea id="dump_out" rows="17" cols="90"></textarea></br>
+		</td></tr>
+	</table>
+
+</body>
+
+<div id="footer"> <span style="font-size:11px;"> Copyright Per Vices 2014. All rights reserved.</span> </div>
+</html>

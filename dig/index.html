@@ -1,0 +1,566 @@
+<html>
+
+<script>
+window.onload = function() {
+	// update XML
+	sync_data();
+	setTimeout(function(){load_xml();}, 500);
+};
+
+
+function populate_fields(ele) {
+	var i;
+	for (i = 0; i < ele.length; i++) {
+		if (ele[i].childNodes[1].firstChild.nodeValue == "OPR_MODE") {
+			if (ele[i].childNodes[(1*2)+1].firstChild.nodeValue == "NORMAL") {
+				document.getElementById("opr_nor").checked="true"
+			} else {
+				document.getElementById("opr_lpbk").checked="true"
+			}
+			if (ele[i].childNodes[(2*2)+1].firstChild.nodeValue == "ON") {
+				document.getElementById("uhd_en").src="../images/on.svg";
+
+				// disable links to other pages
+				document.getElementById("pv_logo").setAttribute('href', "javascript:void(0);");
+				document.getElementById("pv").setAttribute('href', "javascript:void(0);");
+				document.getElementById("rx_page").setAttribute('href', "javascript:void(0);");
+				document.getElementById("tx_page").setAttribute('href', "javascript:void(0);");
+				document.getElementById("synth_page").setAttribute('href', "javascript:void(0);");
+				document.getElementById("dig_page").setAttribute('href', "javascript:void(0);");
+				document.getElementById("debug_page").setAttribute('href', "javascript:void(0);");
+			} else {
+				document.getElementById("uhd_en").src="../images/off.svg";
+				
+				// enabling links to other pages
+				document.getElementById("pv_logo").setAttribute('href', "../");
+				document.getElementById("pv").setAttribute('href', "../");
+				document.getElementById("rx_page").setAttribute('href', "../rx");
+				document.getElementById("tx_page").setAttribute('href', "../tx");
+				document.getElementById("synth_page").setAttribute('href', "../synth");
+				document.getElementById("dig_page").setAttribute('href', "../dig");
+				document.getElementById("debug_page").setAttribute('href', "../debug"); 
+			}
+		} else if (ele[i].childNodes[1].firstChild.nodeValue == "SFPA_IP") {
+			document.getElementById("sfpa_ip").value=ele[i].childNodes[(1*2)+1].firstChild.nodeValue;
+		}
+		else if (ele[i].childNodes[1].firstChild.nodeValue == "SFPA_MAC") {
+			document.getElementById("sfpa_mac").value=ele[i].childNodes[(1*2)+1].firstChild.nodeValue;
+		}
+		else if (ele[i].childNodes[1].firstChild.nodeValue == "SFPA_UDP") {
+			document.getElementById("sfpa_udp").value=ele[i].childNodes[(1*2)+1].firstChild.nodeValue;
+		}
+		else if (ele[i].childNodes[1].firstChild.nodeValue == "SFPB_IP") {
+			document.getElementById("sfpb_ip").value=ele[i].childNodes[(1*2)+1].firstChild.nodeValue;
+		}
+		else if (ele[i].childNodes[1].firstChild.nodeValue == "SFPB_MAC") {
+			document.getElementById("sfpb_mac").value=ele[i].childNodes[(1*2)+1].firstChild.nodeValue;
+		}
+		else if (ele[i].childNodes[1].firstChild.nodeValue == "SFPB_UDP") {
+			document.getElementById("sfpb_udp").value=ele[i].childNodes[(1*2)+1].firstChild.nodeValue;
+		}
+	}
+}
+
+
+// load the xml
+function load_xml() {
+	var xmlDoc;
+	var xmlload;
+	var ele;
+	if (window.XMLHttpRequest) {
+		xmlload=new XMLHttpRequest();
+	} else {
+		xmlload=new ActiveXObject("Microsoft.XMLHTTP");
+	}
+	xmlload.onreadystatechange=function() {
+	   if (xmlload.readyState==4 && xmlload.status==200) {
+	      xmlDoc = xmlload.responseXML;
+	      ele=xmlDoc.getElementsByTagName("net");
+	      populate_fields(ele);
+	      ele=xmlDoc.getElementsByTagName("opr");
+	      populate_fields(ele);
+	   }
+	}
+	
+	xmlload.open("GET","state_current.xml",true);
+	xmlload.send();
+}
+
+
+var old_reg;
+// invoke shell script
+function runscript(script, param, output, type) {
+	var xmlhttp;
+	if (type == "box")
+		document.getElementById(output).innerHTML="";
+	else
+		document.getElementById(output).value="";
+
+	if (window.XMLHttpRequest)
+		xmlhttp=new XMLHttpRequest();
+	else
+		xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+
+	xmlhttp.onreadystatechange=function() {
+		if (xmlhttp.readyState==4 && xmlhttp.status==200) {
+			if (type == "box")
+				document.getElementById(output).innerHTML += xmlhttp.responseText;
+			else if (type == "var") {
+				old_reg = xmlhttp.responseText;
+				var reg_hex = old_reg.split("x");
+				old_reg = reg_hex[1];
+				old_reg = old_reg.replace(/(\r\n|\n|\r)/gm,"");
+			}
+			else
+				document.getElementById(output).value += xmlhttp.responseText;
+		}
+	}
+
+	xmlhttp.open("POST","../cgi-bin/"+script, true);
+	xmlhttp.send(param);
+}
+
+
+// writing states to xml
+function write_xml(ft, attr, val) {
+	
+	// perl script takes this param = brd, chain, name, chan, attr, val
+	// @brd = dig
+	// @ft = name of state to be changed (ie. SAMPLE_RATE, FREQ_ADJ...)
+	// @attr = attribute to be changed
+	// @val = new state value
+	
+	var sep = ",";
+	var brd = "dig";
+	var param = brd.concat(sep,ft,sep,attr,sep,val);
+	
+	runscript("invoke_xmlprsr.sh", param, "dump_out", "box");
+}
+
+
+// enabling/disabling UHD
+function uhd_enable() {
+
+	if (document.getElementById("uhd_en").src.indexOf("on.svg") > -1) {
+		// disabling UHD
+		document.getElementById("uhd_en").src="../images/off.svg";
+		
+		// enabling links to other pages
+		document.getElementById("pv_logo").setAttribute('href', "../");
+		document.getElementById("pv").setAttribute('href', "../");
+		document.getElementById("rx_page").setAttribute('href', "../rx");
+		document.getElementById("tx_page").setAttribute('href', "../tx");
+		document.getElementById("synth_page").setAttribute('href', "../synth");
+		document.getElementById("dig_page").setAttribute('href', "../dig");
+    document.getElementById("debug_page").setAttribute('href', "../debug"); 
+    
+		setTimeout(function(){ runscript("uhd_enable.sh", "0", "dump_out", "box");}, 300);
+		
+	} else {
+		// enabling UHD
+		document.getElementById("uhd_en").src="../images/on.svg";
+		
+		// disable links to other pages
+		document.getElementById("pv_logo").setAttribute('href', "javascript:void(0);");
+		document.getElementById("pv").setAttribute('href', "javascript:void(0);");
+		document.getElementById("rx_page").setAttribute('href', "javascript:void(0);");
+		document.getElementById("tx_page").setAttribute('href', "javascript:void(0);");
+		document.getElementById("synth_page").setAttribute('href', "javascript:void(0);");
+		document.getElementById("dig_page").setAttribute('href', "javascript:void(0);");
+    document.getElementById("debug_page").setAttribute('href', "javascript:void(0);");
+    
+		setTimeout(function(){ runscript("uhd_enable.sh", "1", "dump_out", "box");}, 300);
+	}
+}
+
+
+// send command to MCU
+function sendcmd(board, str) {
+	var xmlhttp;
+	if (str.length==0) return;
+	document.getElementById("dump_out").innerHTML="";
+
+	if (window.XMLHttpRequest)
+		xmlhttp=new XMLHttpRequest();
+	else
+		xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+
+	xmlhttp.onreadystatechange=function() {
+		if (xmlhttp.readyState==4 && xmlhttp.status==200) {
+			document.getElementById("dump_out").innerHTML+=xmlhttp.responseText;
+		}
+	}
+
+	if(str.indexOf("-c a") > -1) {
+		var elements = document.getElementsByName("chan");
+		for (var i = 0; i < elements.length; i++) {
+			if (elements[i].checked) {
+				str = str.replace("-c a", "-c "+elements[i].value);
+			}
+		}
+	}
+
+	if (board == "DIG") {
+		xmlhttp.open("POST","../cgi-bin/cmd_mcu.sh", true);
+		xmlhttp.send(str);
+	} else if (board == "SYNTH") {
+		xmlhttp.open("POST","../cgi-bin/fcmd_mcu.sh", true);
+		xmlhttp.send("fwd -b 2 -m \'"+str+"\'");
+	} else if (board == "TX") {
+		xmlhttp.open("POST","../cgi-bin/fcmd_mcu.sh", true);
+		xmlhttp.send("fwd -b 1 -m \'"+str+"\'");
+	} else if (board == "RX") {
+		xmlhttp.open("POST","../cgi-bin/fcmd_mcu.sh", true);
+		xmlhttp.send("fwd -b 0 -m \'"+str+"\'");
+	}
+}
+
+
+// update an image on the screen
+function new_img(str, img) {
+	document.getElementById(str).src=img;
+}
+
+
+// when someone presses the power button
+function pwr_button(board, id, str_on, str_off) {
+	if (document.getElementById(id).src.indexOf("on.svg") > -1) {
+		document.getElementById(id).src="../images/off.svg";
+		sendcmd(board, str_off);
+	} else {
+		document.getElementById(id).src="../images/on.svg";
+		sendcmd(board, str_on);
+	}
+}
+
+
+// dhcp logic
+function dhcp_handler() {
+	if (document.getElementById("dhcp").checked) {
+		runscript("set_dhcp.sh", "on", "dump_out", "box");
+		document.getElementById("net_ip").disabled=true;
+		document.getElementById("net_gate").disabled=true;
+		document.getElementById("net_mask").disabled=true;
+	} else {
+		runscript("set_dhcp.sh", "off", "dump_out", "box");
+		document.getElementById("net_ip").disabled=false;
+		document.getElementById("net_gate").disabled=false;
+		document.getElementById("net_mask").disabled=false;
+		setTimeout(function(){runscript("get_net.sh", "address", "net_ip", "input")}, 300);
+		setTimeout(function(){runscript("get_net.sh", "gateway", "net_gate", "input")}, 500);
+		setTimeout(function(){runscript("get_net.sh", "netmask", "net_mask", "input")}, 700);
+	}
+}
+
+
+function updatenetwork() {
+	runscript("set_host.sh", document.getElementById("net_host").value, "dump_out", "box");
+
+	if (!document.getElementById("dhcp").checked) {
+		// need a delay of 200ms because of file I/O race conditions
+		setTimeout(function(){runscript("set_ip.sh", "\taddress "+document.getElementById("net_ip").value, "dump_out", "box")}, 300);
+		setTimeout(function(){runscript("set_gate.sh", "\tgateway "+document.getElementById("net_gate").value, "dump_out", "box")}, 500);
+		setTimeout(function(){runscript("set_mask.sh", "\tnetmask "+document.getElementById("net_mask").value, "dump_out", "box")}, 700);
+	}
+}
+
+
+function sync_dhcp() {
+	var xmlhttp;
+
+	if (window.XMLHttpRequest)
+		xmlhttp=new XMLHttpRequest();
+	else
+		xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+
+	xmlhttp.onreadystatechange=function() {
+		if (xmlhttp.readyState==4 && xmlhttp.status==200) {
+			if (xmlhttp.responseText.indexOf("#") > -1) {
+				document.getElementById("dhcp").checked=false;
+				document.getElementById("net_ip").disabled=false;
+				document.getElementById("net_gate").disabled=false;
+				document.getElementById("net_mask").disabled=false;
+			} else {
+				document.getElementById("dhcp").checked=true;
+				document.getElementById("net_ip").disabled=true;
+				document.getElementById("net_gate").disabled=true;
+				document.getElementById("net_mask").disabled=true;
+			}
+		}
+	}
+
+	xmlhttp.open("POST","../cgi-bin/get_dhcp.sh", false);
+	xmlhttp.send("");
+}
+
+
+// update XML and populate fields
+function sync_data() {
+	// Update the network configurations
+	sync_dhcp();
+	setTimeout(function(){runscript("get_hostname.sh", "", "net_host", "input")}, 300);
+	if (!document.getElementById("dhcp").checked) {
+		setTimeout(function(){runscript("get_net.sh", "address", "net_ip", "input")}, 500);
+		setTimeout(function(){runscript("get_net.sh", "gateway", "net_gate", "input")}, 700);
+		setTimeout(function(){runscript("get_net.sh", "netmask", "net_mask", "input")}, 900);
+	}
+}
+
+
+//setting SFP information
+function set_sfp(port) {
+	var param, ip, mac, udp;
+	var sep = ",";
+	if ( port == "a" ) {
+		ip = document.getElementById("sfpa_ip").value;
+		mac = document.getElementById("sfpa_mac").value;
+		udp = document.getElementById("sfpa_udp").value;
+		write_xml("SFPA_IP", "addr", ip);
+		setTimeout(function(){ write_xml("SFPA_MAC", "addr", mac);}, 300);
+		setTimeout(function(){ write_xml("SFPA_UDP", "port", udp);}, 500);
+		
+	} else {
+		ip = document.getElementById("sfpb_ip").value;
+		mac = document.getElementById("sfpb_mac").value;
+		udp = document.getElementById("sfpb_udp").value;
+		write_xml("SFPB_IP", "addr", ip);
+		setTimeout(function(){ write_xml("SFPB_MAC", "addr", mac);}, 300);
+		setTimeout(function(){ write_xml("SFPB_UDP", "port", udp);}, 500);
+	}
+	param = port.concat(sep,ip,sep,mac,sep,udp);
+	setTimeout(function(){ runscript("set_sfp.sh", param, "dump_out", "box");}, 700);
+}
+
+
+//reading to register
+function reg_rd(board, reg_num, output){
+	var reg_name = board.concat(reg_num);
+	runscript("reg_read.sh", reg_name, "dump_out", "var");
+}
+
+
+// writing to register
+function reg_wr(board, reg_num, mask, value, output){
+	var reg_name = board.concat(reg_num);
+	var sep = ".";
+	var param = reg_name.concat(sep,mask,sep,value);
+	runscript("reg_write.sh", param, "dump_out", "box");
+}
+
+
+// get JESD status
+function get_jesd() {
+	var reg_jesd;
+	reg_rd("sys", "1", reg_jesd);
+	
+	var reg_val="0x".concat(old_reg);
+	runscript("get_jesd.sh", reg_val, "dump_out", "box");
+}
+
+
+// TODO: download the current configuration
+function download_config() {
+	window.location = "../crimson_config.xml";
+}
+
+
+// TODO: upload a configuration file
+function upload_config() {
+
+}
+
+</script>
+
+
+<head>
+	<link rel="stylesheet" type="text/css" href="../pvstyle.css">
+	<div id="head">
+		<h1>
+			<a href = "../" id="pv_logo"><input type="image" src="../images/PV1.png"></a>
+			<a href = "../" id="pv">Per Vices: Configuration</a>
+		</h1>
+	</div>
+	<div id="menu">
+		<ul>
+			<li><a href = "../rx" id="rx_page">RX Chain</a></li>
+			<li><a href = "../tx" id="tx_page">TX Chain</a></li>
+			<li><a href = "../synth" id="synth_page">Clock</a></li>
+			<li><a href = "../dig" id="dig_page">Configuration</a></li>
+			<li><a href = "../debug" id="debug_page">Debug</a></li>
+		</ul>
+	</div>
+</head>
+<hr>
+<body>
+	<p>The digital board houses the FPGA with the SoC ARM Cortex-A9 Processor and hard processing system for JESD communication between the boards. The digital board is required for communicating with the RX and TX board, and retrieves all of the clocks through the Synth board. The digital board supports 20Gbps using dual 10GbE and digital down/up conversion on the FPGA with Per Vices DSP IP core. The ADC and DAC chains that you see refer to the hardware running on the Arria V ST FPGA. It includes a series of filters before it feeds to and from the 10GbE SFP + Port.</p>
+<p>For more information about the SoC ARM Cortex-A9, please click <a href="http://www.altera.com/devices/processor/arm/cortex-a9/m-arm-cortex-a9.html" target="_blank">here</a>. For more support on customizing the linux distribution, please refer to Rocket Board <a href="http://www.rocketboards.org/foswiki/Main/WebHome" target="_blank">here</a> in reference to Altera's Arria V.</p>
+
+
+	<!-- UHD -->
+	<h2>UHD</h2>
+	<table style="width:15%;">
+		<tr><td>
+			<b>UHD Enable:</b>
+		</td><td>
+			<input type="image" id="uhd_en" src="../images/off.svg" 
+			onclick="uhd_enable();">
+		</td></tr>
+	</table>
+	<p>Note: Enabling UHD will disable the access and capability to configure Crimson through the management port.</p>
+	</br>
+	
+	<!-- NETWORK CONFIGURATION -->
+	<h2>Network Configuration</h2>
+	<!--<table>
+		<tr>
+			<td style="width:70;"><input id="ipv4" type="radio" name="ipv" value="0" checked="true"
+			onclick="reg_wr('sys', '3', 'fffffffb', '00000000', 'ipv4');
+				setTimeout(function(){reg_wr('sys', '16', 'fffffffb', '00000000', 'ipv4')}, 250);">IPv4</td>
+			<td><input id="ipv6" type="radio" name="ipv" value="1" 
+			onclick="reg_wr('sys', '3', 'fffffffb', '00000004', 'ipv6');
+				setTimeout(function(){reg_wr('sys', '16', 'fffffffb', '00000004', 'ipv6')}, 250);">IPv6</td>
+		</tr>
+	</table>-->
+		
+	<table>
+		<tr>
+			<td style="width:100;"><input type="checkbox" id="dhcp" name="dhcp" onclick="dhcp_handler()">DHCP</td>
+			<td style="width:100;">Hostname</td>
+			<td><input type="text" id="net_host" maxlength="15"></td>
+		</tr><tr>
+			<td></td>
+			<td>IP Addr.</td>
+			<td><input type="text" id="net_ip" maxlength="15"></td>
+		</tr><tr>
+			<td></td>
+			<td>Gateway</td>
+			<td><input type="text" id="net_gate" maxlength="15"></td>
+		</tr><tr>
+			<td><button type="button" onclick="updatenetwork()">Update</button></td>
+			<td>Netmask</td>
+			<td><input type="text" id="net_mask" maxlength="15"></td>
+		</tr>
+	</table></br></br>
+	
+	<table>
+		<tr><td style="width:300;">
+			<h2>SFP+ Port A</h2>
+			<table>
+				<tr>
+					<td style="width:100;">IP Addr.</td>
+					<td><input type="text" id="sfpa_ip" maxlength="15"></td>
+				</tr><tr>
+					<td>MAC Addr.</td>
+					<td><input type="text" id="sfpa_mac" maxlength="12"></td>
+				</tr><tr>
+					<td>UDP Port</td>
+					<td><input type="text" id="sfpa_udp" maxlength="5"></td>
+				</tr><tr>
+					<td><button type="button" id="set_sfpa" style="width:52;"
+							onclick="set_sfp('a');">Set</button></td>
+				</tr>	
+			</table>
+		</td><td>
+			<h2>SFP+ Port B</h2>
+			<table>
+				<tr>
+					<td style="width:100;">IP Addr.</td>
+					<td><input type="text" id="sfpb_ip" maxlength="15"></td>
+				</tr><tr>
+					<td>MAC Addr.</td>
+					<td><input type="text" id="sfpb_mac" maxlength="12"></td>
+				</tr><tr>
+					<td>UDP Port</td>
+					<td><input type="text" id="sfpb_udp" maxlength="5"></td>
+				</tr><tr>
+					<td><button type="button" id="set_sfpb" style="width:52;"
+							onclick="set_sfp('b');">Set</button></td>
+				</tr>	
+			</table>
+		</td></tr>
+	</table>
+	
+	<!-- TODO: Implement loading and saving config files	 -->
+	<!--<h2>Configuration Files</h2>
+	<table>
+		<tr>
+			<td><button type="button" onclick="download_config()">Save Config</button></td>
+			<td></td>
+		</tr><tr>
+			<td><button type="button" onclick="upload_config()">Load Config</button></td>
+			<td><input type="file" id="conf_file"></td>
+		</tr>
+	</table>-->
+
+	<!-- BOARD CONFIGURATION -->
+	<h2>Digital Board Control</h2>	
+	<table style="width:1500;">
+		<tr>
+			<td valign="top">
+			
+				<b>Board Operation Mode</b>
+				<table>
+					<tr><td style="width:100;"><input id="opr_nor" type="radio" name="opr_mode" value="0" checked="true"
+						onclick="write_xml('OPR_MODE', 'mode', 'NORMAL'); 
+						setTimeout(function(){reg_wr('sys', '0', 'fffffff0', '00000000', 'opr_nor');}, 500);">Normal
+						</td><td><input id="opr_lpbk" type="radio" name="opr_mode" value="1"
+						onclick="write_xml('OPR_MODE', 'mode', 'LPBK'); 
+						setTimeout(function(){reg_wr('sys', '0', 'fffffff0', '00000000', 'opr_lpbk');}, 500);">Loopback
+						</td>
+					</tr>
+				</table></br>
+
+				<b>Board IC's</b>
+				<table>
+					<tr>
+						<td>LED</td>
+					</tr> <tr>
+						<td><button type="button" onclick="sendcmd('DIG', 'board -l 5')"   style="width:60;">Test</button></td>
+					</tr>
+				</table> </br>
+
+				<b>Board State</b>
+				<table>
+					<tr>
+						<td><button type="button" onclick="sendcmd('DIG', 'board -i')" style="width:60;">Init</button></td>
+						<td><button type="button" onclick="sendcmd('DIG', 'board -d')" style="width:60;">Demo</button></td>
+						<td><button type="button" onclick="sendcmd('DIG', 'board -e')" style="width:60;">Diag</button></td>
+						<td><button type="button" onclick="sendcmd('DIG', 'board -m')" style="width:60;">Mute</button></td>
+					</tr><tr>
+						<td><button type="button" onclick="sendcmd('DIG', 'board -r')" style="width:60;">Reset</button></td>
+						<td><button type="button" onclick="sendcmd('DIG', 'board -k')" style="width:60;">Kill</button></td>
+						<td><button type="button" onclick="sendcmd('DIG', 'board -p')" style="width:60;">Panic</button></td>
+					</tr>
+				</table></br>
+				
+			</td><td valign="top">
+				<b>Board Version</b></br>
+				<button type="button" onclick="sendcmd('DIG', 'board -v')" style="width:60;">Get</button>&nbsp;&nbsp;
+				Version: <div id="version_out"></div></br>
+
+				<b>Board Temperature</b></br>
+				<button type="button" onclick="sendcmd('DIG', 'board -t')" style="width:60;">Get</button>&nbsp;&nbsp;
+				Temperature (&deg;C): <div id="temp_out"></div></br>
+
+				<b>FPGA</b>
+				<table>
+					<tr>
+						<td><button type="button" id="fpga_rst" onclick="sendcmd('DIG', 'fpga -r')" style="width:60;">Reset</button>&nbsp;&nbsp;
+						FPGA Reset</td>
+					</tr><tr>				
+						<td><button type="button" id="jesd_stat" onclick="get_jesd()" style="width:60;">Get</button>&nbsp;&nbsp;
+						JESD Status</td>
+					</tr>
+				</table></br>
+				
+		</td><td valign="top">
+			<b>Console Output</b></br>
+			<textarea id="dump_out" rows="17" cols="90" ></textarea></br>
+		</td></tr>
+	</table>
+
+</body>
+<div id="footer">
+<span style="font-size:11px;"> Copyright Per Vices 2014. All rights reserved.</span>
+</div>
+</html>
