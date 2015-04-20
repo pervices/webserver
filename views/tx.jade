@@ -1,0 +1,71 @@
+extends ./layout.jade
+
+block content
+   p This page allows the configuration of the entire transmit chain from the digital backend to the RF frontend. Select the channel that is being configured.
+   p The digital signal comes from the FPGA and gets interpolated through the DSP chain on the FPGA. The interpolation can go up to a maximum of 322 MSPS and can be frequency adjusted prior to DAC conversion. The digital signal is sent to the RF frontend using the JESD serial interface, providing the DAC with both IQ channel values. The analog signal passes through an RF switch for high band and low band selection. The high band is reserved for signals greater than 500 MHz and the low band is reserved for signals under 500 MHz. The high band offers a frequency mixer for up-conversion up to a maximum of 6 GHz.
+   ul.nav.nav-tabs
+      li.active(role="presentation")
+         a(href="#") Channel A
+      li(role="presentation")
+         a(href="#") Channel B
+      li(role="presentation")
+         a(href="#") Channel C
+      li(role="presentation")
+         a(href="#") Channel D
+   br
+   b Channel Enable 
+   input(type="checkbox", name='chan_en', unchecked)
+   h3 Radio Configuration
+   img(src="/img/tx_chain.svg", style="max-width: 100%;max-height: 100%;").center
+   h3 TX DSP Chain
+   img(src="/img/tx_dsp.svg", style="max-width: 100%;max-height: 100%;").center
+   h3 TX Board Control
+   .inline-block(style="width:20%")
+      b JESD Sync
+      br
+      button.btn.btn-default.btn-xs Sync
+      br
+      br
+      b Channel IC's
+      table
+         tr
+            td DAC
+            td GPIOX
+            td LED
+         tr
+            td
+               button.btn.btn-default.btn-xs.btn-block Test
+            td
+               button.btn.btn-default.btn-xs.btn-block Test
+            td
+               button.btn.btn-default.btn-xs.btn-block Test
+         tr
+            td
+               button.btn.btn-default.btn-xs.btn-block Dump
+            td
+               button.btn.btn-default.btn-xs.btn-block Dump
+      br
+      b Channel State
+      table
+         tr
+            td
+               button.btn.btn-default.btn-xs.btn-block Init
+            td
+               button.btn.btn-default.btn-xs.btn-block Demo
+            td
+               button.btn.btn-default.btn-xs.btn-block Mute
+            td
+               button.btn.btn-default.btn-xs.btn-block Reset
+   .inline-block(style="width:15%")
+      b Board Version
+      br
+      button.btn.btn-default.btn-xs Get
+      br
+      br
+      b Board Temperature
+      br
+      button.btn.btn-default.btn-xs Get
+   .inline-block(style="width:65%")
+      b Console Output
+      br
+      input(type="text")

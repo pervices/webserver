@@ -1,0 +1,76 @@
+extends ./layout.jade
+
+block content
+   p This page allows the configuration of the entire receive chain from the RF front end to the digital backend. Select the channel that is being configured.
+   p The signal is first sampled from the antenna which is connected to the SMA connector on the Crimson. The analog signal is fed through an RF switch based on the frequency of the signal being sampled. High band is reserved for signals greater than 500 MHz, and the low band is reserved for signals less than 500 MHz. Crimson currently supports signals up to 6 GHz. Within the respective RF chains (high and low) it filters the analog signal and divides it into I and Q channels for advanced signal processing on the FPGA. The high band offers an LNA for weaker signals, and a frequency mixer for desired intermediate frequencies prior to signal processing. The low band offers a varactor circuit to fine tune the delay between the I and Q channel. An ADC driver is common between both bands (high and low) prior to the ADC. The ADC will send the data across to the DSP chain within the FPGA at a rate of 322 MSPS using the JESD serial interface. The DSP chain will downsample the samples resulting in an adjusted final sample rate. The frequency of the signal can be adjusted prior to decimation.
+   ul.nav.nav-tabs
+      li.active(role="presentation")
+         a(href="#") Channel A
+      li(role="presentation")
+         a(href="#") Channel B
+      li(role="presentation")
+         a(href="#") Channel C
+      li(role="presentation")
+         a(href="#") Channel D
+   br
+   b Channel Enable 
+   input(type="checkbox", name='chan_en', unchecked)
+   h3 Radio Configuration
+   img(src="/img/rx_chain.svg", style="max-width: 100%;max-height: 100%;").center
+   h3 RX DSP Chain
+   img(src="/img/rx_dsp.svg", style="max-width: 100%;max-height: 100%;").center
+   h3 RX Board Control
+   .inline-block(style="width:20%")
+      b JESD Sync
+      br
+      button.btn.btn-default.btn-xs Sync
+      br
+      br
+      b Channel IC's
+      table
+         tr
+            td ADC
+            td ADRF
+            td GPIOX
+            td LED
+         tr
+            td
+               button.btn.btn-default.btn-xs.btn-block Test
+            td
+               button.btn.btn-default.btn-xs.btn-block Test
+            td
+               button.btn.btn-default.btn-xs.btn-block Test
+            td
+               button.btn.btn-default.btn-xs.btn-block Test
+         tr
+            td
+               button.btn.btn-default.btn-xs.btn-block Dump
+            td
+               button.btn.btn-default.btn-xs.btn-block Dump
+            td
+               button.btn.btn-default.btn-xs.btn-block Dump
+      br
+      b Channel State
+      table
+         tr
+            td
+               button.btn.btn-default.btn-xs.btn-block Init
+            td
+               button.btn.btn-default.btn-xs.btn-block Demo
+            td
+               button.btn.btn-default.btn-xs.btn-block Mute
+            td
+               button.btn.btn-default.btn-xs.btn-block Reset
+   .inline-block(style="width:15%")
+      b Board Version
+      br
+      button.btn.btn-default.btn-xs Get
+      br
+      br
+      b Board Temperature
+      br
+      button.btn.btn-default.btn-xs Get
+   .inline-block(style="width:65%")
+      b Console Output
+      br
+      input(type="text")
