@@ -61,6 +61,7 @@ body {
 
 ul.nav li a {
 	color: #cb2026;
+	font-weight: bold;
 }
 
 .center {
@@ -73,3 +74,21 @@ ul.nav li a {
 	display: inline-block;
 	vertical-align: top;
 }
+
+hr {
+	border-color: #c0c0c0;
+	margin-top: 10px;
+	margin-bottom: 10px;
+}
+
+.top-buffer-5  {margin-top: 5px;}
+.top-buffer-10 {margin-top: 10px;}
+.top-buffer-15 {margin-top: 15px;}
+
+.right-buffer-5  {margin-right: 5px;}
+.right-buffer-10 {margin-right: 10px;}
+.right-buffer-15 {margin-right: 15px;}
+
+.right-pad-0 {padding-right: 0px;}
+.no-padding {padding: 0px;}
+.padding-5  {padding: 5px;}

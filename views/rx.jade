@@ -14,63 +14,71 @@ block content
          a(href="#") Channel D
    br
    b Channel Enable 
-   input(type="checkbox", name='chan_en', unchecked)
+   input(type="checkbox", name='en', unchecked)
    h3 Radio Configuration
+   hr
    img(src="/img/rx_chain.svg", style="max-width: 100%;max-height: 100%;").center
    h3 RX DSP Chain
+   hr
    img(src="/img/rx_dsp.svg", style="max-width: 100%;max-height: 100%;").center
+   br
    h3 RX Board Control
-   .inline-block(style="width:20%")
-      b JESD Sync
-      br
-      button.btn.btn-default.btn-xs Sync
-      br
-      br
-      b Channel IC's
-      table
-         tr
-            td ADC
-            td ADRF
-            td GPIOX
-            td LED
-         tr
-            td
-               button.btn.btn-default.btn-xs.btn-block Test
-            td
-               button.btn.btn-default.btn-xs.btn-block Test
-            td
-               button.btn.btn-default.btn-xs.btn-block Test
-            td
-               button.btn.btn-default.btn-xs.btn-block Test
-         tr
-            td
-               button.btn.btn-default.btn-xs.btn-block Dump
-            td
-               button.btn.btn-default.btn-xs.btn-block Dump
-            td
-               button.btn.btn-default.btn-xs.btn-block Dump
-      br
-      b Channel State
-      table
-         tr
-            td
-               button.btn.btn-default.btn-xs.btn-block Init
-            td
-               button.btn.btn-default.btn-xs.btn-block Demo
-            td
-               button.btn.btn-default.btn-xs.btn-block Mute
-            td
-               button.btn.btn-default.btn-xs.btn-block Reset
-   .inline-block(style="width:15%")
-      b Board Version
-      br
-      button.btn.btn-default.btn-xs Get
-      br
-      br
-      b Board Temperature
-      br
-      button.btn.btn-default.btn-xs Get
-   .inline-block(style="width:65%")
-      b Console Output
-      br
-      input(type="text")
+   hr
+   .container-fluid
+      .row
+         .col-md-3
+            b JESD Sync
+            .row
+               .col-md-4.top-buffer-5
+                  button.btn.btn-default.btn-xs.btn-block Sync
+            br
+            b Channel IC's
+            br
+            .row
+               .col-md-3.top-buffer-5.right-pad-0
+                  | ADC
+               .col-md-3.top-buffer-5.right-pad-0
+                  | ADRF
+               .col-md-3.top-buffer-5.right-pad-0
+                  | GPIOX
+               .col-md-3.top-buffer-5.right-pad-0
+                  | LED
+            .row
+               .col-md-3.top-buffer-5.right-pad-0
+                  button.btn.btn-default.btn-xs.btn-block Test
+               .col-md-3.top-buffer-5.right-pad-0
+                  button.btn.btn-default.btn-xs.btn-block Test
+               .col-md-3.top-buffer-5.right-pad-0
+                  button.btn.btn-default.btn-xs.btn-block Test
+               .col-md-3.top-buffer-5.right-pad-0
+                  button.btn.btn-default.btn-xs.btn-block Test
+            .row
+               .col-md-3.top-buffer-5.right-pad-0
+                  button.btn.btn-default.btn-xs.btn-block Dump
+               .col-md-3.top-buffer-5.right-pad-0
+                  button.btn.btn-default.btn-xs.btn-block Dump
+               .col-md-3.top-buffer-5.right-pad-0
+                  button.btn.btn-default.btn-xs.btn-block Dump
+            br
+            b Channel State
+            br
+            .row
+               .col-md-4.top-buffer-5
+                  button.btn.btn-default.btn-xs.btn-block Init
+                  button.btn.btn-default.btn-xs.btn-block Demo
+                  button.btn.btn-default.btn-xs.btn-block Mute
+                  button.btn.btn-default.btn-xs.btn-block Reset
+         .col-md-2
+            b Board Version
+            .row
+               .col-md-6.top-buffer-5
+                  button.btn.btn-default.btn-xs.btn-block Get
+            br
+            b Board Temperature
+            .row
+               .col-md-6.top-buffer-5
+                  button.btn.btn-default.btn-xs.btn-block Get
+         .col-md-7
+            b Console Output
+            br
+            textarea.form-control#chist(rows='10')

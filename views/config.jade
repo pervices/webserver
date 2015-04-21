@@ -1,0 +1,141 @@
+extends ./layout.jade
+
+block content
+   p The digital board houses the FPGA with the SoC ARM Cortex-A9 Processor and hard processing system for JESD communication between the boards. The digital board is required for communicating with the RX and TX board, and retrieves all of the clocks through the Synth board. The digital board supports 20Gbps using dual 10GbE and digital down/up conversion on the FPGA with Per Vices DSP IP core. The ADC and DAC chains that you see refer to the hardware running on the Arria V ST FPGA. It includes a series of filters before it feeds to and from the 10GbE SFP + Port.
+   h3 Network Configuration
+   hr
+   .container-fluid
+      .row.top-buffer-5
+         .col-md-1
+            | DHCP Enable
+         .col-md-1
+            input(type="checkbox", name='en', unchecked)
+      .row.top-buffer-5
+         .col-md-1
+            | Host Name
+         .col-md-1
+            input(type='text')
+      .row.top-buffer-5
+         .col-md-1
+            | IP Address
+         .col-md-1
+            input(type='text')
+      .row.top-buffer-5
+         .col-md-1
+            | Gateway
+         .col-md-1
+            input(type='text')
+      .row.top-buffer-5
+         .col-md-1
+            | Netmask
+         .col-md-1
+            input(type='text')
+      .row.top-buffer-5
+         .col-md-1
+            button.btn.btn-default.btn-xs Update
+   br
+
+   .container-fluid.no-padding
+      .row
+         .col-md-4
+            h3 SFP+ Port A
+            hr
+            .container
+               .row.top-buffer-5
+                  .col-md-2
+                     | IP Address
+                  .col-md-1
+                     input(type='text')
+               .row.top-buffer-5
+                  .col-md-2
+                     | MAC Address
+                  .col-md-1
+                     input(type='text')
+               .row.top-buffer-5
+                  .col-md-2
+                     | UDP Port
+                  .col-md-1
+                     input(type='text')
+               .row.top-buffer-5
+                  .col-md-2
+                     button.btn.btn-default.btn-xs Update
+         .col-md-4
+            h3 SFP+ Port B
+            hr
+            .container
+               .row.top-buffer-5
+                  .col-md-2
+                     | IP Address
+                  .col-md-1
+                     input(type='text')
+               .row.top-buffer-5
+                  .col-md-2
+                     | MAC Address
+                  .col-md-1
+                     input(type='text')
+               .row.top-buffer-5
+                  .col-md-2
+                     | UDP Port
+                  .col-md-1
+                     input(type='text')
+               .row.top-buffer-5
+                  .col-md-2
+                     button.btn.btn-default.btn-xs Update
+   br
+
+   h3 Digital Board Control
+   hr
+   .container-fluid
+      .row
+         .col-md-3
+            b Board Operation Mode
+            br
+            label.radio-inline
+               input(type='radio', name='op_mode', value='0')
+               | Normal
+            label.radio-inline
+               input(type='radio', name='op_mode', value='1')
+               | Loopback
+            br
+            br
+            b Board IC's
+            br
+            | LED
+            .row
+               .col-md-4.top-buffer-5
+                  button.btn.btn-default.btn-xs.btn-block Test
+            br
+            b Channel State
+            br
+            .row
+               .col-md-4.top-buffer-5
+                  button.btn.btn-default.btn-xs.btn-block Init
+                  button.btn.btn-default.btn-xs.btn-block Demo
+                  button.btn.btn-default.btn-xs.btn-block Mute
+                  button.btn.btn-default.btn-xs.btn-block Reset
+         .col-md-2
+            b Board Version
+            .row
+               .col-md-6.top-buffer-5
+                  button.btn.btn-default.btn-xs.btn-block Get
+            br
+            b Board Temperature
+            .row
+               .col-md-6.top-buffer-5
+                  button.btn.btn-default.btn-xs.btn-block Get
+            br
+            b FPGA
+            .row
+               .col-md-6.top-buffer-5
+                  button.btn.btn-default.btn-xs.btn-block Reset
+               .col-md-6.top-buffer-5
+                  | FPGA Reset
+            .row
+               .col-md-6.top-buffer-5
+                  button.btn.btn-default.btn-xs.btn-block Get
+               .col-md-6.top-buffer-5
+                  | JESD Status
+         .col-md-7
+            b Console Output
+            br
+            textarea.form-control#chist(rows='10')

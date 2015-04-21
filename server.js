@@ -22,14 +22,14 @@ app.get('/tx', function (req, res) {
   });
 });
 
-app.get('/synth', function (req, res) {
-  res.render('synth', {
+app.get('/clock', function (req, res) {
+  res.render('clock', {
      title: "Clock"
   });
 });
 
-app.get('/dig', function (req, res) {
-  res.render('dig', {
+app.get('/config', function (req, res) {
+  res.render('config', {
      title: "Configuration"
   });
 });

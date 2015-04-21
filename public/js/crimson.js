@@ -1,5 +1,5 @@
 $(document).ready(function() {
-   $("[name='chan_en']").bootstrapSwitch({
+   $("[name='en']").bootstrapSwitch({
       onText: 'ON',
       offText: 'OFF',
       size: 'mini',
