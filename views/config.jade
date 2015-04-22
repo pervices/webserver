@@ -45,17 +45,12 @@ block content
                   .col-md-2
                      | IP Address
                   .col-md-1
-                     input(type='text')
+                     input(type='text')#sfpa_ip
                .row.top-buffer-5
                   .col-md-2
                      | MAC Address
                   .col-md-1
-                     input(type='text')
-               .row.top-buffer-5
-                  .col-md-2
-                     | UDP Port
-                  .col-md-1
-                     input(type='text')
+                     input(type='text')#sfpa_mac
                .row.top-buffer-5
                   .col-md-2
                      button.btn.btn-default.btn-xs Update
@@ -67,17 +62,12 @@ block content
                   .col-md-2
                      | IP Address
                   .col-md-1
-                     input(type='text')
+                     input(type='text')#sfpb_ip
                .row.top-buffer-5
                   .col-md-2
                      | MAC Address
                   .col-md-1
-                     input(type='text')
-               .row.top-buffer-5
-                  .col-md-2
-                     | UDP Port
-                  .col-md-1
-                     input(type='text')
+                     input(type='text')#sfpb_mac
                .row.top-buffer-5
                   .col-md-2
                      button.btn.btn-default.btn-xs Update
@@ -91,10 +81,10 @@ block content
             b Board Operation Mode
             br
             label.radio-inline
-               input(type='radio', name='op_mode', value='0')
+               input(type='radio', name='op_mode', value='0')#opmode_normal
                | Normal
             label.radio-inline
-               input(type='radio', name='op_mode', value='1')
+               input(type='radio', name='op_mode', value='1')#opmode_loopback
                | Loopback
             br
             br
@@ -103,7 +93,7 @@ block content
             | LED
             .row
                .col-md-4.top-buffer-5
-                  button.btn.btn-default.btn-xs.btn-block Test
+                  button.btn.btn-default.btn-xs.btn-block#dig_led Test
             br
             b Channel State
             br

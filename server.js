@@ -1,5 +1,5 @@
 var express = require('express');
-var app = express();
+var app     = express();
 
 app.set('view engine', 'jade');
 app.use(express.static(__dirname + '/public'));
@@ -40,11 +40,11 @@ app.get('/debug', function (req, res) {
   });
 });
 
-var server = app.listen(3000, function () {
+var io = require('socket.io').listen(app.listen(3000, function () {
+    var host = this.address().address;
+    var port = this.address().port;
+    console.log('Crimson server listening at http://%s:%s', host, port);
+  })
+);
 
-  var host = server.address().address;
-  var port = server.address().port;
-
-  console.log('Example app listening at http://%s:%s', host, port);
-
-});
+var props = require('./prop.js')(io);
