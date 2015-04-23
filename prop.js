@@ -1,5 +1,7 @@
 var fs = require('fs');
 var state_dir = '/home/root/state/';
+var sys = require('sys');
+var exec = require('child_process').exec;
 
 module.exports = function(io) {
    io.sockets.on('connection', function (socket) {
@@ -24,5 +26,17 @@ module.exports = function(io) {
          });
          console.log('Wrote to ' + data.file + ': ' + data.message);
       });
+
+
+      // Handle raw system cmds
+      socket.on('raw_cmd', function (data) {
+         exec(data.message, function(err, stdout, stderr) {
+            if (err) throw err;
+            io.sockets.emit('raw_reply', {cmd: data.message, message: stdout});
+            console.log('Raw cmd: ' + data.message);
+         });
+      });
+
+
    });
 }

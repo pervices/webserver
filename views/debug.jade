@@ -83,16 +83,16 @@ block content
       .row
          .col-md-1
                | Board
-               select.form-control.input-sm#board-sel
-                  option TX
-                  option RX
-                  option Synth
-                  option Digital
+               select.form-control.input-sm#program_board
+                  option(value="tx") TX
+                  option(value="rx") RX
+                  option(value="synth") Synth
+                  option(value="dig") Digital
          .col-md-3
             | Hexfile
-            input(type='file')#hexfile
+            input(type='file')#program_hexfile
          .col-md-2
-            button.btn.btn-default.btn-md Program
+            button.btn.btn-default.btn-md.disabled#program_start Program
    br
    h3 Raw Command Line Interface
    hr
@@ -100,15 +100,15 @@ block content
       .row
          .col-md-1 Command: 
          .col-md-2
-            input(type='text', style="width:100%;")
+            input(type='text', style="width:100%;")#uart_cmd
          .col-md-1
-            button.btn.btn-default.btn-sm Send Command
+            button.btn.btn-default.btn-sm#send_uart_cmd Send Command
       .row
          .col-md-7
             | Console Output
             br
-            textarea.form-control#cout(rows='15')
+            textarea.form-control#uart_out(rows='15')
          .col-md-5
             | Command History
             br
-            textarea.form-control#chist(rows='15')
+            textarea.form-control#uart_hist(rows='15')

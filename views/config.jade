@@ -14,22 +14,12 @@ block content
          .col-md-1
             | Host Name
          .col-md-1
-            input(type='text')#host_name
+            input(type='text')#hostname
       .row.top-buffer-5
          .col-md-1
             | IP Address
          .col-md-1
             input(type='text')#mgmt_ip
-      .row.top-buffer-5
-         .col-md-1
-            | Gateway
-         .col-md-1
-            input(type='text')#mgmt_gateway
-      .row.top-buffer-5
-         .col-md-1
-            | Netmask
-         .col-md-1
-            input(type='text')#mgmt_netmask
       .row.top-buffer-5
          .col-md-1
             button.btn.btn-default.btn-xs Update
@@ -117,7 +107,7 @@ block content
             b FPGA
             .row
                .col-md-6.top-buffer-5
-                  button.btn.btn-default.btn-xs.btn-block Reset
+                  button.btn.btn-default.btn-xs.btn-block#reset_fpga Reset
                .col-md-6.top-buffer-5
                   | FPGA Reset
             .row
