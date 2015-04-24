@@ -19,13 +19,80 @@ block content
    hr
    .container-fluid(style="text-align:center")
       .row
+         .col-md-1
+            p
+               b RF Band
+            input(type="checkbox", name='hi-low', unchecked)#rf_band
+         .col-md-1
+            p
+               b LNA Bypass
+            input(type="checkbox", name='en', unchecked)#lna_bypass
          .col-md-2
-            | RF Band Selection
-            br
-            input(type="checkbox", name='band', unchecked)#rfband
+            p
+               b Synthesizer Frequency
+            input.input-xs(type="text").width-100#synth_freq
+            |  kHz &nbsp;&nbsp;
+            button.btn.btn-default.btn-xs#synth_freq_set Set
+         .col-md-2
+            p
+               b Varactor Group Delay
+            input.input-xs(type="text").width-100#varac
+            |  clks &nbsp;&nbsp;
+            button.btn.btn-default.btn-xs#varac_set Set
+         .col-md-5
+            p
+               b RX Gain - ADRF6518
+            input(type='range', min='0', max='75', step='1')#gain_range
+            p
+               #gain_display.inline-block
    img(src="/img/rx_chain.svg", style="max-width: 100%;max-height: 100%;").center
    h3 RX DSP Chain
    hr
+   .container-fluid(style="text-align:center")
+      .row
+         .col-md-1
+            p
+               b Reset DSP
+            button.btn.btn-default.btn-xs#dsp_reset Reset
+         .col-md-2
+            p
+               b DSP Signed Data
+            input(type="checkbox", name='en', unchecked)#signed
+         .col-md-2
+            p
+               b Phase Increment
+            input.input-xs(type="text").width-100#dsp_nco
+            |  Hz &nbsp;&nbsp;
+            button.btn.btn-default.btn-xs#dsp_nco_set Set
+         .col-md-3
+            p
+               b Sample Rate
+            input(type='range', min='2', max='256', step='1')#sr_range
+            p.no-margin
+               | Effective sample rate:
+               #sr_display.inline-block
+         .col-md-4
+            p
+               b Destination Link
+            .row.top-buffer-5
+               .col-md-4.text-right
+                  | IPV4 IP Address
+               .col-md-4
+                  input.input-xs(type="text")#ip
+               .col-md-4.text-left
+                  button.btn.btn-default.btn-xs#link_set Set
+            .row.top-buffer-5
+               .col-md-4.text-right
+                  | MAC Address
+               .col-md-4
+                  input.input-xs(type="text")#mac
+            .row.top-buffer-5
+               .col-md-4.text-right
+                  | UDP Port
+               .col-md-4
+                  input.input-xs(type="text")#port
+   br
+   br
    img(src="/img/rx_dsp.svg", style="max-width: 100%;max-height: 100%;").center
    br
    h3 RX Board Control
@@ -57,7 +124,7 @@ block content
                .col-md-3.top-buffer-5.right-pad-0
                   button.btn.btn-default.btn-xs.btn-block Test
                .col-md-3.top-buffer-5.right-pad-0
-                  button.btn.btn-default.btn-xs.btn-block#rx_led Test
+                  button.btn.btn-default.btn-xs.btn-block#led Test
             .row
                .col-md-3.top-buffer-5.right-pad-0
                   button.btn.btn-default.btn-xs.btn-block Dump

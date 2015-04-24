@@ -17,9 +17,88 @@ block content
    input(type="checkbox", name='en', unchecked)#chan_en
    h3 Radio Configuration
    hr
+   .container-fluid(style="text-align:center;")
+      .row
+         .col-md-1.right-pad-0
+            p
+               b RF Band
+            input(type="checkbox", name='hi-low', unchecked)#rf_band
+         .col-md-2.right-pad-0
+            p
+               b Synthesizer Frequency
+            input.input-xs.width-100(type="text")#synth_freq
+            |  kHz &nbsp;&nbsp;
+            button.btn.btn-default.btn-xs#synth_freq_set Set
+         .col-md-2.right-pad-0
+            p
+               b NCO Frequency
+            input.input-xs.width-100(type="text")#dac_nco
+            |  MHz &nbsp;&nbsp;
+            button.btn.btn-default.btn-xs#dac_nco_set Set
+         .col-md-3.right-pad-0
+            p
+               b IQ Voltage Bias
+            .row
+               .col-md-3.align-left#ibias_display I:
+               .col-md-9
+                  input(type='range', min='0', max='28', step='1')#ibias_range
+            .row
+               .col-md-3.align-left#qbias_display Q:
+               .col-md-9
+                  input(type='range', min='0', max='28', step='1')#qbias_range
+            p
+               .inline-block
+         .col-md-4
+            p
+               b TX Gain - RFSA2013
+            input(type='range', min='0', max='28', step='1')#gain_range
+            p
+               #gain_display.inline-block
+                  
    img(src="/img/tx_chain.svg", style="max-width: 100%;max-height: 100%;").center
    h3 TX DSP Chain
    hr
+   .container-fluid(style="text-align:center")
+      .row
+         .col-md-1
+            p
+               b Reset DSP
+            button.btn.btn-default.btn-xs#dsp_reset Reset
+         .col-md-2
+            p
+               b Phase Increment
+            input.input-xs(type="text").width-100#dsp_nco
+            |  Hz &nbsp;&nbsp;
+            button.btn.btn-default.btn-xs#dsp_nco_set Set
+         .col-md-5
+            p
+               b Sample Rate
+            input(type='range', min='2', max='256', step='1')#sr_range
+            p.no-margin
+               | Effective sample rate:
+               #sr_display.inline-block
+         .col-md-4
+            p
+               b Origin Link
+            .row.top-buffer-5
+               .col-md-4.text-right
+                  | IPV4 IP Address
+               .col-md-4
+                  input.input-xs(type="text", placeholder='configuration page', disabled)
+               .col-md-4.text-left
+                  button.btn.btn-default.btn-xs#link_set Set
+            .row.top-buffer-5
+               .col-md-4.text-right
+                  | MAC Address
+               .col-md-4
+                  input.input-xs(type="text", placeholder='configuration page', disabled)
+            .row.top-buffer-5
+               .col-md-4.text-right
+                  | UDP Port
+               .col-md-4
+                  input.input-xs(type="text")#port
+   br
+   br
    img(src="/img/tx_dsp.svg", style="max-width: 100%;max-height: 100%;").center
    br
    h3 TX Board Control
@@ -47,7 +126,7 @@ block content
                .col-md-3.top-buffer-5.right-pad-0
                   button.btn.btn-default.btn-xs.btn-block Test
                .col-md-3.top-buffer-5.right-pad-0
-                  button.btn.btn-default.btn-xs.btn-block#tx_led Test
+                  button.btn.btn-default.btn-xs.btn-block#led Test
             .row
                .col-md-3.top-buffer-5.right-pad-0
                   button.btn.btn-default.btn-xs.btn-block Dump

@@ -43,6 +43,11 @@ block content
                      input(type='text')#sfpa_mac
                .row.top-buffer-5
                   .col-md-2
+                     | Payload Length
+                  .col-md-1
+                     input(type='text')#sfpa_paylen
+               .row.top-buffer-5
+                  .col-md-2
                      button.btn.btn-default.btn-xs Update
          .col-md-4
             h3 SFP+ Port B
@@ -58,6 +63,11 @@ block content
                      | MAC Address
                   .col-md-1
                      input(type='text')#sfpb_mac
+               .row.top-buffer-5
+                  .col-md-2
+                     | Payload Length
+                  .col-md-1
+                     input(type='text')#sfpb_paylen
                .row.top-buffer-5
                   .col-md-2
                      button.btn.btn-default.btn-xs Update
@@ -83,7 +93,7 @@ block content
             | LED
             .row
                .col-md-4.top-buffer-5
-                  button.btn.btn-default.btn-xs.btn-block#dig_led Test
+                  button.btn.btn-default.btn-xs.btn-block#led Test
             br
             b Channel State
             br
