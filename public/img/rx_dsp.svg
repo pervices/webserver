@@ -2173,6 +2173,34 @@
          transform="matrix(-0.4,0,0,-0.4,-4,0)"
          inkscape:connector-curvature="0" />
     </marker>
+    <marker
+       inkscape:stockid="Arrow1Mend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="Arrow1Mend-81"
+       style="overflow:visible">
+      <path
+         id="path4191-71"
+         d="M 0,0 5,-5 -12.5,0 5,5 0,0 Z"
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt"
+         transform="matrix(-0.4,0,0,-0.4,-4,0)"
+         inkscape:connector-curvature="0" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow1Mend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="marker3793"
+       style="overflow:visible">
+      <path
+         id="path3795"
+         d="M 0,0 5,-5 -12.5,0 5,5 0,0 Z"
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt"
+         transform="matrix(-0.4,0,0,-0.4,-4,0)"
+         inkscape:connector-curvature="0" />
+    </marker>
   </defs>
   <sodipodi:namedview
      id="base"
@@ -2182,8 +2210,8 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="0.98994949"
-     inkscape:cx="720.70336"
-     inkscape:cy="101.76829"
+     inkscape:cx="459.11112"
+     inkscape:cy="69.389401"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="true"
@@ -2237,7 +2265,7 @@
          id="tspan3070"
          x="185.57143"
          y="71.505035"
-         style="font-size:8px">iADCDI</tspan></text>
+         style="font-size:8px">ADC I DATA</tspan></text>
     <text
        xml:space="preserve"
        style="font-size:12px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
@@ -2252,28 +2280,29 @@
          style="font-size:18px;font-weight:bold" /></text>
     <text
        xml:space="preserve"
-       style="font-style:normal;font-weight:normal;font-size:12px;line-height:125%;font-family:Sans;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none"
-       x="313.29785"
-       y="88.362183"
+       style="font-style:normal;font-weight:normal;font-size:12.00004578px;line-height:125%;font-family:Sans;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none"
+       x="313.29953"
+       y="88.362617"
        id="text3008-8"
        sodipodi:linespacing="125%"
        inkscape:export-filename="/home/yyao/proj1/langford/docs/internal/Rx.png"
        inkscape:export-xdpi="600"
-       inkscape:export-ydpi="600"><tspan
+       inkscape:export-ydpi="600"
+       transform="scale(0.99999625,1.0000038)"><tspan
          sodipodi:role="line"
-         x="313.29785"
-         y="88.362183"
-         style="font-weight:bold;font-size:12px;text-align:center;text-anchor:middle"
+         x="313.29953"
+         y="88.362617"
+         style="font-weight:bold;font-size:12.00004578px;text-align:center;text-anchor:middle"
          id="tspan3744">CORDIC</tspan><tspan
          sodipodi:role="line"
-         x="313.29785"
-         y="103.36218"
-         style="font-weight:bold;font-size:12px;text-align:center;text-anchor:middle"
+         x="313.29953"
+         y="103.34694"
+         style="font-weight:bold;font-size:12.00004578px;text-align:center;text-anchor:middle"
          id="tspan3739">32 STAGE</tspan><tspan
          sodipodi:role="line"
-         x="313.29785"
-         y="118.36218"
-         style="font-weight:bold;font-size:12px;text-align:center;text-anchor:middle"
+         x="313.29953"
+         y="118.33127"
+         style="font-weight:bold;font-size:12.00004578px;text-align:center;text-anchor:middle"
          id="tspan3741">MIXER</tspan></text>
     <rect
        style="fill:none;stroke:#000000;stroke-width:0.87599999;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
@@ -2299,7 +2328,7 @@
          id="tspan3070-9"
          x="182.71428"
          y="123.6479"
-         style="font-size:8px">iADCDQ</tspan></text>
+         style="font-size:8px">ADC Q DATA</tspan></text>
     <path
        style="fill:none;stroke:#000000;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#Arrow1Mend)"
        d="m 135,74.362183 134,0"
@@ -2316,24 +2345,9 @@
        inkscape:export-filename="/home/yyao/proj1/langford/docs/internal/Rx.png"
        inkscape:export-xdpi="600"
        inkscape:export-ydpi="600" />
-    <text
-       xml:space="preserve"
-       style="font-style:normal;font-weight:normal;font-size:12px;line-height:125%;font-family:Sans;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none"
-       x="425"
-       y="124.36218"
-       id="text3068-6-5-3"
-       sodipodi:linespacing="125%"
-       inkscape:export-filename="/home/yyao/proj1/langford/docs/internal/Rx.png"
-       inkscape:export-xdpi="600"
-       inkscape:export-ydpi="600"><tspan
-         sodipodi:role="line"
-         x="425"
-         y="124.36218"
-         style="font-size:8px"
-         id="tspan3221-3-2">wQ</tspan></text>
     <path
-       style="fill:none;stroke:#000000;stroke-width:1.85164022;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-start:none;marker-end:url(#Arrow1Mend)"
-       d="m 360,74.362183 150,0"
+       style="fill:none;stroke:#000000;stroke-width:1.41896009;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-start:none;marker-end:url(#Arrow1Mend)"
+       d="m 360.55049,73.733477 86.11947,0"
        id="path5023"
        inkscape:connector-curvature="0"
        inkscape:export-filename="/home/yyao/proj1/langford/docs/internal/Rx.png"
@@ -2341,24 +2355,25 @@
        inkscape:export-ydpi="600" />
     <text
        xml:space="preserve"
-       style="font-style:normal;font-weight:normal;font-size:12px;line-height:125%;font-family:Sans;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none"
-       x="915.20898"
-       y="95.362183"
+       style="font-style:normal;font-weight:normal;font-size:12.00004578px;line-height:125%;font-family:Sans;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none"
+       x="919.21295"
+       y="95.36264"
        id="text3012-8-8-5-8"
        sodipodi:linespacing="125%"
        inkscape:export-filename="/home/yyao/proj1/langford/docs/internal/Rx.png"
        inkscape:export-xdpi="600"
-       inkscape:export-ydpi="600"><tspan
+       inkscape:export-ydpi="600"
+       transform="scale(0.99999621,1.0000038)"><tspan
          sodipodi:role="line"
-         x="915.20898"
-         y="95.362183"
+         x="919.21295"
+         y="95.36264"
          id="tspan4080-0"
-         style="font-size:14px;text-align:center;text-anchor:middle">Data</tspan><tspan
+         style="font-size:14.00005245px;text-align:center;text-anchor:middle">Data</tspan><tspan
          sodipodi:role="line"
-         x="915.20898"
-         y="112.86218"
+         x="919.21295"
+         y="112.86271"
          id="tspan6740"
-         style="font-size:14px;text-align:center;text-anchor:middle">packing</tspan></text>
+         style="font-size:14.00005245px;text-align:center;text-anchor:middle">packing</tspan></text>
     <flowRoot
        xml:space="preserve"
        id="flowRoot3736"
@@ -2371,55 +2386,20 @@
            x="123.21429"
            y="5.1071429" /></flowRegion><flowPara
          id="flowPara3742" /></flowRoot>    <path
-       style="fill:none;stroke:#000000;stroke-width:1.85164022;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-start:none;marker-end:url(#Arrow1Mend)"
-       d="m 360,129.36218 150,0"
+       style="fill:none;stroke:#000000;stroke-width:1.41896009;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-start:none;marker-end:url(#Arrow1Mend)"
+       d="m 360.55049,129.99089 86.11947,0"
        id="path5023-16"
        inkscape:connector-curvature="0"
        inkscape:export-filename="/home/yyao/proj1/langford/docs/internal/Rx.png"
        inkscape:export-xdpi="600"
        inkscape:export-ydpi="600" />
-    <text
-       xml:space="preserve"
-       style="font-style:normal;font-weight:normal;font-size:12px;line-height:125%;font-family:Sans;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none"
-       x="425"
-       y="69.362183"
-       id="text3068-6-4-4-0"
-       sodipodi:linespacing="125%"
-       inkscape:export-filename="/home/yyao/proj1/langford/docs/internal/Rx.png"
-       inkscape:export-xdpi="600"
-       inkscape:export-ydpi="600"><tspan
-         sodipodi:role="line"
-         x="425"
-         y="69.362183"
-         style="font-size:8px"
-         id="tspan3221-1-7-6">wI</tspan><tspan
-         sodipodi:role="line"
-         x="425"
-         y="79.362183"
-         style="font-size:8px"
-         id="tspan6743" /></text>
-    <text
-       xml:space="preserve"
-       style="font-size:12px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
-       x="527"
-       y="32.36219"
-       id="text3008-9-3-3"
-       sodipodi:linespacing="125%"
-       inkscape:export-filename="/home/yyao/proj1/langford/docs/internal/Rx.png"
-       inkscape:export-xdpi="600"
-       inkscape:export-ydpi="600"><tspan
-         sodipodi:role="line"
-         id="tspan3010-55-65-3"
-         x="527"
-         y="32.36219"
-         style="font-size:14px;font-weight:bold">Decim2CIC</tspan></text>
     <rect
-       style="fill:none;stroke:#000000;stroke-width:2.68328118;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+       style="fill:none;stroke:#000000;stroke-width:1.37098253;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        id="rect5850-0-2"
-       width="269.99997"
-       height="180"
-       x="520"
-       y="12.362182"
+       width="132.92137"
+       height="95.449333"
+       x="451.34387"
+       y="54.132439"
        inkscape:export-filename="/home/yyao/proj1/langford/docs/internal/Rx.png"
        inkscape:export-xdpi="600"
        inkscape:export-ydpi="600" />
@@ -2428,7 +2408,7 @@
        id="rect5850-0-2-3-5"
        width="76.136383"
        height="77.993584"
-       x="879.93176"
+       x="883.93176"
        y="63.579674"
        inkscape:export-filename="/home/yyao/proj1/langford/docs/internal/Rx.png"
        inkscape:export-xdpi="600"
@@ -2436,12 +2416,12 @@
     <circle
        id="path8043"
        style="fill:none;stroke:#000000;stroke-width:0.56;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-       cx="1038"
+       cx="1078"
        cy="79.362183"
        r="2" />
     <path
        style="fill:none;stroke:#000000;stroke-width:1.5;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-start:none;marker-end:url(#Arrow1Mend)"
-       d="m 1040,79.362183 20,0"
+       d="m 1080,79.362183 20,0"
        id="path5023-4-4-1-8-9"
        inkscape:connector-curvature="0"
        inkscape:export-filename="/home/yyao/proj1/langford/docs/internal/Rx.png"
@@ -2450,40 +2430,25 @@
     <circle
        id="path8043-3"
        style="fill:none;stroke:#000000;stroke-width:0.56;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-       cx="1038"
+       cx="1078"
        cy="119.36218"
        r="2" />
     <path
        style="fill:none;stroke:#000000;stroke-width:1.5;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-start:none;marker-end:url(#Arrow1Mend)"
-       d="m 1040,119.36218 20,0"
+       d="m 1080,119.36218 20,0"
        id="path5023-4-4-1-8-9-8"
        inkscape:connector-curvature="0"
        inkscape:export-filename="/home/yyao/proj1/langford/docs/internal/Rx.png"
        inkscape:export-xdpi="600"
        inkscape:export-ydpi="600" />
     <path
-       style="fill:none;stroke:#000000;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-       d="m 956,99.362183 39,0"
+       style="fill:none;stroke:#000000;stroke-width:2.75494885;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="m 961,99.362183 74,0"
        id="path8136"
        inkscape:connector-curvature="0" />
-    <text
-       xml:space="preserve"
-       style="font-style:normal;font-weight:normal;font-size:12px;line-height:125%;font-family:Sans;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none"
-       x="818"
-       y="124.36218"
-       id="text3068-6-5-3-0"
-       sodipodi:linespacing="125%"
-       inkscape:export-filename="/home/yyao/proj1/langford/docs/internal/Rx.png"
-       inkscape:export-xdpi="600"
-       inkscape:export-ydpi="600"><tspan
-         sodipodi:role="line"
-         x="818"
-         y="124.36218"
-         style="font-size:8px"
-         id="tspan3221-3-2-7">wQ_final</tspan></text>
     <path
        style="fill:none;stroke:#000000;stroke-width:1.35224688;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-start:none;marker-end:url(#Arrow1Mend)"
-       d="m 795,74.362183 80,0"
+       d="m 801,74.362183 80,0"
        id="path5023-4"
        inkscape:connector-curvature="0"
        inkscape:export-filename="/home/yyao/proj1/langford/docs/internal/Rx.png"
@@ -2491,7 +2456,7 @@
        inkscape:export-ydpi="600" />
     <path
        style="fill:none;stroke:#000000;stroke-width:1.35224688;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-start:none;marker-end:url(#Arrow1Mend)"
-       d="m 795,129.36218 80,0"
+       d="m 801,129.36218 80,0"
        id="path5023-16-2"
        inkscape:connector-curvature="0"
        inkscape:export-filename="/home/yyao/proj1/langford/docs/internal/Rx.png"
@@ -2499,23 +2464,93 @@
        inkscape:export-ydpi="600" />
     <text
        xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:12.00004578px;line-height:125%;font-family:Sans;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none"
+       x="514.53406"
+       y="97.844849"
+       id="text3008-8-1"
+       sodipodi:linespacing="125%"
+       inkscape:export-filename="/home/yyao/proj1/langford/docs/internal/Rx.png"
+       inkscape:export-xdpi="600"
+       inkscape:export-ydpi="600"
+       transform="scale(0.99999621,1.0000038)"><tspan
+         sodipodi:role="line"
+         x="516.62"
+         y="97.844849"
+         style="font-weight:bold;font-size:12.00004578px;text-align:center;text-anchor:middle"
+         id="tspan3741-8">3<tspan
+   style="font-size:64.99999762%;baseline-shift:super"
+   id="tspan3747">o</tspan>CIC DECIMATION </tspan><tspan
+         sodipodi:role="line"
+         x="514.53406"
+         y="112.84491"
+         style="font-weight:bold;font-size:12.00004578px;text-align:center;text-anchor:middle"
+         id="tspan3745">FILTER</tspan></text>
+    <rect
+       style="fill:none;stroke:#000000;stroke-width:1.31850231;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="rect5850-0-2-9"
+       width="122.87231"
+       height="95.501808"
+       x="675.33789"
+       y="53.278793"
+       inkscape:export-filename="/home/yyao/proj1/langford/docs/internal/Rx.png"
+       inkscape:export-xdpi="600"
+       inkscape:export-ydpi="600" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:12.00004578px;line-height:125%;font-family:Sans;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none"
+       x="735.48389"
+       y="89.017487"
+       id="text3008-8-1-1"
+       sodipodi:linespacing="125%"
+       inkscape:export-filename="/home/yyao/proj1/langford/docs/internal/Rx.png"
+       inkscape:export-xdpi="600"
+       inkscape:export-ydpi="600"
+       transform="scale(0.99999621,1.0000038)"><tspan
+         sodipodi:role="line"
+         x="735.48389"
+         y="89.017487"
+         style="font-weight:bold;font-size:12.00004578px;text-align:center;text-anchor:middle"
+         id="tspan3745-0">16 TAP FIR</tspan><tspan
+         sodipodi:role="line"
+         x="735.48389"
+         y="104.01755"
+         style="font-weight:bold;font-size:12.00004578px;text-align:center;text-anchor:middle"
+         id="tspan3779">COMPENSATION</tspan><tspan
+         sodipodi:role="line"
+         x="735.48389"
+         y="119.0176"
+         style="font-weight:bold;font-size:12.00004578px;text-align:center;text-anchor:middle"
+         id="tspan3781">FILTER</tspan></text>
+    <path
+       style="fill:none;stroke:#000000;stroke-width:1.41896009;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-start:none;marker-end:url(#Arrow1Mend-81)"
+       d="m 586.26478,74.44776 86.11947,0"
+       id="path5023-3"
+       inkscape:connector-curvature="0"
+       inkscape:export-filename="/home/yyao/proj1/langford/docs/internal/Rx.png"
+       inkscape:export-xdpi="600"
+       inkscape:export-ydpi="600" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:1.41896009;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-start:none;marker-end:url(#Arrow1Mend-81)"
+       d="m 586.26478,130.70517 86.11947,0"
+       id="path5023-16-3"
+       inkscape:connector-curvature="0"
+       inkscape:export-filename="/home/yyao/proj1/langford/docs/internal/Rx.png"
+       inkscape:export-xdpi="600"
+       inkscape:export-ydpi="600" />
+    <text
+       xml:space="preserve"
        style="font-style:normal;font-weight:normal;font-size:12px;line-height:125%;font-family:Sans;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none"
-       x="818"
-       y="69.362183"
-       id="text3068-6-4-4-0-1"
+       x="968"
+       y="90.790749"
+       id="text3068-8"
        sodipodi:linespacing="125%"
        inkscape:export-filename="/home/yyao/proj1/langford/docs/internal/Rx.png"
        inkscape:export-xdpi="600"
        inkscape:export-ydpi="600"><tspan
          sodipodi:role="line"
-         x="818"
-         y="69.362183"
-         style="font-size:8px"
-         id="tspan3221-1-7-6-8">wI_final</tspan><tspan
-         sodipodi:role="line"
-         x="818"
-         y="79.362183"
-         style="font-size:8px"
-         id="tspan6743-4" /></text>
+         id="tspan3070-5"
+         x="968"
+         y="90.790749"
+         style="font-size:8px">64bit DMA DATA</tspan></text>
   </g>
 </svg>

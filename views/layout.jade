@@ -21,6 +21,15 @@ html
             a(href='/debug') Debug
    hr
    body
+      .modal.fade#loadingModal
+         .modal-dialog
+            .modal-content
+               .modal-header
+                  button.close(type='button', data-dismiss='modal') &times;
+                  h4.modal-title Heating up RF Chain 
+                     span.glyphicon.glyphicon-fire
+               .modal-body
+                  p Please standby as the RF chain is heated up...
       block content
    #footer
       p Copyright Per Vices 2015. All rights reserved.

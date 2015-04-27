@@ -48,6 +48,16 @@ $("#chan_a,#chan_b,#chan_c,#chan_d").click(function() {
 // En/disable channel
 $("#chan_en").on('switchChange.bootstrapSwitch', function(event, state) {
    socket.emit('prop_wr', { file: cur_root + '/pwr', message: state ? '1' : '0' });
+
+   // if turn on, overwrite with the current settings
+   if (state) {
+      $("#loadingModal").modal('show');
+      setTimeout(function() {         
+         if (cur_root.indexOf('rx') > -1) write_rx();
+         else                             write_tx();
+         $("#loadingModal").modal('hide');
+      }, 3500);
+   }
 });
 
 // En/disable DHCP
@@ -161,6 +171,25 @@ $("#link_set").click( function() {
    }
 });
 
+// sfp settings
+$("#sfpa_set").click( function() {
+   socket.emit('prop_wr', { file: 'fpga/link/sfpa/ip_addr', message: $("#sfpa_ip").val() });
+   socket.emit('prop_wr', { file: 'fpga/link/sfpa/mac_addr', message: $("#sfpa_mac").val() });
+   socket.emit('prop_wr', { file: 'fpga/link/sfpa/pay_len', message: $("#sfpa_paylen").val() });
+});
+
+$("#sfpb_set").click( function() {
+   socket.emit('prop_wr', { file: 'fpga/link/sfpb/ip_addr', message: $("#sfpb_ip").val() });
+   socket.emit('prop_wr', { file: 'fpga/link/sfpb/mac_addr', message: $("#sfpb_mac").val() });
+   socket.emit('prop_wr', { file: 'fpga/link/sfpb/pay_len', message: $("#sfpb_paylen").val() });
+});
+
+$("#mgmt_set").click( function() {
+   socket.emit('prop_wr', { file: 'fpga/link/net/hostname', message: $("#hostname").val() });
+   if (!$('#dhcp_en').bootstrapSwitch('state'))
+      socket.emit('prop_wr', { file: 'fpga/link/net/ip_addr', message: $("#mgmt_ip").val() });
+});
+
 // dac nco
 $("#dac_nco_set").click( function() {
    socket.emit('prop_wr', { file: cur_root + '/rf/dac/nco', message: $("#dac_nco").val() });
@@ -238,6 +267,34 @@ socket.on('prop_ret', function (data) {
    }
 });
 
+// write the current settings to SDR
+function write_rx() {
+   socket.emit('prop_wr', { file: cur_root + '/rf/freq/val'   , message: $('#synth_freq').val()});
+   socket.emit('prop_wr', { file: cur_root + '/rf/freq/lna'   , message: $('#lna_bypass').bootstrapSwitch('state') ? '1' : '0'});
+   socket.emit('prop_wr', { file: cur_root + '/rf/freq/varac' , message: $('#varac').val()});
+   socket.emit('prop_wr', { file: cur_root + '/rf/freq/band'  , message: $('#rf_band').bootstrapSwitch('state') ? '1' : '0'});
+   socket.emit('prop_wr', { file: cur_root + '/rf/gain/val'   , message: $('#gain_range').val()});
+   socket.emit('prop_wr', { file: cur_root + '/dsp/signed'    , message: $('#signed').bootstrapSwitch('state') ? '1' : '0'});
+   socket.emit('prop_wr', { file: cur_root + '/dsp/nco_adj'   , message: $('#dsp_nco').val()});
+   socket.emit('prop_wr', { file: cur_root + '/dsp/rate'      , message: (322.265625 / $('#sr_range').val() * 1000000)});
+   socket.emit('prop_wr', { file: cur_root + '/link/port'     , message: $('#port').val()});
+   socket.emit('prop_wr', { file: cur_root + '/link/ip_dest'  , message: $('#ip').val()});
+   socket.emit('prop_wr', { file: cur_root + '/link/mac_dest' , message: $('#mac').val()});
+}
+
+function write_tx() {
+   socket.emit('prop_wr', { file: cur_root + '/rf/freq/val'   , message: $('#synth_freq').val()});
+   socket.emit('prop_wr', { file: cur_root + '/rf/freq/lna'   , message: $('#lna_bypass').bootstrapSwitch('state') ? '1' : '0'});
+   socket.emit('prop_wr', { file: cur_root + '/rf/freq/i_bias', message: $('#ibias_range').val()});
+   socket.emit('prop_wr', { file: cur_root + '/rf/freq/q_bias', message: $('#qbias_range').val()});
+   socket.emit('prop_wr', { file: cur_root + '/rf/freq/band'  , message: $('#rf_band').bootstrapSwitch('state') ? '1' : '0'});
+   socket.emit('prop_wr', { file: cur_root + '/rf/gain/val'   , message: $('#gain_range').val()});
+   socket.emit('prop_wr', { file: cur_root + '/rf/dac/nco'    , message: $('#dac_nco').val()});
+   socket.emit('prop_wr', { file: cur_root + '/dsp/nco_adj'   , message: $('#dsp_nco').val()});
+   socket.emit('prop_wr', { file: cur_root + '/dsp/rate'      , message: (322.265625 / $('#sr_range').val() * 1000000)});
+   socket.emit('prop_wr', { file: cur_root + '/link/port'     , message: $('#port').val()});
+}
+
 // Loading config data
 function load_config () {
    socket.emit('prop_rd', { file: 'fpga/link/sfpa/ip_addr' });
@@ -250,14 +307,6 @@ function load_config () {
    socket.emit('prop_rd', { file: 'fpga/link/net/dhcp_en'});
    socket.emit('prop_rd', { file: 'fpga/link/net/hostname'});
    socket.emit('prop_rd', { file: 'fpga/link/net/ip_addr'});
-}
-
-function load_clock () {
-
-}
-
-function load_debug () {
-
 }
 
 function load_rx () {
@@ -289,7 +338,6 @@ function load_tx () {
    socket.emit('prop_rd', { file: cur_root + '/link/port'     });
 }
 
-
 // determine which page is currently loaded
 window.onload = function() {
    if (pathname.indexOf('config') > -1) {
@@ -299,11 +347,11 @@ window.onload = function() {
    } else if (pathname.indexOf('clock') > -1) {
       cur_board = 'time';
       cur_root = cur_board;
-      load_clock();
+      //load_clock();
    } else if (pathname.indexOf('debug') > -1) {
       cur_board = 'fpga';
       cur_root = cur_board;
-      load_debug();
+      //load_debug();
    } else if (pathname.indexOf('rx') > -1) {
       cur_board = 'rx';
       cur_root = cur_board + '_' + cur_chan;
