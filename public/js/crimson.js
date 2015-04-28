@@ -48,15 +48,24 @@ $("#chan_a,#chan_b,#chan_c,#chan_d").click(function() {
 // En/disable channel
 $("#chan_en").on('switchChange.bootstrapSwitch', function(event, state) {
    socket.emit('prop_wr', { file: cur_root + '/pwr', message: state ? '1' : '0' });
+   var is_rx = cur_root.indexOf('rx') > -1;
 
    // if turn on, overwrite with the current settings
    if (state) {
       $("#loadingModal").modal('show');
       setTimeout(function() {         
-         if (cur_root.indexOf('rx') > -1) write_rx();
-         else                             write_tx();
+         if (is_rx) {
+            write_rx();
+            activateControls_rx(true);
+         } else {
+            write_tx();
+            activateControls_tx(true);
+         }
          $("#loadingModal").modal('hide');
-      }, 3500);
+      }, 4000);
+   } else {
+      if (is_rx)  activateControls_rx(false);
+      else        activateControls_tx(false);
    }
 });
 
@@ -84,9 +93,77 @@ $("#send_uart_cmd").click(function() {
    }
 });
 
+// pressing enter on uart command redirects a click
 $("#uart_cmd").keypress(function(event) {
    if (event.keyCode == 13)
       $("#send_uart_cmd").click();
+});
+
+// jesd sync
+$("#jesdsync").click( function() {
+   socket.emit('prop_wr', { file: 'fpga/board/jesd_sync', message: '1' });
+});
+
+// board version
+$("#version").click( function() {
+   if (cur_board == 'time')
+      socket.emit('raw_cmd', { message: "echo 'board -v' | mcu -f s" });
+   else if (cur_board == 'fpga')
+      socket.emit('raw_cmd', { message: "echo 'board -v' | mcu" });
+   else if (cur_board == 'tx')
+      socket.emit('raw_cmd', { message: "echo 'board -v' | mcu -f t" });
+   else if (cur_board == 'rx')
+      socket.emit('raw_cmd', { message: "echo 'board -v' | mcu -f r" });
+});
+
+// board temperature
+$("#temperature").click(function() {
+   if (cur_board == 'time')
+      socket.emit('raw_cmd', { message: "echo 'board -t' | mcu -f s" });
+   else if (cur_board == 'fpga')
+      socket.emit('raw_cmd', { message: "echo 'board -t' | mcu" });
+   else if (cur_board == 'tx')
+      socket.emit('raw_cmd', { message: "echo 'board -c 15 -t' | mcu -f t" });
+   else if (cur_board == 'rx')
+      socket.emit('raw_cmd', { message: "echo 'board -c 15 -u' | mcu -f r" });
+});
+
+// board channel features
+$("#chan_init,#chan_demo,#chan_mute,#chan_reset").click(function() {
+   $("#adminModal").modal('show');
+});
+
+// board test routines
+$("[id$=_test]").click( function() {
+   $("#adminModal").modal('show');
+});
+
+// board dump routines
+$("#hmc_dump").click(function() {
+   socket.emit('raw_cmd', { message: "echo 'dump -f' | mcu -f s" });
+});
+
+$("#lmk_dump").click(function() {
+   socket.emit('raw_cmd', { message: "echo 'dump -c' | mcu -f s" });
+});
+
+$("#dac_dump").click(function() {
+   socket.emit('raw_cmd', { message: "echo 'dump -c " + cur_chan + " -d' | mcu -f t" });
+});
+
+$("#gpiox_dump").click(function() {
+   if (cur_board == 'tx')
+      socket.emit('raw_cmd', { message: "echo 'dump -c " + cur_chan + " -g' | mcu -f t" });
+   else if (cur_board == 'rx')
+      socket.emit('raw_cmd', { message: "echo 'dump -c " + cur_chan + " -g' | mcu -f r" });
+});
+
+$("#adc_dump").click(function() {
+   socket.emit('raw_cmd', { message: "echo 'dump -c " + cur_chan + " -a' | mcu -f r" });
+});
+
+$("#adrf_dump").click(function() {
+   socket.emit('raw_cmd', { message: "echo 'dump -c " + cur_chan + " -v' | mcu -f r" });
 });
 
 // program board
@@ -95,26 +172,19 @@ $("#program_start").click(function() {
    socket.emit('raw_cmd', { message: "/home/root/pv_mcu/flash.sh " + option});
 });
 
-// Loopback mode
-$("#opmode_normal,#opmode_loopback").click(function() {
-   if($('#opmode_normal').is(':checked'))
-      socket.emit('prop_wr', { file: 'fpga/link/loopback', message: '0' });
-   else
-      socket.emit('prop_wr', { file: 'fpga/link/loopback', message: '1' });
-});
-
 // gain
 $("#gain_range").change(function(){
    $("#gain_display").text($(this).val() + ' dB');
    socket.emit('prop_wr', { file: cur_root + '/rf/gain/val', message: $(this).val() });
 });
 
-// bias
+// i-bias
 $("#ibias_range").change(function(){
    $("#ibias_display").text('I: ' + $(this).val() + ' mV');
    socket.emit('prop_wr', { file: cur_root + '/rf/freq/i_bias', message: $(this).val() });
 });
 
+// q-bias
 $("#qbias_range").change(function(){
    $("#qbias_display").text('Q: ' + $(this).val() + ' mV');
    socket.emit('prop_wr', { file: cur_root + '/rf/freq/q_bias', message: $(this).val() });
@@ -162,6 +232,11 @@ $("#dsp_reset").click( function() {
    socket.emit('prop_wr', { file: cur_root + '/dsp/rstreq', message: '1' });
 });
 
+// loopback
+$("#loopback").on('switchChange.bootstrapSwitch', function(event, state) {
+   socket.emit('prop_wr', { file: cur_root + '/dsp/loopback', message: state ? '1' : '0' });
+});
+
 // link settings
 $("#link_set").click( function() {
    socket.emit('prop_wr', { file: cur_root + '/link/port',     message: $("#port").val() });
@@ -198,8 +273,10 @@ $("#dac_nco_set").click( function() {
 // receive console from server
 socket.on('raw_reply', function (data) {
    console.log("Raw reply: " + data.message);
-   $("#uart_hist").val( $("#uart_hist").val() + data.cmd + "\n");
-   $("#uart_out" ).val(data.message);
+   if ($("#chist"))
+      $("#chist").val( $("#chist").val() + data.cmd + "\n");
+   if ($("#cout"))
+      $("#cout" ).val(data.message.substring(0, data.message.length-1));
 });
 
 // receive data from server
@@ -220,8 +297,6 @@ socket.on('prop_ret', function (data) {
       $('#sfpb_mac').val(data.message);
    } else if (data.file == 'fpga/link/sfpb/pay_len') {
       $('#sfpb_paylen').val(data.message);
-   } else if (data.file == 'fpga/link/loopback') {
-      $('input:radio[name=op_mode]')[parseInt(data.message)].checked = true;
    } else if (data.file == 'fpga/link/net/dhcp_en') {
       $('#dhcp_en').bootstrapSwitch('state', parseInt(data.message) != 0, true);
    } else if (data.file == 'fpga/link/net/hostname') {
@@ -230,6 +305,15 @@ socket.on('prop_ret', function (data) {
       $('#mgmt_ip').val(data.message);
    } else if (data.file == cur_root + '/pwr') {
       $('#chan_en').bootstrapSwitch('state', parseInt(data.message) != 0, true);
+      var is_rx = cur_root.indexOf('rx') > -1;
+
+      if (parseInt(data.message) != 0) {
+         if (is_rx) activateControls_rx(true);
+         else  activateControls_tx(true);
+      } else {
+         if (is_rx) activateControls_rx(false);
+         else  activateControls_tx(false);
+      }
    } else if (data.file == cur_root + '/rf/freq/val') {
       $('#synth_freq').val(data.message);
    } else if (data.file == cur_root + '/rf/freq/lna') {
@@ -253,8 +337,8 @@ socket.on('prop_ret', function (data) {
       $('#mac').val(data.message);
    } else if (data.file == cur_root + '/dsp/rate') {
       $('#sr_range').val(322.265625 * 1000000 / parseInt(data.message));
-      var text = '322.265625 / ' + parseInt(data.message) + ' = ';
-      text = text + (322.265625 * 1000000 / parseInt(data.message)).toFixed(4) + 'MSPS';
+      var text = '322.265625 / ' + $('#sr_range').val() + ' = ';
+      text = text + (parseInt(data.message) / 1000000).toFixed(4) + 'MSPS';
       $("#sr_display").text(text);
    } else if (data.file == cur_root + '/rf/freq/i_bias') {
       $('#ibias_range').val(parseInt(data.message));
@@ -264,8 +348,49 @@ socket.on('prop_ret', function (data) {
       $("#qbias_display").text('I: ' + parseInt(data.message) + ' mV');
    } else if (data.file == cur_root + '/rf/dac/nco') {
       $('#dac_nco').val(data.message);
+   } else if (data.file == cur_root + '/dsp/loopback') {
+      $('#loopback').bootstrapSwitch('state', parseInt(data.message) != 0, true);
    }
+
 });
+
+// en/disable the configurations
+function activateControls_rx(state) {
+   //$('#rf_band').bootstrapSwitch('readonly', !state);
+   //$('#lna_bypass').bootstrapSwitch('readonly', !state);
+   $("#synth_freq").prop('disabled', !state);
+   $("#synth_freq_set").prop('disabled', !state);
+   $("#varac").prop('disabled', !state);
+   $("#varac_set").prop('disabled', !state);
+   $("#gain_range").prop('disabled', !state);
+   $("#dsp_reset").prop('disabled', !state);
+   //$('#signed').bootstrapSwitch('readonly', !state);
+   $("#dsp_nco").prop('disabled', !state);
+   $("#dsp_nco_set").prop('disabled', !state);
+   $("#sr_range").prop('disabled', !state);
+   $("#ip").prop('disabled', !state);
+   $("#link_set").prop('disabled', !state);
+   $("#mac").prop('disabled', !state);
+   $("#port").prop('disabled', !state);
+   //$('#loopback').bootstrapSwitch('readonly', !state);
+}
+
+function activateControls_tx(state) {
+   //$('#rf_band').bootstrapSwitch('readonly', !state);
+   $("#synth_freq").prop('disabled', !state);
+   $("#synth_freq_set").prop('disabled', !state);
+   $("#dac_nco").prop('disabled', !state);
+   $("#dac_nco_set").prop('disabled', !state);
+   $("#ibias_range").prop('disabled', !state);
+   $("#qbias_range").prop('disabled', !state);
+   $("#gain_range").prop('disabled', !state);
+   $("#dsp_reset").prop('disabled', !state);
+   $("#dsp_nco").prop('disabled', !state);
+   $("#dsp_nco_set").prop('disabled', !state);
+   $("#sr_range").prop('disabled', !state);
+   $("#link_set").prop('disabled', !state);
+   $("#port").prop('disabled', !state);
+}
 
 // write the current settings to SDR
 function write_rx() {
@@ -280,6 +405,7 @@ function write_rx() {
    socket.emit('prop_wr', { file: cur_root + '/link/port'     , message: $('#port').val()});
    socket.emit('prop_wr', { file: cur_root + '/link/ip_dest'  , message: $('#ip').val()});
    socket.emit('prop_wr', { file: cur_root + '/link/mac_dest' , message: $('#mac').val()});
+   socket.emit('prop_wr', { file: cur_root + '/dsp/loopback'  , message: $('#loopback').bootstrapSwitch('state') ? '1' : '0'});
 }
 
 function write_tx() {
@@ -303,14 +429,12 @@ function load_config () {
    socket.emit('prop_rd', { file: 'fpga/link/sfpb/ip_addr' });
    socket.emit('prop_rd', { file: 'fpga/link/sfpb/mac_addr'});
    socket.emit('prop_rd', { file: 'fpga/link/sfpb/pay_len'});
-   socket.emit('prop_rd', { file: 'fpga/link/loopback'});
    socket.emit('prop_rd', { file: 'fpga/link/net/dhcp_en'});
    socket.emit('prop_rd', { file: 'fpga/link/net/hostname'});
    socket.emit('prop_rd', { file: 'fpga/link/net/ip_addr'});
 }
 
 function load_rx () {
-   socket.emit('prop_rd', { file: cur_root + '/pwr' });
    socket.emit('prop_rd', { file: cur_root + '/rf/freq/val'  });
    socket.emit('prop_rd', { file: cur_root + '/rf/freq/lna'  });
    socket.emit('prop_rd', { file: cur_root + '/rf/freq/varac'});
@@ -319,13 +443,14 @@ function load_rx () {
    socket.emit('prop_rd', { file: cur_root + '/dsp/signed'   });
    socket.emit('prop_rd', { file: cur_root + '/dsp/nco_adj'  });
    socket.emit('prop_rd', { file: cur_root + '/dsp/rate'     });
+   socket.emit('prop_rd', { file: cur_root + '/dsp/loopback' });
    socket.emit('prop_rd', { file: cur_root + '/link/port'    });
    socket.emit('prop_rd', { file: cur_root + '/link/ip_dest' });
    socket.emit('prop_rd', { file: cur_root + '/link/mac_dest'});
+   socket.emit('prop_rd', { file: cur_root + '/pwr' });
 }
 
 function load_tx () {
-   socket.emit('prop_rd', { file: cur_root + '/pwr' });
    socket.emit('prop_rd', { file: cur_root + '/rf/freq/val'   });
    socket.emit('prop_rd', { file: cur_root + '/rf/freq/lna'   });
    socket.emit('prop_rd', { file: cur_root + '/rf/freq/i_bias'});
@@ -336,6 +461,7 @@ function load_tx () {
    socket.emit('prop_rd', { file: cur_root + '/dsp/nco_adj'   });
    socket.emit('prop_rd', { file: cur_root + '/dsp/rate'      });
    socket.emit('prop_rd', { file: cur_root + '/link/port'     });
+   socket.emit('prop_rd', { file: cur_root + '/pwr' });
 }
 
 // determine which page is currently loaded

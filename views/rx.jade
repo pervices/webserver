@@ -91,6 +91,11 @@ block content
                   | UDP Port
                .col-md-4
                   input.input-xs(type="text")#port
+      .row
+         .col-md-1
+            p
+               b Loopback Mode
+            input(type="checkbox", name='en', unchecked)#loopback
    br
    br
    img(src="/img/rx_dsp.svg", style="max-width: 100%;max-height: 100%;").center
@@ -103,7 +108,7 @@ block content
             b JESD Sync
             .row
                .col-md-4.top-buffer-5
-                  button.btn.btn-default.btn-xs.btn-block Sync
+                  button.btn.btn-default.btn-xs.btn-block#jesdsync Sync
             br
             b Channel IC's
             br
@@ -118,40 +123,40 @@ block content
                   | LED
             .row
                .col-md-3.top-buffer-5.right-pad-0
-                  button.btn.btn-default.btn-xs.btn-block Test
+                  button.btn.btn-default.btn-xs.btn-block#adc_test Test
                .col-md-3.top-buffer-5.right-pad-0
-                  button.btn.btn-default.btn-xs.btn-block Test
+                  button.btn.btn-default.btn-xs.btn-block#adrf_test Test
                .col-md-3.top-buffer-5.right-pad-0
-                  button.btn.btn-default.btn-xs.btn-block Test
+                  button.btn.btn-default.btn-xs.btn-block#gpiox_test Test
                .col-md-3.top-buffer-5.right-pad-0
                   button.btn.btn-default.btn-xs.btn-block#led Test
             .row
                .col-md-3.top-buffer-5.right-pad-0
-                  button.btn.btn-default.btn-xs.btn-block Dump
+                  button.btn.btn-default.btn-xs.btn-block#adc_dump Dump
                .col-md-3.top-buffer-5.right-pad-0
-                  button.btn.btn-default.btn-xs.btn-block Dump
+                  button.btn.btn-default.btn-xs.btn-block#adrf_dump Dump
                .col-md-3.top-buffer-5.right-pad-0
-                  button.btn.btn-default.btn-xs.btn-block Dump
+                  button.btn.btn-default.btn-xs.btn-block#gpiox_dump Dump
             br
             b Channel State
             br
             .row
                .col-md-4.top-buffer-5
-                  button.btn.btn-default.btn-xs.btn-block Init
-                  button.btn.btn-default.btn-xs.btn-block Demo
-                  button.btn.btn-default.btn-xs.btn-block Mute
-                  button.btn.btn-default.btn-xs.btn-block Reset
+                  button.btn.btn-default.btn-xs.btn-block#chan_init Init
+                  button.btn.btn-default.btn-xs.btn-block#chan_demo Demo
+                  button.btn.btn-default.btn-xs.btn-block#chan_mute Mute
+                  button.btn.btn-default.btn-xs.btn-block#chan_reset Reset
          .col-md-2
             b Board Version
             .row
                .col-md-6.top-buffer-5
-                  button.btn.btn-default.btn-xs.btn-block Get
+                  button.btn.btn-default.btn-xs.btn-block#version Get
             br
             b Board Temperature
             .row
                .col-md-6.top-buffer-5
-                  button.btn.btn-default.btn-xs.btn-block Get
+                  button.btn.btn-default.btn-xs.btn-block#temperature Get
          .col-md-7
             b Console Output
             br
-            textarea.form-control#chist(rows='10')
+            textarea.form-control#cout(rows='10')

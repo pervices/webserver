@@ -78,16 +78,6 @@ block content
    .container-fluid
       .row
          .col-md-3
-            b Board Operation Mode
-            br
-            label.radio-inline
-               input(type='radio', name='op_mode', value='0')#opmode_normal
-               | Normal
-            label.radio-inline
-               input(type='radio', name='op_mode', value='1')#opmode_loopback
-               | Loopback
-            br
-            br
             b Board IC's
             br
             | LED
@@ -99,20 +89,20 @@ block content
             br
             .row
                .col-md-4.top-buffer-5
-                  button.btn.btn-default.btn-xs.btn-block Init
-                  button.btn.btn-default.btn-xs.btn-block Demo
-                  button.btn.btn-default.btn-xs.btn-block Mute
-                  button.btn.btn-default.btn-xs.btn-block Reset
+                  button.btn.btn-default.btn-xs.btn-block#chan_init Init
+                  button.btn.btn-default.btn-xs.btn-block#chan_demo Demo
+                  button.btn.btn-default.btn-xs.btn-block#chan_mute Mute
+                  button.btn.btn-default.btn-xs.btn-block#chan_reset Reset
          .col-md-2
             b Board Version
             .row
                .col-md-6.top-buffer-5
-                  button.btn.btn-default.btn-xs.btn-block Get
+                  button.btn.btn-default.btn-xs.btn-block#version Get
             br
             b Board Temperature
             .row
                .col-md-6.top-buffer-5
-                  button.btn.btn-default.btn-xs.btn-block Get
+                  button.btn.btn-default.btn-xs.btn-block#temperature Get
             br
             b FPGA
             .row
@@ -128,4 +118,4 @@ block content
          .col-md-7
             b Console Output
             br
-            textarea.form-control#chist(rows='10')
+            textarea.form-control#cout(rows='10')
