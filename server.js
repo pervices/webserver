@@ -40,7 +40,7 @@ app.get('/debug', function (req, res) {
   });
 });
 
-var io = require('socket.io').listen(app.listen(3000, function () {
+var io = require('socket.io').listen(app.listen(80, function () {
     var host = this.address().address;
     var port = this.address().port;
     console.log('Crimson server listening at http://%s:%s', host, port);
