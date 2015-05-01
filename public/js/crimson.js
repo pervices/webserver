@@ -14,7 +14,6 @@ $(document).ready(function() {
       size: 'mini',
       onColor: 'success'
    });
-
 });
 
 // socket.io connection
@@ -213,6 +212,21 @@ $("#signed").on('switchChange.bootstrapSwitch', function(event, state) {
    socket.emit('prop_wr', { file: cur_root + '/dsp/signed', message: state ? '1' : '0' });
 });
 
+// reference clock
+$("#ext_ref").on('switchChange.bootstrapSwitch', function(event, state) {
+   socket.emit('prop_wr', { file: cur_root + '/source/ref', message: state ? 'external' : 'internal' });
+});
+
+// external sync
+$("#ext_sync").on('switchChange.bootstrapSwitch', function(event, state) {
+   socket.emit('prop_wr', { file: cur_root + '/source/sync', message: state ? 'external' : 'internal' });
+});
+
+// external VCO 
+$("#ext_vco").on('switchChange.bootstrapSwitch', function(event, state) {
+   socket.emit('prop_wr', { file: cur_root + '/source/vco', message: state ? 'external' : 'internal' });
+});
+
 // frequency of synthesizer
 $("#synth_freq_set").click( function() {
    socket.emit('prop_wr', { file: cur_root + '/rf/freq/val', message: $("#synth_freq").val() });
@@ -380,6 +394,12 @@ socket.on('prop_ret', function (data) {
       $('#dac_nco').val(data.message);
    } else if (data.file == cur_root + '/dsp/loopback') {
       $('#loopback').bootstrapSwitch('state', parseInt(data.message) != 0, true);
+   } else if (data.file == cur_root + '/source/ref') {
+      $('#ext_ref').bootstrapSwitch('state', data.message.indexOf('external') > -1, true);
+   } else if (data.file == cur_root + '/source/sync') {
+      $('#ext_sync').bootstrapSwitch('state', data.message.indexOf('external') > -1, true);
+   } else if (data.file == cur_root + '/source/vco') {
+      $('#ext_vco').bootstrapSwitch('state', data.message.indexOf('external') > -1, true);
    }
 
 });
@@ -494,6 +514,12 @@ function load_tx (isLoad) {
    socket.emit('prop_rd', { file: cur_root + '/pwr'           ,debug: isLoad});
 }
 
+function load_clock (isLoad) {
+   socket.emit('prop_rd', { file: cur_root + '/source/vco'    ,debug: isLoad});
+   socket.emit('prop_rd', { file: cur_root + '/source/sync'   ,debug: isLoad});
+   socket.emit('prop_rd', { file: cur_root + '/source/ref'    ,debug: isLoad});
+}
+
 // determine which page is currently loaded
 window.onload = function() {
    var loadFunc;
@@ -505,7 +531,7 @@ window.onload = function() {
    } else if (pathname.indexOf('clock') > -1) {
       cur_board = 'time';
       cur_root = cur_board;
-      //loadFunc = load_clock;
+      loadFunc = load_clock;
    } else if (pathname.indexOf('debug') > -1) {
       cur_board = 'fpga';
       cur_root = cur_board;
