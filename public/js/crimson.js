@@ -169,7 +169,8 @@ $("#adrf_dump").click(function() {
 // program board
 $("#program_start").click(function() {
    var option = $( "#program_board option:selected" ).val();
-   socket.emit('raw_cmd', { message: "/home/root/pv_mcu/flash.sh " + option});
+   //console.log( $('#program_hexfile').prop('files')[0]);
+   //socket.emit('hexfile', { board: option, buf: $('#program_hexfile').prop('files')[0] });
 });
 
 // gain
@@ -268,6 +269,12 @@ $("#mgmt_set").click( function() {
 // dac nco
 $("#dac_nco_set").click( function() {
    socket.emit('prop_wr', { file: cur_root + '/rf/dac/nco', message: $("#dac_nco").val() });
+});
+
+// hexfile
+$("#program_hexfile").change( function() {
+   if( $("#program_hexfile").val())
+      $("#program_start").removeClass('disabled');
 });
 
 // receive console from server
