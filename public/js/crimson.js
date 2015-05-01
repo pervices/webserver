@@ -181,13 +181,13 @@ $("#gain_range").change(function(){
 // i-bias
 $("#ibias_range").change(function(){
    $("#ibias_display").text('I: ' + $(this).val() + ' mV');
-   socket.emit('prop_wr', { file: cur_root + '/rf/freq/i_bias', message: $(this).val() });
+   socket.emit('prop_wr', { file: cur_root + '/rf/freq/i_bias', message: ($(this).val()/100) });
 });
 
 // q-bias
 $("#qbias_range").change(function(){
    $("#qbias_display").text('Q: ' + $(this).val() + ' mV');
-   socket.emit('prop_wr', { file: cur_root + '/rf/freq/q_bias', message: $(this).val() });
+   socket.emit('prop_wr', { file: cur_root + '/rf/freq/q_bias', message: ($(this).val()/100) });
 });
 
 // sample rate
@@ -385,11 +385,11 @@ socket.on('prop_ret', function (data) {
       text = text + (parseInt(data.message) / 1000000).toFixed(4) + 'MSPS';
       $("#sr_display").text(text);
    } else if (data.file == cur_root + '/rf/freq/i_bias') {
-      $('#ibias_range').val(parseInt(data.message));
-      $("#ibias_display").text('I: ' + parseInt(data.message) + ' mV');
+      $('#ibias_range').val(parseInt(data.message)*100);
+      $("#ibias_display").text('I: ' + parseInt(data.message)*100 + ' mV');
    } else if (data.file == cur_root + '/rf/freq/q_bias') {
-      $('#qbias_range').val(parseInt(data.message));
-      $("#qbias_display").text('I: ' + parseInt(data.message) + ' mV');
+      $('#qbias_range').val(parseInt(data.message)*100);
+      $("#qbias_display").text('I: ' + parseInt(data.message)*100 + ' mV');
    } else if (data.file == cur_root + '/rf/dac/nco') {
       $('#dac_nco').val(data.message);
    } else if (data.file == cur_root + '/dsp/loopback') {
@@ -461,8 +461,8 @@ function write_rx() {
 function write_tx() {
    socket.emit('prop_wr', { file: cur_root + '/rf/freq/val'   , message: $('#synth_freq').val()});
    socket.emit('prop_wr', { file: cur_root + '/rf/freq/lna'   , message: $('#lna_bypass').bootstrapSwitch('state') ? '1' : '0'});
-   socket.emit('prop_wr', { file: cur_root + '/rf/freq/i_bias', message: $('#ibias_range').val()});
-   socket.emit('prop_wr', { file: cur_root + '/rf/freq/q_bias', message: $('#qbias_range').val()});
+   socket.emit('prop_wr', { file: cur_root + '/rf/freq/i_bias', message: $('#ibias_range').val()/100});
+   socket.emit('prop_wr', { file: cur_root + '/rf/freq/q_bias', message: $('#qbias_range').val()/100});
    socket.emit('prop_wr', { file: cur_root + '/rf/freq/band'  , message: $('#rf_band').bootstrapSwitch('state') ? '1' : '0'});
    socket.emit('prop_wr', { file: cur_root + '/rf/gain/val'   , message: $('#gain_range').val()});
    socket.emit('prop_wr', { file: cur_root + '/rf/dac/nco'    , message: $('#dac_nco').val()});
