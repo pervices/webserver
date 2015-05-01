@@ -24,7 +24,11 @@ module.exports = function(io) {
          fs.writeFile( state_dir + data.file, data.message , function(err, fd){
             if (err) throw err;
          });
-         console.log('Wrote to ' + data.file + ': ' + data.message);
+
+         // send the data back to the client
+         var debug_msg = 'Wrote to ' + data.file + ': ' + data.message;
+         io.sockets.emit('prop_wr_ret', {message: debug_msg});
+         //console.log(debug_msg);
       });
 
 

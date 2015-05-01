@@ -280,17 +280,38 @@ $("#program_hexfile").change( function() {
 // receive console from server
 socket.on('raw_reply', function (data) {
    console.log("Raw reply: " + data.message);
-   if ($("#chist"))
+   if ($("#chist")) {
       $("#chist").val( $("#chist").val() + data.cmd + "\n");
-   if ($("#cout"))
-      $("#cout" ).val(data.message.substring(0, data.message.length-1));
+      $("#chist").change();
+   }
+
+   if ($("#cout")) {
+      $("#cout" ).val( $("#cout" ).val() + "\n" + data.message.substring(0, data.message.length-3));
+      $("#cout").change();
+   }
+});
+
+// auto scroll-bar
+$('#cout,#chist').change(function() {
+   $(this).scrollTop($(this)[0].scrollHeight);
+});
+
+// receive debug msg from server
+socket.on('prop_wr_ret', function (data) {
+   console.log(data.message);
+   $("#cout" ).val( $("#cout" ).val() + "\n" + data.message);
+   $("#cout").change();
 });
 
 // receive data from server
 socket.on('prop_ret', function (data) {
    var channel = cur_chan;
 
-   console.log("Returned from file " + data.file + ": " + data);
+   var debug_msg = "Read from " + data.file + ": " + data.message;
+   console.log(debug_msg);
+   $("#cout" ).val( $("#cout" ).val() + "\n" + debug_msg);
+   $("#cout").change();
+
    // Lookup table for return data
    if (data.file == 'fpga/link/sfpa/ip_addr') {
       $('#sfpa_ip').val(data.message);
