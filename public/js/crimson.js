@@ -279,7 +279,7 @@ $("#program_hexfile").change( function() {
 
 // receive console from server
 socket.on('raw_reply', function (data) {
-   console.log("Raw reply: " + data.message);
+   //console.log("Raw reply: " + data.message);
    if ($("#chist")) {
       $("#chist").val( $("#chist").val() + data.cmd + "\n");
       $("#chist").change();
@@ -298,7 +298,7 @@ $('#cout,#chist').change(function() {
 
 // receive debug msg from server
 socket.on('prop_wr_ret', function (data) {
-   console.log(data.message);
+   //console.log(data.message);
    $("#cout" ).val( $("#cout" ).val() + "\n" + data.message);
    $("#cout").change();
 });
@@ -308,9 +308,11 @@ socket.on('prop_ret', function (data) {
    var channel = cur_chan;
 
    var debug_msg = "Read from " + data.file + ": " + data.message;
-   console.log(debug_msg);
-   $("#cout" ).val( $("#cout" ).val() + "\n" + debug_msg);
-   $("#cout").change();
+   //console.log(debug_msg);
+   if (data.debug) {
+      $("#cout" ).val( $("#cout" ).val() + "\n" + debug_msg);
+      $("#cout").change();
+   }
 
    // Lookup table for return data
    if (data.file == 'fpga/link/sfpa/ip_addr') {
@@ -450,69 +452,74 @@ function write_tx() {
 }
 
 // Loading config data
-function load_config () {
-   socket.emit('prop_rd', { file: 'fpga/link/sfpa/ip_addr' });
-   socket.emit('prop_rd', { file: 'fpga/link/sfpa/mac_addr'});
-   socket.emit('prop_rd', { file: 'fpga/link/sfpa/pay_len'});
-   socket.emit('prop_rd', { file: 'fpga/link/sfpb/ip_addr' });
-   socket.emit('prop_rd', { file: 'fpga/link/sfpb/mac_addr'});
-   socket.emit('prop_rd', { file: 'fpga/link/sfpb/pay_len'});
-   socket.emit('prop_rd', { file: 'fpga/link/net/dhcp_en'});
-   socket.emit('prop_rd', { file: 'fpga/link/net/hostname'});
-   socket.emit('prop_rd', { file: 'fpga/link/net/ip_addr'});
+function load_config (isLoad) {
+   socket.emit('prop_rd', { file: 'fpga/link/sfpa/ip_addr'    ,debug: isLoad});
+   socket.emit('prop_rd', { file: 'fpga/link/sfpa/mac_addr'   ,debug: isLoad});
+   socket.emit('prop_rd', { file: 'fpga/link/sfpa/pay_len'    ,debug: isLoad});
+   socket.emit('prop_rd', { file: 'fpga/link/sfpb/ip_addr'    ,debug: isLoad});
+   socket.emit('prop_rd', { file: 'fpga/link/sfpb/mac_addr'   ,debug: isLoad});
+   socket.emit('prop_rd', { file: 'fpga/link/sfpb/pay_len'    ,debug: isLoad});
+   socket.emit('prop_rd', { file: 'fpga/link/net/dhcp_en'     ,debug: isLoad});
+   socket.emit('prop_rd', { file: 'fpga/link/net/hostname'    ,debug: isLoad});
+   socket.emit('prop_rd', { file: 'fpga/link/net/ip_addr'     ,debug: isLoad});
 }
 
-function load_rx () {
-   socket.emit('prop_rd', { file: cur_root + '/rf/freq/val'  });
-   socket.emit('prop_rd', { file: cur_root + '/rf/freq/lna'  });
-   socket.emit('prop_rd', { file: cur_root + '/rf/freq/varac'});
-   socket.emit('prop_rd', { file: cur_root + '/rf/freq/band' });
-   socket.emit('prop_rd', { file: cur_root + '/rf/gain/val'  });
-   socket.emit('prop_rd', { file: cur_root + '/dsp/signed'   });
-   socket.emit('prop_rd', { file: cur_root + '/dsp/nco_adj'  });
-   socket.emit('prop_rd', { file: cur_root + '/dsp/rate'     });
-   socket.emit('prop_rd', { file: cur_root + '/dsp/loopback' });
-   socket.emit('prop_rd', { file: cur_root + '/link/port'    });
-   socket.emit('prop_rd', { file: cur_root + '/link/ip_dest' });
-   socket.emit('prop_rd', { file: cur_root + '/link/mac_dest'});
-   socket.emit('prop_rd', { file: cur_root + '/pwr' });
+function load_rx (isLoad) {
+   socket.emit('prop_rd', { file: cur_root + '/rf/freq/val'   ,debug: isLoad});
+   socket.emit('prop_rd', { file: cur_root + '/rf/freq/lna'   ,debug: isLoad});
+   socket.emit('prop_rd', { file: cur_root + '/rf/freq/varac' ,debug: isLoad});
+   socket.emit('prop_rd', { file: cur_root + '/rf/freq/band'  ,debug: isLoad});
+   socket.emit('prop_rd', { file: cur_root + '/rf/gain/val'   ,debug: isLoad});
+   socket.emit('prop_rd', { file: cur_root + '/dsp/signed'    ,debug: isLoad});
+   socket.emit('prop_rd', { file: cur_root + '/dsp/nco_adj'   ,debug: isLoad});
+   socket.emit('prop_rd', { file: cur_root + '/dsp/rate'      ,debug: isLoad});
+   socket.emit('prop_rd', { file: cur_root + '/dsp/loopback'  ,debug: isLoad});
+   socket.emit('prop_rd', { file: cur_root + '/link/port'     ,debug: isLoad});
+   socket.emit('prop_rd', { file: cur_root + '/link/ip_dest'  ,debug: isLoad});
+   socket.emit('prop_rd', { file: cur_root + '/link/mac_dest' ,debug: isLoad});
+   socket.emit('prop_rd', { file: cur_root + '/pwr'           ,debug: isLoad});
 }
 
-function load_tx () {
-   socket.emit('prop_rd', { file: cur_root + '/rf/freq/val'   });
-   socket.emit('prop_rd', { file: cur_root + '/rf/freq/lna'   });
-   socket.emit('prop_rd', { file: cur_root + '/rf/freq/i_bias'});
-   socket.emit('prop_rd', { file: cur_root + '/rf/freq/q_bias'});
-   socket.emit('prop_rd', { file: cur_root + '/rf/freq/band'  });
-   socket.emit('prop_rd', { file: cur_root + '/rf/gain/val'   });
-   socket.emit('prop_rd', { file: cur_root + '/rf/dac/nco'    });
-   socket.emit('prop_rd', { file: cur_root + '/dsp/nco_adj'   });
-   socket.emit('prop_rd', { file: cur_root + '/dsp/rate'      });
-   socket.emit('prop_rd', { file: cur_root + '/link/port'     });
-   socket.emit('prop_rd', { file: cur_root + '/pwr' });
+function load_tx (isLoad) {
+   socket.emit('prop_rd', { file: cur_root + '/rf/freq/val'   ,debug: isLoad});
+   socket.emit('prop_rd', { file: cur_root + '/rf/freq/lna'   ,debug: isLoad});
+   socket.emit('prop_rd', { file: cur_root + '/rf/freq/i_bias',debug: isLoad});
+   socket.emit('prop_rd', { file: cur_root + '/rf/freq/q_bias',debug: isLoad});
+   socket.emit('prop_rd', { file: cur_root + '/rf/freq/band'  ,debug: isLoad});
+   socket.emit('prop_rd', { file: cur_root + '/rf/gain/val'   ,debug: isLoad});
+   socket.emit('prop_rd', { file: cur_root + '/rf/dac/nco'    ,debug: isLoad});
+   socket.emit('prop_rd', { file: cur_root + '/dsp/nco_adj'   ,debug: isLoad});
+   socket.emit('prop_rd', { file: cur_root + '/dsp/rate'      ,debug: isLoad});
+   socket.emit('prop_rd', { file: cur_root + '/link/port'     ,debug: isLoad});
+   socket.emit('prop_rd', { file: cur_root + '/pwr'           ,debug: isLoad});
 }
 
 // determine which page is currently loaded
 window.onload = function() {
+   var loadFunc;
+   var refreshFunc;
    if (pathname.indexOf('config') > -1) {
       cur_board = 'fpga';
       cur_root = cur_board;
-      load_config();
+      loadFunc = load_config;
    } else if (pathname.indexOf('clock') > -1) {
       cur_board = 'time';
       cur_root = cur_board;
-      //load_clock();
+      //loadFunc = load_clock;
    } else if (pathname.indexOf('debug') > -1) {
       cur_board = 'fpga';
       cur_root = cur_board;
-      //load_debug();
+      //loadFunc = load_debug;
    } else if (pathname.indexOf('rx') > -1) {
       cur_board = 'rx';
       cur_root = cur_board + '_' + cur_chan;
-      load_rx();
+      loadFunc = load_rx;
    } else if (pathname.indexOf('tx') > -1) {
       cur_board = 'tx';
       cur_root = cur_board + '_' + cur_chan;
-      load_tx();
+      loadFunc = load_tx;
    }
+
+   loadFunc(true);
+   var refreshID = setInterval(loadFunc, 3000);
 }

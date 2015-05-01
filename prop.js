@@ -8,13 +8,14 @@ module.exports = function(io) {
       // Handle property reads
       socket.on('prop_rd', function (data) {
          var file = data.file;
+         var debug = data.debug;
 
          // read the data from fs
          fs.readFile( state_dir + data.file, 'utf8', function(err, data){
             if (err) throw err;
 
             // send the data back to the client
-            io.sockets.emit('prop_ret', {file: file, message: data});
+            io.sockets.emit('prop_ret', {file: file, message: data, debug: debug});
          }); 
       });
 
