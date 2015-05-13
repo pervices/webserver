@@ -203,8 +203,8 @@ $("#rf_band").on('switchChange.bootstrapSwitch', function(event, state) {
 });
 
 // lna bypass
-$("#lna_bypass").on('switchChange.bootstrapSwitch', function(event, state) {
-   socket.emit('prop_wr', { file: cur_root + '/rf/freq/lna', message: state ? '1' : '0' });
+$("#lna_en").on('switchChange.bootstrapSwitch', function(event, state) {
+   socket.emit('prop_wr', { file: cur_root + '/rf/freq/lna', message: state ? '0' : '1' });
 });
 
 // dsp signed data
@@ -361,7 +361,7 @@ socket.on('prop_ret', function (data) {
    } else if (data.file == cur_root + '/rf/freq/val') {
       $('#synth_freq').val(data.message);
    } else if (data.file == cur_root + '/rf/freq/lna') {
-      $('#lna_bypass').bootstrapSwitch('state', parseInt(data.message) != 0, true);
+      $('#lna_en').bootstrapSwitch('state', parseInt(data.message) == 0, true);
    } else if (data.file == cur_root + '/rf/freq/varac') {
       $('#varac').val(data.message);
    } else if (data.file == cur_root + '/rf/gain/val') {
@@ -407,7 +407,7 @@ socket.on('prop_ret', function (data) {
 // en/disable the configurations
 function activateControls_rx(state) {
    //$('#rf_band').bootstrapSwitch('readonly', !state);
-   //$('#lna_bypass').bootstrapSwitch('readonly', !state);
+   //$('#lna_en').bootstrapSwitch('readonly', !state);
    $("#synth_freq").prop('disabled', !state);
    $("#synth_freq_set").prop('disabled', !state);
    $("#varac").prop('disabled', !state);
@@ -445,7 +445,7 @@ function activateControls_tx(state) {
 // write the current settings to SDR
 function write_rx() {
    socket.emit('prop_wr', { file: cur_root + '/rf/freq/val'   , message: $('#synth_freq').val()});
-   socket.emit('prop_wr', { file: cur_root + '/rf/freq/lna'   , message: $('#lna_bypass').bootstrapSwitch('state') ? '1' : '0'});
+   socket.emit('prop_wr', { file: cur_root + '/rf/freq/lna'   , message: $('#lna_en').bootstrapSwitch('state') ? '0' : '1'});
    socket.emit('prop_wr', { file: cur_root + '/rf/freq/varac' , message: $('#varac').val()});
    socket.emit('prop_wr', { file: cur_root + '/rf/freq/band'  , message: $('#rf_band').bootstrapSwitch('state') ? '1' : '0'});
    socket.emit('prop_wr', { file: cur_root + '/rf/gain/val'   , message: $('#gain_range').val()});
@@ -460,7 +460,7 @@ function write_rx() {
 
 function write_tx() {
    socket.emit('prop_wr', { file: cur_root + '/rf/freq/val'   , message: $('#synth_freq').val()});
-   socket.emit('prop_wr', { file: cur_root + '/rf/freq/lna'   , message: $('#lna_bypass').bootstrapSwitch('state') ? '1' : '0'});
+   socket.emit('prop_wr', { file: cur_root + '/rf/freq/lna'   , message: $('#lna_en').bootstrapSwitch('state') ? '0' : '1'});
    socket.emit('prop_wr', { file: cur_root + '/rf/freq/i_bias', message: $('#ibias_range').val()/100});
    socket.emit('prop_wr', { file: cur_root + '/rf/freq/q_bias', message: $('#qbias_range').val()/100});
    socket.emit('prop_wr', { file: cur_root + '/rf/freq/band'  , message: $('#rf_band').bootstrapSwitch('state') ? '1' : '0'});
