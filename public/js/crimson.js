@@ -192,7 +192,7 @@ $("#qbias_range").change(function(){
 
 // sample rate
 $("#sr_range").change(function(){
-   var text = '322.265625 / ' + $(this).val() + ' = ' + (322.265625 / $(this).val()).toFixed(4) + 'MSPS';
+   var text = '322.265625 / ' + $(this).val() + ' = ' + (322.265625 / $(this).val()).toFixed(6) + 'MSPS';
    $("#sr_display").text(text);
    socket.emit('prop_wr', { file: cur_root + '/dsp/rate', message: (322.265625 / $(this).val() * 1000000).toFixed(6) });
 });
@@ -382,7 +382,7 @@ socket.on('prop_ret', function (data) {
    } else if (data.file == cur_root + '/dsp/rate') {
       $('#sr_range').val(322.265625 * 1000000 / parseInt(data.message));
       var text = '322.265625 / ' + $('#sr_range').val() + ' = ';
-      text = text + (parseInt(data.message) / 1000000).toFixed(4) + 'MSPS';
+      text = text + (parseInt(data.message) / 1000000).toFixed(6) + 'MSPS';
       $("#sr_display").text(text);
    } else if (data.file == cur_root + '/rf/freq/i_bias') {
       $('#ibias_range').val(parseInt(data.message)*100);
