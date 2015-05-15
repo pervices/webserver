@@ -299,7 +299,9 @@ $("#program_hexfile").change( function() {
 socket.on('raw_reply', function (data) {
    // if reading back the sample rate
    if (data.cmd == ("mem rr " + cur_board + cur_chan + "1")) {
-      val = parseInt(data.message.substring(0, data.message.length-1)) + 1;
+      val1 = parseInt("0x" + data.message.substring(data.message.length-3, data.message.length-1)) + 1;
+      val2 = parseInt("0x" + data.message.substring(data.message.length-5, data.message.length-3)) + 1;
+      val = val1 * val2;
       $("#sr_div_display").text("1/" + val);
       if ($("#sr_resamp_display").text() != "")
          $("#sr_display").text((322265625 * 4 / 5 / val));
