@@ -280,8 +280,8 @@ $("#sfpb_set").click( function() {
 
 $("#mgmt_set").click( function() {
    socket.emit('prop_wr', { file: 'fpga/link/net/hostname', message: $("#hostname").val() });
-   if (!$('#dhcp_en').bootstrapSwitch('state'))
-      socket.emit('prop_wr', { file: 'fpga/link/net/ip_addr', message: $("#mgmt_ip").val() });
+   //if (!$('#dhcp_en').bootstrapSwitch('state'))
+   socket.emit('prop_wr', { file: 'fpga/link/net/ip_addr', message: $("#mgmt_ip").val() });
 });
 
 // dac nco
