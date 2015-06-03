@@ -234,6 +234,9 @@ $("#ext_vco").on('switchChange.bootstrapSwitch', function(event, state) {
 // frequency of synthesizer
 $("#synth_freq_set").click( function() {
    socket.emit('prop_wr', { file: cur_root + '/rf/freq/val', message: $("#synth_freq").val() });
+   setTimeout( function() {
+      socket.emit('prop_rd', { file: cur_root + '/rf/freq/val', debug: true});
+   }, 300);
 });
 
 // varactor
