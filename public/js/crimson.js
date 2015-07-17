@@ -129,10 +129,7 @@ $("#temperature").click(function() {
 
 // system reset
 $("#reset_system").click(function() {
-   socket.emit('raw_cmd', { message: "echo 'board -r' | mcu -f s"});
-   socket.emit('raw_cmd', { message: "echo 'board -r' | mcu -f r"});
-   socket.emit('raw_cmd', { message: "echo 'board -r' | mcu -f t"});
-   socket.emit('raw_cmd', { message: "echo 'board -r' | mcu"});
+   socket.emit('prop_wr', { file: 'fpga/board/sys_rstreq', message: '1' });
 });
 
 // board channel features
@@ -245,11 +242,6 @@ $("#synth_freq_set").click( function() {
    setTimeout( function() {
       socket.emit('prop_rd', { file: cur_root + '/rf/freq/val', debug: true});
    }, 1000);
-});
-
-// varactor
-$("#varac_set").click( function() {
-   socket.emit('prop_wr', { file: cur_root + '/rf/freq/varac', message: $("#varac").val() });
 });
 
 // phase increment
@@ -407,8 +399,6 @@ socket.on('prop_ret', function (data) {
       $('#synth_freq').val(data.message);
    } else if (data.file == cur_root + '/rf/freq/lna') {
       $('#lna_en').bootstrapSwitch('state', parseInt(data.message) == 0, true);
-   } else if (data.file == cur_root + '/rf/freq/varac') {
-      $('#varac').val(data.message);
    } else if (data.file == cur_root + '/rf/gain/val') {
       $('#gain_range').val(parseInt(data.message));
       $("#gain_display").text(parseInt(data.message) + ' dB');
@@ -458,8 +448,6 @@ function activateControls_rx(state) {
    //$('#lna_en').bootstrapSwitch('readonly', !state);
    $("#synth_freq").prop('disabled', !state);
    $("#synth_freq_set").prop('disabled', !state);
-   $("#varac").prop('disabled', !state);
-   $("#varac_set").prop('disabled', !state);
    $("#gain_range").prop('disabled', !state);
    $("#dsp_reset").prop('disabled', !state);
    //$('#signed').bootstrapSwitch('readonly', !state);
@@ -496,7 +484,6 @@ function activateControls_tx(state) {
 function write_rx() {
    socket.emit('prop_wr', { file: cur_root + '/rf/freq/val'   , message: $('#synth_freq').val()});
    socket.emit('prop_wr', { file: cur_root + '/rf/freq/lna'   , message: $('#lna_en').bootstrapSwitch('state') ? '0' : '1'});
-   socket.emit('prop_wr', { file: cur_root + '/rf/freq/varac' , message: $('#varac').val()});
    socket.emit('prop_wr', { file: cur_root + '/rf/freq/band'  , message: $('#rf_band').bootstrapSwitch('state') ? '1' : '0'});
    socket.emit('prop_wr', { file: cur_root + '/rf/gain/val'   , message: $('#gain_range').val()});
    socket.emit('prop_wr', { file: cur_root + '/dsp/signed'    , message: $('#signed').bootstrapSwitch('state') ? '1' : '0'});
@@ -510,7 +497,6 @@ function write_rx() {
 
 function write_tx() {
    socket.emit('prop_wr', { file: cur_root + '/rf/freq/val'   , message: $('#synth_freq').val()});
-   socket.emit('prop_wr', { file: cur_root + '/rf/freq/lna'   , message: $('#lna_en').bootstrapSwitch('state') ? '0' : '1'});
    socket.emit('prop_wr', { file: cur_root + '/rf/freq/i_bias', message: $('#ibias_range').val()/100});
    socket.emit('prop_wr', { file: cur_root + '/rf/freq/q_bias', message: $('#qbias_range').val()/100});
    socket.emit('prop_wr', { file: cur_root + '/rf/freq/band'  , message: $('#rf_band').bootstrapSwitch('state') ? '1' : '0'});
@@ -537,7 +523,6 @@ function load_config (isLoad) {
 function load_rx (isLoad) {
    socket.emit('prop_rd', { file: cur_root + '/rf/freq/val'   ,debug: isLoad});
    socket.emit('prop_rd', { file: cur_root + '/rf/freq/lna'   ,debug: isLoad});
-   socket.emit('prop_rd', { file: cur_root + '/rf/freq/varac' ,debug: isLoad});
    socket.emit('prop_rd', { file: cur_root + '/rf/freq/band'  ,debug: isLoad});
    socket.emit('prop_rd', { file: cur_root + '/rf/gain/val'   ,debug: isLoad});
    socket.emit('prop_rd', { file: cur_root + '/dsp/signed'    ,debug: isLoad});
@@ -552,7 +537,6 @@ function load_rx (isLoad) {
 
 function load_tx (isLoad) {
    socket.emit('prop_rd', { file: cur_root + '/rf/freq/val'   ,debug: isLoad});
-   socket.emit('prop_rd', { file: cur_root + '/rf/freq/lna'   ,debug: isLoad});
    socket.emit('prop_rd', { file: cur_root + '/rf/freq/i_bias',debug: isLoad});
    socket.emit('prop_rd', { file: cur_root + '/rf/freq/q_bias',debug: isLoad});
    socket.emit('prop_rd', { file: cur_root + '/rf/freq/band'  ,debug: isLoad});
