@@ -238,6 +238,7 @@ $("#ext_vco").on('switchChange.bootstrapSwitch', function(event, state) {
 
 // frequency of synthesizer
 $("#synth_freq_set").click( function() {
+   if (!$("#synth_freq").val()) return;
    socket.emit('prop_wr', { file: cur_root + '/rf/freq/val', message: $("#synth_freq").val() });
    setTimeout( function() {
       socket.emit('prop_rd', { file: cur_root + '/rf/freq/val', debug: true});
@@ -246,6 +247,7 @@ $("#synth_freq_set").click( function() {
 
 // phase increment
 $("#dsp_nco_set").click( function() {
+   if (!$("#dsp_nco").val()) return;
    socket.emit('prop_wr', { file: cur_root + '/dsp/nco_adj', message: $("#dsp_nco").val() });
 });
 
@@ -289,6 +291,7 @@ $("#mgmt_set").click( function() {
 
 // dac nco
 $("#dac_nco_set").click( function() {
+   if (!$("#dac_nco").val()) return;
    socket.emit('prop_wr', { file: cur_root + '/rf/dac/nco', message: $("#dac_nco").val() });
 });
 
