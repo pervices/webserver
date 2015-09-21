@@ -219,6 +219,9 @@ $("#mute").on('switchChange.bootstrapSwitch', function(event, state) {
 // rf band
 $("#rf_band").on('switchChange.bootstrapSwitch', function(event, state) {
    socket.emit('prop_wr', { file: cur_root + '/rf/freq/band', message: state ? '1' : '0' });
+   if ( state ) {
+      setTimeout(function(){ $("#synth_freq_set").click(); }, 1500);
+   }
 });
 
 // lna bypass
