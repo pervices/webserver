@@ -33,13 +33,19 @@ block content
             input.input-xs(type="text").width-100#synth_freq
             |  Hz &nbsp;&nbsp;
             button.btn.btn-default.btn-xs#synth_freq_set Set
-         .col-md-7
+         .col-md-4
             p
-               b RX Gain - ADRF6518
-            input(type='range', min='0', max='95', step='1')#gain_range
+               b RX Attenuation - PE43704
+            input(type='range', min='0', max='127', step='1')#atten_range
+            p
+               #atten_display.inline-block
+         .col-md-4
+            p
+               b RX Gain - LMH6521
+            input(type='range', min='0', max='126', step='2')#gain_range
             p
                #gain_display.inline-block
-   img(src="/img/rx_chain.svg", style="max-width: 100%;max-height: 100%;").center
+   img(src="/img/rx_chain.svg", style="width: 100%; height: 100%;").center
    h3 RX DSP Chain
    hr
    .container-fluid(style="text-align:left")
@@ -102,7 +108,7 @@ block content
             input(type="checkbox", name='en', unchecked)#loopback
    br
    br
-   img(src="/img/rx_dsp.svg", style="max-width: 100%;max-height: 100%;").center
+   img(src="/img/rx_dsp.svg", style="width: 75%; height: 75%;").center
    br
    h3 RX Board Control
    hr
@@ -120,7 +126,7 @@ block content
                .col-md-3.top-buffer-5.right-pad-0
                   | ADC
                .col-md-3.top-buffer-5.right-pad-0
-                  | ADRF
+                  | LMH
                .col-md-3.top-buffer-5.right-pad-0
                   | GPIOX
                .col-md-3.top-buffer-5.right-pad-0
