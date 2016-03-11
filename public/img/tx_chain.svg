@@ -15,7 +15,7 @@
    id="svg14572"
    version="1.1"
    inkscape:version="0.91 r13725"
-   sodipodi:docname="Crimson_NG_TX.svg.svg">
+   sodipodi:docname="Crimson_NG_TX.svg">
   <defs
      id="defs14574">
     <marker
@@ -505,9 +505,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="1.979899"
-     inkscape:cx="322.33848"
-     inkscape:cy="68.427012"
+     inkscape:zoom="7.919596"
+     inkscape:cx="323.63325"
+     inkscape:cy="36.615533"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="true"
@@ -594,7 +594,7 @@
            sodipodi:role="line"
            x="339.28152"
            y="494.94659"
-           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:5px;font-family:'DejaVu Serif';-inkscape-font-specification:'DejaVu Serif'">ADF5355</tspan></text>
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:5px;font-family:'DejaVu Serif';-inkscape-font-specification:'DejaVu Serif'">ADF4355</tspan></text>
       <text
          xml:space="preserve"
          style="font-style:normal;font-weight:normal;font-size:7.5px;line-height:87.99999952%;font-family:sans-serif;text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
@@ -673,27 +673,27 @@
       <text
          xml:space="preserve"
          style="font-style:normal;font-weight:normal;font-size:7.5px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-         x="451.53384"
+         x="445.95218"
          y="498.79453"
          id="text5828-3-0-6-8-42-3-3-2-979"
          sodipodi:linespacing="125%"><tspan
            sodipodi:role="line"
-           x="451.53384"
+           x="445.95218"
            y="498.79453"
            style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:6.25px;font-family:'DejaVu Serif';-inkscape-font-specification:'DejaVu Serif'"
-           id="tspan10865-2-7-2-47">Gain</tspan></text>
+           id="tspan10865-2-7-2-47">BB Gain</tspan></text>
       <text
          xml:space="preserve"
          style="font-style:normal;font-weight:normal;font-size:7.5px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-         x="497.69421"
+         x="492.11255"
          y="498.79453"
          id="text5828-3-0-6-8-42-3-3-2-979-1"
          sodipodi:linespacing="125%"><tspan
            sodipodi:role="line"
-           x="497.69421"
+           x="492.11255"
            y="498.79453"
            style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:6.25px;font-family:'DejaVu Serif';-inkscape-font-specification:'DejaVu Serif'"
-           id="tspan10865-2-7-2-47-6">Gain</tspan></text>
+           id="tspan10865-2-7-2-47-6">BB Gain</tspan></text>
       <text
          xml:space="preserve"
          style="font-style:normal;font-weight:normal;font-size:7.5px;line-height:87.99999952%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
