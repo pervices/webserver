@@ -334,26 +334,27 @@ socket.on('raw_reply', function (data) {
       val2 = parseInt("0x" + data.message.substring(data.message.length-5, data.message.length-3)) + 1;
       val = val1 * val2;
       $("#sr_div_display").text("1/" + val);
-      if ($("#sr_resamp_display").text() != "")
-         $("#sr_display").text((322265625 * 4 / 5 / val));
-      else
+      $("#sr_resamp_display").text("");
+//      if ($("#sr_resamp_display").text() != "")
+//         $("#sr_display").text((322265625 * 4 / 5 / val));
+//      else
          $("#sr_display").text((322265625 / val));
       return;
    }
 
-   if (data.cmd == ("mem rr " + cur_board + cur_chan + "4")) {
-      val = parseInt(data.message.substring(0, data.message.length-1));
-      div = $("#sr_div_display").text();
-      div = div.substring(2, div.length);
-      if (val >= 0x8000) {
-         $("#sr_resamp_display").text("4/5 * ");
-         $("#sr_display").text((322265625 * 4 / 5 / parseInt(div)));
-      } else {
-         $("#sr_resamp_display").text("");
-         $("#sr_display").text((322265625 / parseInt(div)));
-      }
-      return;
-   }
+//   if (data.cmd == ("mem rr " + cur_board + cur_chan + "4")) {
+//      val = parseInt(data.message.substring(0, data.message.length-1));
+//      div = $("#sr_div_display").text();
+//      div = div.substring(2, div.length);
+//      if (val >= 0x8000) {
+//         $("#sr_resamp_display").text("4/5 * ");
+//         $("#sr_display").text((322265625 * 4 / 5 / parseInt(div)));
+//      } else {
+//         $("#sr_resamp_display").text("");
+//         $("#sr_display").text((322265625 / parseInt(div)));
+//      }
+//      return;
+//   }
 
    //console.log("Raw reply: " + data.message);
    if ($("#chist")) {
