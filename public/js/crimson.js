@@ -544,7 +544,7 @@ function load_rx (isLoad) {
    socket.emit('prop_rd', { file: cur_root + '/rf/freq/lna'   ,debug: isLoad});
    socket.emit('prop_rd', { file: cur_root + '/rf/freq/band'  ,debug: isLoad});
    socket.emit('prop_rd', { file: cur_root + '/rf/gain/val'   ,debug: isLoad});
-   socket.emit('prop_rd', { file: cur_root + '/rf/atten/val'   ,debug: isLoad});
+   socket.emit('prop_rd', { file: cur_root + '/rf/atten/val'  ,debug: isLoad});
    socket.emit('prop_rd', { file: cur_root + '/dsp/signed'    ,debug: isLoad});
    socket.emit('prop_rd', { file: cur_root + '/dsp/nco_adj'   ,debug: isLoad});
    socket.emit('prop_rd', { file: cur_root + '/dsp/rate'      ,debug: isLoad});
@@ -569,10 +569,10 @@ function load_tx (isLoad) {
 }
 
 function load_clock (isLoad) {
-   socket.emit('prop_rd', { file: cur_root + '/source/vco'    ,debug: isLoad});
-   socket.emit('prop_rd', { file: cur_root + '/source/sysref'   ,debug: isLoad});
-   socket.emit('prop_rd', { file: cur_root + '/source/devclk'    ,debug: isLoad});
-   socket.emit('prop_rd', { file: cur_root + '/source/pll'    ,debug: isLoad});
+//   socket.emit('prop_rd', { file: cur_root + '/source/vco'    ,debug: isLoad});
+//   socket.emit('prop_rd', { file: cur_root + '/source/sysref' ,debug: isLoad});
+//   socket.emit('prop_rd', { file: cur_root + '/source/devclk' ,debug: isLoad});
+//   socket.emit('prop_rd', { file: cur_root + '/source/pll'    ,debug: isLoad});
    socket.emit('prop_rd', { file: cur_root + '/source/ref'    ,debug: isLoad});
 }
 
