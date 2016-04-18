@@ -28,11 +28,14 @@ block content
                b Synth Freq
             button.btn.btn-default.btn-xs#mute Mute
          .col-md-2.right-pad-0
-            p
-               b Synthesizer Frequency
-            input.input-xs.width-100(type="text")#synth_freq
-            |  Hz &nbsp;&nbsp;
-            button.btn.btn-default.btn-xs#synth_freq_set Set
+            .row
+               p
+                  b Synthesizer Frequency
+               input.input-xs.width-100(type="text")#synth_freq
+               |  Hz &nbsp;&nbsp;
+               button.btn.btn-default.btn-xs#synth_freq_set Set
+            .row
+               div(class="alert alert-danger", style="display: none")#synth_error_display MUST be >= 53MHz
          .col-md-2.right-pad-0
             p
                b DAC NCO Offset

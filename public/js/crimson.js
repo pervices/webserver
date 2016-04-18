@@ -262,7 +262,16 @@ $("#out_vco_en").on('switchChange.bootstrapSwitch', function(event, state) {
 
 // frequency of synthesizer
 $("#synth_freq_set").click( function() {
-   if (!$("#synth_freq").val()) return;
+	var reqfreq = $("#synth_freq").val();
+   if (!reqfreq) return;
+   
+   // Frequency Setting less than 53MHz is considered invalid 
+   if ((reqfreq < 53000000) && (reqfreq > 0)) {		// Setting to 0 is a valid command to mute PLL
+	   $("#synth_error_display").show();
+   } else {
+	   $("#synth_error_display").hide();
+   }
+   
    socket.emit('prop_wr', { file: cur_root + '/rf/freq/val', message: $("#synth_freq").val() });
    setTimeout( function() {
       socket.emit('prop_rd', { file: cur_root + '/rf/freq/val', debug: true});

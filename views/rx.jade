@@ -28,11 +28,14 @@ block content
                b LNA Enable
             input(type="checkbox", name='en', unchecked)#lna_en
          .col-md-2
-            p
-               b Synthesizer Frequency
-            input.input-xs(type="text").width-100#synth_freq
-            |  Hz &nbsp;&nbsp;
-            button.btn.btn-default.btn-xs#synth_freq_set Set
+            .row 
+               p
+                  b Synthesizer Frequency
+               input.input-xs(type="text").width-100#synth_freq
+               |  Hz &nbsp;&nbsp;
+               button.btn.btn-default.btn-xs#synth_freq_set Set
+            .row
+               div(class="alert alert-danger", style="display: none")#synth_error_display MUST be >= 53MHz
          .col-md-4
             p
                b RX Attenuation - PE43704
