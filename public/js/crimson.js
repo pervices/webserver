@@ -334,6 +334,123 @@ $("#program_hexfile").change( function() {
       $("#program_start").removeClass('disabled');
 });
 
+/////////////////////////////////////////////////////////////////////
+// Pressing ENTER on Textboxes activates their button press events //
+/////////////////////////////////////////////////////////////////////
+
+$("#synth_freq").keyup(function(e) {
+	if (e.keyCode == 13) {
+		e.preventDefault();
+		$("#synth_freq_set").click();
+	}
+});
+
+$("#dac_nco").keyup(function(e) {
+	if (e.keyCode == 13) {
+		e.preventDefault();
+		$("#dac_nco_set").click();
+	}
+});
+
+$("#dsp_nco").keyup(function(e) {
+	if (e.keyCode == 13) {
+		e.preventDefault();
+		$("#dsp_nco_set").click();
+	}
+});
+
+$("#sr").keyup(function(e) {
+	if (e.keyCode == 13) {
+		e.preventDefault();
+		$("#sr_set").click();
+	}
+});
+
+$("#ip").keyup(function(e) {
+	if (e.keyCode == 13) {
+		e.preventDefault();
+		$("#link_set").click();
+	}
+});
+
+$("#mac").keyup(function(e) {
+	if (e.keyCode == 13) {
+		e.preventDefault();
+		$("#link_set").click();
+	}
+});
+
+$("#port").keyup(function(e) {
+	if (e.keyCode == 13) {
+		e.preventDefault();
+		$("#link_set").click();
+	}
+});
+
+$("#hostname").keyup(function(e) {
+	if (e.keyCode == 13) {
+		e.preventDefault();
+		$("#mgmt_set").click();
+	}
+});
+
+$("#mgmt_ip").keyup(function(e) {
+	if (e.keyCode == 13) {
+		e.preventDefault();
+		$("#mgmt_set").click();
+	}
+});
+
+$("#sfpa_ip").keyup(function(e) {
+	if (e.keyCode == 13) {
+		e.preventDefault();
+		$("#sfpa_set").click();
+	}
+});
+
+$("#sfpa_mac").keyup(function(e) {
+	if (e.keyCode == 13) {
+		e.preventDefault();
+		$("#sfpa_set").click();
+	}
+});
+
+$("#sfpa_paylen").keyup(function(e) {
+	if (e.keyCode == 13) {
+		e.preventDefault();
+		$("#sfpa_set").click();
+	}
+});
+
+$("#sfpb_ip").keyup(function(e) {
+	if (e.keyCode == 13) {
+		e.preventDefault();
+		$("#sfpb_set").click();
+	}
+});
+
+$("#sfpb_mac").keyup(function(e) {
+	if (e.keyCode == 13) {
+		e.preventDefault();
+		$("#sfpb_set").click();
+	}
+});
+
+$("#sfpb_paylen").keyup(function(e) {
+	if (e.keyCode == 13) {
+		e.preventDefault();
+		$("#sfpb_set").click();
+	}
+});
+
+$("#uart_cmd").keyup(function(e) {
+	if (e.keyCode == 13) {
+		e.preventDefault();
+		$("#send_uart_cmd").click();
+	}
+});
+
+
 // receive console from server
 socket.on('raw_reply', function (data) {
    // if reading back the sample rate
