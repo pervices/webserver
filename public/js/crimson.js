@@ -211,12 +211,6 @@ $("#sr_set").click(function(){
    }, 500);
 });
 
-// mute
-$("#mute").click(function() {
-   $("#synth_freq").val("0");
-   setTimeout( function() { $("#synth_freq_set").click(); }, 100);
-});
-
 // rf band
 $("#rf_band").on('switchChange.bootstrapSwitch', function(event, state) {
    socket.emit('prop_wr', { file: cur_root + '/rf/freq/band', message: state ? '1' : '0' });
@@ -605,11 +599,11 @@ socket.on('prop_ret', function (data) {
 // en/disable the configurations
 function activateControls_rx(state) {
    $('#rf_band').bootstrapSwitch('readonly', !state);
-   $('#pa_en').bootstrapSwitch('readonly', !state);
-   $("#synth_freq").prop('disabled', !state);
-   $("#synth_freq_set").prop('disabled', !state);
+   $('#pa_en').bootstrapSwitch('readonly', !(state && $('#rf_band').bootstrapSwitch('state')));
+   $("#synth_freq").prop('disabled', !(state && $('#rf_band').bootstrapSwitch('state')));
+   $("#synth_freq_set").prop('disabled', !(state && $('#rf_band').bootstrapSwitch('state')));
    $("#gain_range").prop('disabled', !state);
-   $("#atten_range").prop('disabled', !state);
+   $("#atten_range").prop('disabled', !(state && $('#rf_band').bootstrapSwitch('state')));
    $("#dsp_reset").prop('disabled', !state);
    //$('#signed').bootstrapSwitch('readonly', !state);
    $("#dsp_nco").prop('disabled', !state);
@@ -625,15 +619,14 @@ function activateControls_rx(state) {
 
 function activateControls_tx(state) {
    $('#rf_band').bootstrapSwitch('readonly', !state);
-   $("#synth_freq").prop('disabled', !state);
-   $("#synth_freq_set").prop('disabled', !state);
+   $("#synth_freq").prop('disabled', !(state && $('#rf_band').bootstrapSwitch('state')));
+   $("#synth_freq_set").prop('disabled', !(state && $('#rf_band').bootstrapSwitch('state')));
    $("#dac_nco").prop('disabled', !state);
    $("#dac_nco_set").prop('disabled', !state);
    $("#ibias_range").prop('disabled', !state);
    $("#qbias_range").prop('disabled', !state);
    $("#gain_range").prop('disabled', !state);
    $("#dsp_reset").prop('disabled', !state);
-   $("#mute").prop('disabled', !state);
    $("#dsp_nco").prop('disabled', !state);
    $("#dsp_nco_set").prop('disabled', !state);
    $("#sr").prop('disabled', !state);
