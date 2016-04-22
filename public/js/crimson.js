@@ -584,14 +584,14 @@ socket.on('prop_ret', function (data) {
       $('#loopback').bootstrapSwitch('state', parseInt(data.message) != 0, true);
    } else if (data.file == cur_root + '/source/ref') {
       $('#ext_ref').bootstrapSwitch('state', data.message.indexOf('external') > -1, true);
-   } else if (data.file == cur_root + '/source/devclk') {
-      $('#out_devclk_en').bootstrapSwitch('state', data.message.indexOf('external') > -1, true);
-   } else if (data.file == cur_root + '/source/pll') {
-      $('#out_pll_en').bootstrapSwitch('state', data.message.indexOf('external') > -1, true);
-   } else if (data.file == cur_root + '/source/sync') {
-      $('#out_sysref_en').bootstrapSwitch('state', data.message.indexOf('external') > -1, true);
-   } else if (data.file == cur_root + '/source/vco') {
-      $('#out_vco_en').bootstrapSwitch('state', data.message.indexOf('external') > -1, true);
+//   } else if (data.file == cur_root + '/source/devclk') {
+//      $('#out_devclk_en').bootstrapSwitch('state', data.message.indexOf('external') > -1, true);
+//   } else if (data.file == cur_root + '/source/pll') {
+//      $('#out_pll_en').bootstrapSwitch('state', data.message.indexOf('external') > -1, true);
+//   } else if (data.file == cur_root + '/source/sync') {
+//      $('#out_sysref_en').bootstrapSwitch('state', data.message.indexOf('external') > -1, true);
+//   } else if (data.file == cur_root + '/source/vco') {
+//      $('#out_vco_en').bootstrapSwitch('state', data.message.indexOf('external') > -1, true);
    }
 
 });
