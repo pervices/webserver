@@ -221,7 +221,25 @@ $("#mute").click(function() {
 $("#rf_band").on('switchChange.bootstrapSwitch', function(event, state) {
    socket.emit('prop_wr', { file: cur_root + '/rf/freq/band', message: state ? '1' : '0' });
    if ( state ) {
+	   // if RX, enable DSA slider
+	   if (pathname.indexOf('rx') > -1) {
+		   $("#atten_range").prop('disabled', !state);
+		   $('#pa_en').bootstrapSwitch('readonly', !state);
+	   }
+	   
+	   $("#synth_freq").prop('disabled', !state);
+	   $("#synth_freq_set").prop('disabled', !state);
+	   
       setTimeout(function(){ $("#synth_freq_set").click(); }, 900);
+   } else {
+	   // if RX, disable DSA slider
+	   if (pathname.indexOf('rx') > -1) {
+		   $("#atten_range").prop('disabled', !state);
+		   $('#pa_en').bootstrapSwitch('readonly', !state);
+	   }
+	   
+	   $("#synth_freq").prop('disabled', !state);
+	   $("#synth_freq_set").prop('disabled', !state);
    }
 });
 
