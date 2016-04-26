@@ -219,6 +219,15 @@ $("#rf_band").on('switchChange.bootstrapSwitch', function(event, state) {
 	   if (pathname.indexOf('rx') > -1) {
 		   $("#atten_range").prop('disabled', !state);
 		   $('#pa_en').bootstrapSwitch('readonly', !state);
+		   
+		   // Force Attenuation Setting to MAX
+		   $("#atten_range").val(127);
+		   $("#atten_range").change();
+		   
+	   } else if (pathname.indexOf('tx') > -1) {
+		   // Force Gain Setting to MIN
+		   $("#gain_range").val(0);
+		   $("#gain_range").change();
 	   }
 	   
 	   $("#synth_freq").prop('disabled', !state);
@@ -230,6 +239,15 @@ $("#rf_band").on('switchChange.bootstrapSwitch', function(event, state) {
 	   if (pathname.indexOf('rx') > -1) {
 		   $("#atten_range").prop('disabled', !state);
 		   $('#pa_en').bootstrapSwitch('readonly', !state);
+		   
+		   // Force Attenuation Setting to MAX
+		   $("#atten_range").val(127);
+		   $("#atten_range").change();
+		   
+	   } else if (pathname.indexOf('tx') > -1) {
+		   // Force Gain Setting to MIN
+		   $("#gain_range").val(0);
+		   $("#gain_range").change();
 	   }
 	   
 	   $("#synth_freq").prop('disabled', !state);
