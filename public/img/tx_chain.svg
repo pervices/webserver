@@ -24,8 +24,8 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="1.979899"
-     inkscape:cx="290.19275"
-     inkscape:cy="28.611767"
+     inkscape:cx="301.52503"
+     inkscape:cy="63.36615"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="true"
@@ -1692,5 +1692,29 @@
            x="87.881889"
            sodipodi:role="line" /></text>
     </g>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:40px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.44291338;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
+       x="287.40125"
+       y="191.24449"
+       id="text5828-3-0-6-8-9-3"
+       sodipodi:linespacing="125%"><tspan
+         id="tspan11337"
+         sodipodi:role="line"
+         x="287.40125"
+         y="191.24449"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:5px;font-family:sans-serif;-inkscape-font-specification:sans-serif;stroke-width:0.44291338;stroke-miterlimit:10;stroke-dasharray:none">PE42920</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:40px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.44291344;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       x="585.71082"
+       y="189.02373"
+       id="text5828-3-0-68-9-9"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         x="585.71082"
+         y="189.02373"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:5px;font-family:sans-serif;-inkscape-font-specification:sans-serif;stroke-width:0.44291344;stroke-miterlimit:4;stroke-dasharray:none"
+         id="tspan4414">SKY13374-397LF</tspan></text>
   </g>
 </svg>
