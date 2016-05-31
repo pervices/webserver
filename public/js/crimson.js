@@ -245,6 +245,12 @@ $("#ext_vco").on('switchChange.bootstrapSwitch', function(event, state) {
    socket.emit('prop_wr', { file: cur_root + '/source/vco', message: state ? 'external' : 'internal' });
 });
 
+// ref_dac
+$("#ref_dac_set").click( function() {
+   if(!$("#ref_dac").val()) return;
+   socket.emit('prop_wr', { file: cur_root + '/source/ref_dac', message: $("#ref_dac").val()} 
+};
+
 // frequency of synthesizer
 $("#synth_freq_set").click( function() {
    if (!$("#synth_freq").val()) return;
