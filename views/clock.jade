@@ -11,6 +11,11 @@ block content
                b External Reference Clock
             input(type="checkbox", name='en', unchecked)#ext_ref
          .col-md-2.right-pad-0
+	    p
+	       b Internal Reference DAC calibration
+	    input.input-xs(type="text").width-100#ref_dac
+	    |   12'b Value &nbsp;&nbsp;
+	    button.btn.btn-default.btn-xs#ref_dac_set Set
          .col-md-2.right-pad-0
             p
                b JESD DevClock Output
