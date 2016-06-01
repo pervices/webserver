@@ -151,6 +151,10 @@ $("#lmk_dump").click(function() {
    socket.emit('raw_cmd', { message: "echo 'dump -c' | mcu -f s" });
 });
 
+$("#nanodac_dump").click(function() {
+   socket.emit('raw_cmd', { message: "echo 'dump -n' | mcu -f s" });
+});
+
 $("#dac_dump").click(function() {
    socket.emit('raw_cmd', { message: "echo 'dump -c " + cur_chan + " -d' | mcu -f t" });
 });
@@ -293,8 +297,8 @@ $("#out_vco_en").on('switchChange.bootstrapSwitch', function(event, state) {
 // ref_dac
 $("#ref_dac_set").click( function() {
    if(!$("#ref_dac").val()) return;
-   socket.emit('prop_wr', { file: cur_root + '/source/ref_dac', message: $("#ref_dac").val()} 
-};
+   socket.emit('prop_wr', { file: cur_root + '/source/ref_dac', message: $("#ref_dac").val()}) 
+});
 
 // frequency of synthesizer
 $("#synth_freq_set").click( function() {
@@ -486,6 +490,12 @@ $("#uart_cmd").keyup(function(e) {
 	}
 });
 
+$("#ref_dac").keyup(function(e) {
+        if (e.keyCode == 13) {
+                e.preventDefault();
+                $("#send_uart_cmd").click();
+        }
+});
 
 // receive console from server
 socket.on('raw_reply', function (data) {
@@ -608,6 +618,8 @@ socket.on('prop_ret', function (data) {
       $('#loopback').bootstrapSwitch('state', parseInt(data.message) != 0, true);
    } else if (data.file == cur_root + '/source/ref') {
       $('#ext_ref').bootstrapSwitch('state', data.message.indexOf('external') > -1, true);
+   } else if (data.file == cur_root + '/source/ref_dac') {
+      $('#ref_dac').val(data.message);
 //   } else if (data.file == cur_root + '/source/devclk') {
 //      $('#out_devclk_en').bootstrapSwitch('state', data.message.indexOf('external') > -1, true);
 //   } else if (data.file == cur_root + '/source/pll') {
@@ -734,7 +746,7 @@ function load_clock (isLoad) {
 //   socket.emit('prop_rd', { file: cur_root + '/source/sysref' ,debug: isLoad});
 //   socket.emit('prop_rd', { file: cur_root + '/source/devclk' ,debug: isLoad});
 //   socket.emit('prop_rd', { file: cur_root + '/source/pll'    ,debug: isLoad});
-   socket.emit('prop_rd', { file: cur_root + '/source/ref'    ,debug: isLoad});
+   socket.emit('prop_rd', { file: cur_root + '/source/ref_dac'    ,debug: isLoad});
 }
 
 // determine which page is currently loaded
