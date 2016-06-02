@@ -151,10 +151,6 @@ $("#lmk_dump").click(function() {
    socket.emit('raw_cmd', { message: "echo 'dump -c' | mcu -f s" });
 });
 
-$("#nanodac_dump").click(function() {
-   socket.emit('raw_cmd', { message: "echo 'dump -n' | mcu -f s" });
-});
-
 $("#dac_dump").click(function() {
    socket.emit('raw_cmd', { message: "echo 'dump -c " + cur_chan + " -d' | mcu -f t" });
 });
