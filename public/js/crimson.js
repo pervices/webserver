@@ -61,7 +61,7 @@ $("#chan_en").on('switchChange.bootstrapSwitch', function(event, state) {
             activateControls_tx(true);
          }
          $("#loadingModal").modal('hide');
-      }, 4000);
+      }, 500);
    } else {
       if (is_rx)  activateControls_rx(false);
       else        activateControls_tx(false);
