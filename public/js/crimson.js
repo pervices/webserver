@@ -312,6 +312,9 @@ $("#synth_freq_set").click( function() {
 $("#dsp_nco_set").click( function() {
    if (!$("#dsp_nco").val()) return;
    socket.emit('prop_wr', { file: cur_root + '/dsp/nco_adj', message: $("#dsp_nco").val() });
+   setTimeout( function() {
+	   socket.emit('prop_rd', { file: cur_root + '/dsp/nco_adj', debug: true });
+   }, 1000);
 });
 
 // dsp reset
@@ -356,6 +359,9 @@ $("#mgmt_set").click( function() {
 $("#dac_nco_set").click( function() {
    if (!$("#dac_nco").val()) return;
    socket.emit('prop_wr', { file: cur_root + '/rf/dac/nco', message: $("#dac_nco").val() });
+   setTimeout( function() {
+	   socket.emit('prop_rd', { file: cur_root + '/rf/dac/nco', debug: true });
+   }, 1000);
 });
 
 // hexfile
