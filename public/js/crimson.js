@@ -661,11 +661,11 @@ function activateControls_tx(state) {
 
 // write the current settings to SDR
 function write_rx() {
-   socket.emit('prop_wr', { file: cur_root + '/rf/freq/val'   , message: $('#synth_freq').val()});
    socket.emit('prop_wr', { file: cur_root + '/rf/freq/lna'   , message: $('#pa_en').bootstrapSwitch('state') ? '0' : '1'});
    socket.emit('prop_wr', { file: cur_root + '/rf/freq/band'  , message: $('#rf_band').bootstrapSwitch('state') ? '1' : '0'});
    socket.emit('prop_wr', { file: cur_root + '/rf/gain/val'   , message: $('#gain_range').val()});
    socket.emit('prop_wr', { file: cur_root + '/rf/atten/val'  , message: $('#atten_range').val()});
+   socket.emit('prop_wr', { file: cur_root + '/rf/freq/val'   , message: $('#synth_freq').val()});
    socket.emit('prop_wr', { file: cur_root + '/dsp/signed'    , message: $('#signed').bootstrapSwitch('state') ? '1' : '0'});
    socket.emit('prop_wr', { file: cur_root + '/dsp/nco_adj'   , message: $('#dsp_nco').val()});
    socket.emit('prop_wr', { file: cur_root + '/dsp/rate'      , message: $('#sr').val()});
@@ -676,12 +676,12 @@ function write_rx() {
 }
 
 function write_tx() {
-   socket.emit('prop_wr', { file: cur_root + '/rf/freq/val'   , message: $('#synth_freq').val()});
    socket.emit('prop_wr', { file: cur_root + '/rf/freq/i_bias', message: $('#ibias_range').val()/100});
    socket.emit('prop_wr', { file: cur_root + '/rf/freq/q_bias', message: $('#qbias_range').val()/100});
    socket.emit('prop_wr', { file: cur_root + '/rf/freq/band'  , message: $('#rf_band').bootstrapSwitch('state') ? '1' : '0'});
    socket.emit('prop_wr', { file: cur_root + '/rf/gain/val'   , message: $('#gain_range').val()});
    socket.emit('prop_wr', { file: cur_root + '/rf/dac/nco'    , message: $('#dac_nco').val()});
+   socket.emit('prop_wr', { file: cur_root + '/rf/freq/val'   , message: $('#synth_freq').val()});
    socket.emit('prop_wr', { file: cur_root + '/dsp/nco_adj'   , message: $('#dsp_nco').val()});
    socket.emit('prop_wr', { file: cur_root + '/dsp/rate'      , message: $('#sr').val()});
    socket.emit('prop_wr', { file: cur_root + '/link/port'     , message: $('#port').val()});
