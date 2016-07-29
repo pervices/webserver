@@ -579,6 +579,7 @@ socket.on('prop_ret', function (data) {
    } else if (data.file == cur_root + '/rf/atten/val') {
       $('#atten_range').val(parseInt(data.message));
       $('#atten_display').text('-' + (parseInt(data.message) / 4) + ' dB');
+      $("#atten_range").prop('disabled', !($('#rf_band').bootstrapSwitch('state') && $('#chan_en').bootstrapSwitch('state')));
    } else if (data.file == cur_root + '/rf/freq/band') {
       $('#rf_band').bootstrapSwitch('readonly', false);
       $('#rf_band').bootstrapSwitch('state', parseInt(data.message) != 0, true);
