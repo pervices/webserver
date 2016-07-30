@@ -575,7 +575,7 @@ window.onload = function() {
    } else if (pathname.indexOf('debug') > -1) {
       cur_board = 'fpga';
       cur_root = cur_board;
-      //loadFunc = load_debug;
+      return;
    } else if (pathname.indexOf('rx') > -1) {
       cur_board = 'rx';
       cur_root = cur_board + '_' + cur_chan;
@@ -584,6 +584,10 @@ window.onload = function() {
       cur_board = 'tx';
       cur_root = cur_board + '_' + cur_chan;
       loadFunc = load_tx;
+   } else {
+      cur_board = 'coverpage';
+      cur_root = cur_board;
+      return;
    }
 
    loadFunc(true);
