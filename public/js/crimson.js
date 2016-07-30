@@ -398,12 +398,17 @@ socket.on('prop_ret', function (data) {
    } else if (data.file == cur_root + '/rf/freq/val') {
       $('#synth_freq').val(data.message);
    } else if (data.file == cur_root + '/rf/freq/lna') {
+      var lna_readonly = $('#lna_en').bootstrapSwitch('readonly');
+      $('#lna_en').bootstrapSwitch('readonly', false);
       $('#lna_en').bootstrapSwitch('state', parseInt(data.message) == 0, true);
+      $('#lna_en').bootstrapSwitch('readonly', lna_readonly);
    } else if (data.file == cur_root + '/rf/gain/val') {
       $('#gain_range').val(parseInt(data.message));
       $("#gain_display").text(parseInt(data.message) + ' dB');
    } else if (data.file == cur_root + '/rf/freq/band') {
+      $('#rf_band').bootstrapSwitch('readonly', false);
       $('#rf_band').bootstrapSwitch('state', parseInt(data.message) != 0, true);
+      $('#rf_band').bootstrapSwitch('readonly', !($('#chan_en').bootstrapSwitch('state')));
    } else if (data.file == cur_root + '/dsp/signed') {
       $('#signed').bootstrapSwitch('state', parseInt(data.message) != 0, true);
    } else if (data.file == cur_root + '/dsp/nco_adj') {
@@ -482,10 +487,10 @@ function activateControls_tx(state) {
 
 // write the current settings to SDR
 function write_rx() {
-   socket.emit('prop_wr', { file: cur_root + '/rf/freq/val'   , message: $('#synth_freq').val()});
    socket.emit('prop_wr', { file: cur_root + '/rf/freq/lna'   , message: $('#lna_en').bootstrapSwitch('state') ? '0' : '1'});
    socket.emit('prop_wr', { file: cur_root + '/rf/freq/band'  , message: $('#rf_band').bootstrapSwitch('state') ? '1' : '0'});
    socket.emit('prop_wr', { file: cur_root + '/rf/gain/val'   , message: $('#gain_range').val()});
+   socket.emit('prop_wr', { file: cur_root + '/rf/freq/val'   , message: $('#synth_freq').val()});
    socket.emit('prop_wr', { file: cur_root + '/dsp/signed'    , message: $('#signed').bootstrapSwitch('state') ? '1' : '0'});
    socket.emit('prop_wr', { file: cur_root + '/dsp/nco_adj'   , message: $('#dsp_nco').val()});
    socket.emit('prop_wr', { file: cur_root + '/dsp/rate'      , message: $('#sr').val()});
@@ -496,12 +501,13 @@ function write_rx() {
 }
 
 function write_tx() {
-   socket.emit('prop_wr', { file: cur_root + '/rf/freq/val'   , message: $('#synth_freq').val()});
+
    socket.emit('prop_wr', { file: cur_root + '/rf/freq/i_bias', message: $('#ibias_range').val()/100});
    socket.emit('prop_wr', { file: cur_root + '/rf/freq/q_bias', message: $('#qbias_range').val()/100});
    socket.emit('prop_wr', { file: cur_root + '/rf/freq/band'  , message: $('#rf_band').bootstrapSwitch('state') ? '1' : '0'});
    socket.emit('prop_wr', { file: cur_root + '/rf/gain/val'   , message: $('#gain_range').val()});
    socket.emit('prop_wr', { file: cur_root + '/rf/dac/nco'    , message: $('#dac_nco').val()});
+   socket.emit('prop_wr', { file: cur_root + '/rf/freq/val'   , message: $('#synth_freq').val()});
    socket.emit('prop_wr', { file: cur_root + '/dsp/nco_adj'   , message: $('#dsp_nco').val()});
    socket.emit('prop_wr', { file: cur_root + '/dsp/rate'      , message: $('#sr').val()});
    socket.emit('prop_wr', { file: cur_root + '/link/port'     , message: $('#port').val()});
@@ -521,9 +527,10 @@ function load_config (isLoad) {
 }
 
 function load_rx (isLoad) {
+   socket.emit('prop_rd', { file: cur_root + '/pwr'           ,debug: isLoad});
+   socket.emit('prop_rd', { file: cur_root + '/rf/freq/band'  ,debug: isLoad});
    socket.emit('prop_rd', { file: cur_root + '/rf/freq/val'   ,debug: isLoad});
    socket.emit('prop_rd', { file: cur_root + '/rf/freq/lna'   ,debug: isLoad});
-   socket.emit('prop_rd', { file: cur_root + '/rf/freq/band'  ,debug: isLoad});
    socket.emit('prop_rd', { file: cur_root + '/rf/gain/val'   ,debug: isLoad});
    socket.emit('prop_rd', { file: cur_root + '/dsp/signed'    ,debug: isLoad});
    socket.emit('prop_rd', { file: cur_root + '/dsp/nco_adj'   ,debug: isLoad});
@@ -532,20 +539,19 @@ function load_rx (isLoad) {
    socket.emit('prop_rd', { file: cur_root + '/link/port'     ,debug: isLoad});
    socket.emit('prop_rd', { file: cur_root + '/link/ip_dest'  ,debug: isLoad});
    socket.emit('prop_rd', { file: cur_root + '/link/mac_dest' ,debug: isLoad});
-   socket.emit('prop_rd', { file: cur_root + '/pwr'           ,debug: isLoad});
 }
 
 function load_tx (isLoad) {
+   socket.emit('prop_rd', { file: cur_root + '/pwr'           ,debug: isLoad});
+   socket.emit('prop_rd', { file: cur_root + '/rf/freq/band'  ,debug: isLoad});
    socket.emit('prop_rd', { file: cur_root + '/rf/freq/val'   ,debug: isLoad});
    socket.emit('prop_rd', { file: cur_root + '/rf/freq/i_bias',debug: isLoad});
    socket.emit('prop_rd', { file: cur_root + '/rf/freq/q_bias',debug: isLoad});
-   socket.emit('prop_rd', { file: cur_root + '/rf/freq/band'  ,debug: isLoad});
    socket.emit('prop_rd', { file: cur_root + '/rf/gain/val'   ,debug: isLoad});
    socket.emit('prop_rd', { file: cur_root + '/rf/dac/nco'    ,debug: isLoad});
    socket.emit('prop_rd', { file: cur_root + '/dsp/nco_adj'   ,debug: isLoad});
    socket.emit('prop_rd', { file: cur_root + '/dsp/rate'      ,debug: isLoad});
    socket.emit('prop_rd', { file: cur_root + '/link/port'     ,debug: isLoad});
-   socket.emit('prop_rd', { file: cur_root + '/pwr'           ,debug: isLoad});
 }
 
 function load_clock (isLoad) {
