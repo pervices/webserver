@@ -569,6 +569,9 @@ socket.on('prop_ret', function (data) {
       }
    } else if (data.file == cur_root + '/rf/freq/val') {
       $('#synth_freq').val(data.message);
+      var synth_freq_en = $('#chan_en').bootstrapSwitch('state') && $('#rf_band').bootstrapSwitch('state');
+      $("#synth_freq").prop('disabled', !synth_freq_en);
+      $("#synth_freq_set").prop('disabled', !synth_freq_en);
    } else if (data.file == cur_root + '/rf/freq/lna') {
       $('#pa_en').bootstrapSwitch('readonly', false);
       $('#pa_en').bootstrapSwitch('state', parseInt(data.message) == 0, true);
@@ -707,8 +710,8 @@ function load_config (isLoad) {
 
 function load_rx (isLoad) {
    socket.emit('prop_rd', { file: cur_root + '/pwr'           ,debug: isLoad});
-   socket.emit('prop_rd', { file: cur_root + '/rf/freq/val'   ,debug: isLoad});
    socket.emit('prop_rd', { file: cur_root + '/rf/freq/band'  ,debug: isLoad});
+   socket.emit('prop_rd', { file: cur_root + '/rf/freq/val'   ,debug: isLoad});
    socket.emit('prop_rd', { file: cur_root + '/rf/freq/lna'   ,debug: isLoad});
    socket.emit('prop_rd', { file: cur_root + '/rf/gain/val'   ,debug: isLoad});
    socket.emit('prop_rd', { file: cur_root + '/rf/atten/val'  ,debug: isLoad});
@@ -723,10 +726,10 @@ function load_rx (isLoad) {
 
 function load_tx (isLoad) {
    socket.emit('prop_rd', { file: cur_root + '/pwr'           ,debug: isLoad});
-   socket.emit('prop_rd', { file: cur_root + '/rf/freq/val'   ,debug: isLoad});
    socket.emit('prop_rd', { file: cur_root + '/rf/freq/i_bias',debug: isLoad});
    socket.emit('prop_rd', { file: cur_root + '/rf/freq/q_bias',debug: isLoad});
    socket.emit('prop_rd', { file: cur_root + '/rf/freq/band'  ,debug: isLoad});
+   socket.emit('prop_rd', { file: cur_root + '/rf/freq/val'   ,debug: isLoad});
    socket.emit('prop_rd', { file: cur_root + '/rf/gain/val'   ,debug: isLoad});
    socket.emit('prop_rd', { file: cur_root + '/rf/dac/nco'    ,debug: isLoad});
    socket.emit('prop_rd', { file: cur_root + '/dsp/nco_adj'   ,debug: isLoad});
