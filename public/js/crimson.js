@@ -208,6 +208,7 @@ $("#sr_set").click(function(){
    // read the actual values for the sample rate
    setTimeout(function() {
       socket.emit('raw_cmd', { message: "mem rr " + cur_board + cur_chan + "1" });
+      socket.emit('raw_cmd', { message: "mem rr " + cur_board + cur_chan + "4" });
    }, 500);
 });
 
@@ -493,8 +494,26 @@ socket.on('raw_reply', function (data) {
    if (data.cmd == ("mem rr " + cur_board + cur_chan + "1")) {
       var val = parseInt(data.message) + 1;
       $("#sr_div_display").text("1/" + val);
-      $("#sr_display").text((322265625 / val));
+      if ($("#sr_resamp_display").text() != "") {
+	  $("#sr_display").text((322265625 * 4 / 5 / val));
+      } else {
+	$("#sr_display").text((322265625 / val));
+      }
       return;
+   }
+
+   if (data.cmd == ("mem rr " + cur_board + cur_chan + "4")) {
+       var val = parseInt(data.message.substring(0, data.message.length-1));
+       var div = $("#sr_div_display").text();
+       div = div.substring(2, div.length);
+       if (val >= 0x8000) {
+	   $("#sr_resamp_display").text("4/5 * ");
+	   $("#sr_display").text((322265625 * 4 / 5 / parseInt(div)));
+       } else {
+	   $("#sr_resamp_display").text("");
+	   $("#sr_display").text((322265625 / parseInt(div)));
+       }
+       return;
    }
 
    //console.log("Raw reply: " + data.message);
@@ -601,6 +620,7 @@ socket.on('prop_ret', function (data) {
       // read the actual values for the sample rate
       setTimeout(function() {
          socket.emit('raw_cmd', { message: "mem rr " + cur_board + cur_chan + "1" });
+	 socket.emit('raw_cmd', { message: "mem rr " + cur_board + cur_chan + "4" });
       }, 500);
    } else if (data.file == cur_root + '/rf/freq/i_bias') {
       $('#ibias_range').val(parseInt(data.message)*100);
