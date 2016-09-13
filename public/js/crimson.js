@@ -48,6 +48,9 @@ $("#chan_a,#chan_b,#chan_c,#chan_d").click(function() {
 $("#chan_en").on('switchChange.bootstrapSwitch', function(event, state) {
    socket.emit('prop_wr', { file: cur_root + '/pwr', message: state ? '1' : '0' });
    var is_rx = cur_root.indexOf('rx') > -1;
+   if (is_rx) {
+      socket.emit('prop_wr', { file: cur_root + '/stream', message: state ? '1' : '0' });
+   }
 
    // if turn on, overwrite with the current settings
    if (state) {
