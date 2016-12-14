@@ -498,9 +498,9 @@ socket.on('raw_reply', function (data) {
       var val = parseInt(data.message) + 1;
       $("#sr_div_display").text("1/" + val);
       if ($("#sr_resamp_display").text() != "") {
-	  $("#sr_display").text((322265625 * 4 / 5 / val));
+	  $("#sr_display").text((325000000 * 4 / 5 / val));
       } else {
-	$("#sr_display").text((322265625 / val));
+	$("#sr_display").text((325000000 / val));
       }
       return;
    }
@@ -511,10 +511,10 @@ socket.on('raw_reply', function (data) {
        div = div.substring(2, div.length);
        if (val >= 0x8000) {
 	   $("#sr_resamp_display").text("4/5 * ");
-	   $("#sr_display").text((322265625 * 4 / 5 / parseInt(div)));
+	   $("#sr_display").text((325000000 * 4 / 5 / parseInt(div)));
        } else {
 	   $("#sr_resamp_display").text("");
-	   $("#sr_display").text((322265625 / parseInt(div)));
+	   $("#sr_display").text((325000000 / parseInt(div)));
        }
        return;
    }
