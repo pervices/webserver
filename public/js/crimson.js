@@ -237,6 +237,7 @@ $("#sr_set").click(function(){
 
    // read the actual values for the sample rate
    setTimeout(function() {
+      socket.emit('raw_cmd', { message: "mem rr " + cur_board + cur_chan + "1" });
       socket.emit('raw_cmd', { message: "mem rr " + cur_board + cur_chan + "4" });
    }, 500);
 });
