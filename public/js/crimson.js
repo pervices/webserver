@@ -174,6 +174,8 @@ $("#dac_dump").click(function() {
 
 $("#dac_dither_enable").on('switchChange.bootstrapSwitch', function(event, state) {
    socket.emit('prop_wr', { file: cur_root + '/rf/dac/dither_en', message: ( state ? '1' : '0' ) });
+   $('#dac_dither_mixer_enable').bootstrapSwitch('readonly', !state);
+   $("#dac_dither_amplitude_select").prop('disabled', !state);
 });
 
 $("#dac_dither_mixer_enable").on('switchChange.bootstrapSwitch', function(event, state) {
