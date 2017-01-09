@@ -176,8 +176,8 @@ $("#dac_dither_enable").on('switchChange.bootstrapSwitch', function(event, state
    socket.emit('prop_wr', { file: cur_root + '/rf/dac/dither_en', message: ( state ? '1' : '0' ) });
    $('#dac_dither_mixer_enable').bootstrapSwitch('readonly', !state);
    $("#dac_dither_amplitude_select").prop('disabled', !state);
+   socket.emit('prop_rd', { file: cur_root + '/rf/dac/dither_sra_sel', debug: true });
 });
-
 $("#dac_dither_mixer_enable").on('switchChange.bootstrapSwitch', function(event, state) {
    socket.emit('prop_wr', { file: cur_root + '/rf/dac/dither_mixer_en', message: ( state ? '1' : '0' ) });
 });
@@ -663,7 +663,10 @@ socket.on('prop_ret', function (data) {
    } else if (data.file == cur_root + '/rf/dac/nco') {
       $('#dac_nco').val(data.message);
    } else if (data.file == cur_root + '/rf/dac/dither_en') {
-      $('#dac_dither_enable').bootstrapSwitch( 'state', 0 == parseInt(data.message) ? false : true );
+      var dac_dither_en = 0 == parseInt(data.message) ? false : true;
+	  $('#dac_dither_enable').bootstrapSwitch( 'state', dac_dither_en );
+	  $('#dac_dither_mixer_enable').bootstrapSwitch('readonly', ! dac_dither_en );
+	  $("#dac_dither_amplitude_select").prop('disabled', ! dac_dither_en );
    } else if (data.file == cur_root + '/rf/dac/dither_mixer_en') {
       $('#dac_dither_mixer_enable').bootstrapSwitch( 'state', 0 == parseInt(data.message) ? false : true );
    } else if (data.file == cur_root + '/rf/dac/dither_sra_sel') {
@@ -711,8 +714,8 @@ function activateControls_tx(state) {
    $("#synth_freq").prop('disabled', !(state && $('#rf_band').bootstrapSwitch('state')));
    $("#synth_freq_set").prop('disabled', !(state && $('#rf_band').bootstrapSwitch('state')));
    $("#dac_nco").prop('disabled', !state);
-   $("#dac_dither_en").prop('disabled', !state);
-   $("#dac_dither_mixer_en").prop('disabled', !state);
+   $('#dac_dither_en').bootstrapSwitch('readonly', !state);
+   $('#dac_dither_mixer_en').bootstrapSwitch('readonly', !state);
    $("#dac_dither_sra_sel").prop('disabled', !state);
    $("#dac_nco_set").prop('disabled', !state);
    $("#ibias_range").prop('disabled', !state);
@@ -801,6 +804,10 @@ function load_tx (isLoad) {
    socket.emit('prop_rd', { file: cur_root + '/dsp/nco_adj'   			,debug: isLoad});
    socket.emit('prop_rd', { file: cur_root + '/dsp/rate'      			,debug: isLoad});
    socket.emit('prop_rd', { file: cur_root + '/link/port'     			,debug: isLoad});
+   
+   var dac_dither_en = $('#dac_dither_enable').bootstrapSwitch('state') == 'on' ? true : false;
+   $('#dac_dither_mixer_enable').bootstrapSwitch('readonly', ! dac_dither_en );
+   $("#dac_dither_amplitude_select").prop('disabled', ! dac_dither_en );
 }
 
 function load_clock (isLoad) {
