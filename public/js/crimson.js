@@ -14,6 +14,20 @@ $(document).ready(function() {
       size: 'mini',
       onColor: 'success'
    });
+
+   $("[name='dither-en']").bootstrapSwitch({
+      onText: 'ON',
+      offText: 'OFF',
+      size: 'mini',
+      onColor: 'success'
+   });
+
+   $("[name='dither-mixer-en']").bootstrapSwitch({
+      onText: 'ON',
+      offText: 'OFF',
+      size: 'mini',
+      onColor: 'success'
+   });
 });
 
 // socket.io connection
@@ -156,6 +170,21 @@ $("#lmk_dump").click(function() {
 
 $("#dac_dump").click(function() {
    socket.emit('raw_cmd', { message: "echo 'dump -c " + cur_chan + " -d' | mcu -f t" });
+});
+
+$("#dac_dither_enable").on('switchChange.bootstrapSwitch', function(event, state) {
+   socket.emit('prop_wr', { file: cur_root + '/rf/dac/dither_en', message: ( state ? '1' : '0' ) });
+   $('#dac_dither_mixer_enable').bootstrapSwitch('readonly', !state);
+   $("#dac_dither_amplitude_select").prop('disabled', !state);
+   socket.emit('prop_rd', { file: cur_root + '/rf/dac/dither_sra_sel', debug: true });
+});
+$("#dac_dither_mixer_enable").on('switchChange.bootstrapSwitch', function(event, state) {
+   socket.emit('prop_wr', { file: cur_root + '/rf/dac/dither_mixer_en', message: ( state ? '1' : '0' ) });
+});
+
+$("#dac_dither_amplitude_select").change(function() {
+   $("#dac_dither_amplitude_display").text('+' + ($(this).val()) + ' dB');
+   socket.emit('prop_wr', { file: cur_root + '/rf/dac/dither_sra_sel', message: $(this).val() });
 });
 
 $("#gpiox_dump").click(function() {
@@ -633,6 +662,16 @@ socket.on('prop_ret', function (data) {
       $("#qbias_display").text('Q: ' + parseInt(data.message)*100 + ' mV');
    } else if (data.file == cur_root + '/rf/dac/nco') {
       $('#dac_nco').val(data.message);
+   } else if (data.file == cur_root + '/rf/dac/dither_en') {
+      var dac_dither_en = 0 == parseInt(data.message) ? false : true;
+	  $('#dac_dither_enable').bootstrapSwitch( 'state', dac_dither_en );
+	  $('#dac_dither_mixer_enable').bootstrapSwitch('readonly', ! dac_dither_en );
+	  $("#dac_dither_amplitude_select").prop('disabled', ! dac_dither_en );
+   } else if (data.file == cur_root + '/rf/dac/dither_mixer_en') {
+      $('#dac_dither_mixer_enable').bootstrapSwitch( 'state', 0 == parseInt(data.message) ? false : true );
+   } else if (data.file == cur_root + '/rf/dac/dither_sra_sel') {
+      $('#dac_dither_amplitude_select').val( data.message );
+      $("#dac_dither_amplitude_display").text('+' + parseInt(data.message) + ' dB');
    } else if (data.file == cur_root + '/dsp/loopback') {
       $('#loopback').bootstrapSwitch('state', parseInt(data.message) != 0, true);
    } else if (data.file == cur_root + '/source/ref') {
@@ -675,6 +714,9 @@ function activateControls_tx(state) {
    $("#synth_freq").prop('disabled', !(state && $('#rf_band').bootstrapSwitch('state')));
    $("#synth_freq_set").prop('disabled', !(state && $('#rf_band').bootstrapSwitch('state')));
    $("#dac_nco").prop('disabled', !state);
+   $('#dac_dither_en').bootstrapSwitch('readonly', !state);
+   $('#dac_dither_mixer_en').bootstrapSwitch('readonly', !state);
+   $("#dac_dither_sra_sel").prop('disabled', !state);
    $("#dac_nco_set").prop('disabled', !state);
    $("#ibias_range").prop('disabled', !state);
    $("#qbias_range").prop('disabled', !state);
@@ -705,15 +747,18 @@ function write_rx() {
 }
 
 function write_tx() {
-   socket.emit('prop_wr', { file: cur_root + '/rf/freq/i_bias', message: $('#ibias_range').val()/100});
-   socket.emit('prop_wr', { file: cur_root + '/rf/freq/q_bias', message: $('#qbias_range').val()/100});
-   socket.emit('prop_wr', { file: cur_root + '/rf/freq/band'  , message: $('#rf_band').bootstrapSwitch('state') ? '1' : '0'});
-   socket.emit('prop_wr', { file: cur_root + '/rf/gain/val'   , message: $('#gain_range').val()});
-   socket.emit('prop_wr', { file: cur_root + '/rf/dac/nco'    , message: $('#dac_nco').val()});
-   socket.emit('prop_wr', { file: cur_root + '/rf/freq/val'   , message: $('#synth_freq').val()});
-   socket.emit('prop_wr', { file: cur_root + '/dsp/nco_adj'   , message: $('#dsp_nco').val()});
-   socket.emit('prop_wr', { file: cur_root + '/dsp/rate'      , message: $('#sr').val()});
-   socket.emit('prop_wr', { file: cur_root + '/link/port'     , message: $('#port').val()});
+   socket.emit('prop_wr', { file: cur_root + '/rf/freq/i_bias'		, message: $('#ibias_range').val()/100});
+   socket.emit('prop_wr', { file: cur_root + '/rf/freq/q_bias'		, message: $('#qbias_range').val()/100});
+   socket.emit('prop_wr', { file: cur_root + '/rf/freq/band'  		, message: $('#rf_band').bootstrapSwitch('state') ? '1' : '0'});
+   socket.emit('prop_wr', { file: cur_root + '/rf/gain/val'   		, message: $('#gain_range').val()});
+   socket.emit('prop_wr', { file: cur_root + '/rf/dac/nco'    		, message: $('#dac_nco').val()});
+   socket.emit('prop_wr', { file: cur_root + '/rf/dac/dither_en'	, message: $('#dac_dither_enable').bootstrapSwitch('state') ? '1' : '0'});
+   socket.emit('prop_wr', { file: cur_root + '/rf/dac/dither_mixer_en'	, message: $('#dac_dither_mixer_enable').bootstrapSwitch('state') ? '1' : '0'});
+   socket.emit('prop_wr', { file: cur_root + '/rf/dac/dither_sra_sel'   , message: $('#dac_dither_amplitude_select').val()});
+   socket.emit('prop_wr', { file: cur_root + '/rf/freq/val'   		, message: $('#synth_freq').val()});
+   socket.emit('prop_wr', { file: cur_root + '/dsp/nco_adj'   		, message: $('#dsp_nco').val()});
+   socket.emit('prop_wr', { file: cur_root + '/dsp/rate'      		, message: $('#sr').val()});
+   socket.emit('prop_wr', { file: cur_root + '/link/port'     		, message: $('#port').val()});
 }
 
 // Loading config data
@@ -746,16 +791,23 @@ function load_rx (isLoad) {
 }
 
 function load_tx (isLoad) {
-   socket.emit('prop_rd', { file: cur_root + '/pwr'           ,debug: isLoad});
-   socket.emit('prop_rd', { file: cur_root + '/rf/freq/i_bias',debug: isLoad});
-   socket.emit('prop_rd', { file: cur_root + '/rf/freq/q_bias',debug: isLoad});
-   socket.emit('prop_rd', { file: cur_root + '/rf/freq/band'  ,debug: isLoad});
-   socket.emit('prop_rd', { file: cur_root + '/rf/freq/val'   ,debug: isLoad});
-   socket.emit('prop_rd', { file: cur_root + '/rf/gain/val'   ,debug: isLoad});
-   socket.emit('prop_rd', { file: cur_root + '/rf/dac/nco'    ,debug: isLoad});
-   socket.emit('prop_rd', { file: cur_root + '/dsp/nco_adj'   ,debug: isLoad});
-   socket.emit('prop_rd', { file: cur_root + '/dsp/rate'      ,debug: isLoad});
-   socket.emit('prop_rd', { file: cur_root + '/link/port'     ,debug: isLoad});
+   socket.emit('prop_rd', { file: cur_root + '/pwr'           			,debug: isLoad});
+   socket.emit('prop_rd', { file: cur_root + '/rf/freq/i_bias'			,debug: isLoad});
+   socket.emit('prop_rd', { file: cur_root + '/rf/freq/q_bias'			,debug: isLoad});
+   socket.emit('prop_rd', { file: cur_root + '/rf/freq/band'  			,debug: isLoad});
+   socket.emit('prop_rd', { file: cur_root + '/rf/freq/val'   			,debug: isLoad});
+   socket.emit('prop_rd', { file: cur_root + '/rf/gain/val'   			,debug: isLoad});
+   socket.emit('prop_rd', { file: cur_root + '/rf/dac/nco'    			,debug: isLoad});
+   socket.emit('prop_rd', { file: cur_root + '/rf/dac/dither_en'		,debug: isLoad});
+   socket.emit('prop_rd', { file: cur_root + '/rf/dac/dither_mixer_en'	,debug: isLoad});
+   socket.emit('prop_rd', { file: cur_root + '/rf/dac/dither_sra_sel'	,debug: isLoad});
+   socket.emit('prop_rd', { file: cur_root + '/dsp/nco_adj'   			,debug: isLoad});
+   socket.emit('prop_rd', { file: cur_root + '/dsp/rate'      			,debug: isLoad});
+   socket.emit('prop_rd', { file: cur_root + '/link/port'     			,debug: isLoad});
+   
+   var dac_dither_en = $('#dac_dither_enable').bootstrapSwitch('state') == 'on' ? true : false;
+   $('#dac_dither_mixer_enable').bootstrapSwitch('readonly', ! dac_dither_en );
+   $("#dac_dither_amplitude_select").prop('disabled', ! dac_dither_en );
 }
 
 function load_clock (isLoad) {
@@ -797,5 +849,4 @@ window.onload = function() {
    }
 
    loadFunc(true);
-   //var refreshID = setInterval(loadFunc, 3000);
 }
