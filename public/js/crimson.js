@@ -28,6 +28,13 @@ $(document).ready(function() {
       size: 'mini',
       onColor: 'success'
    });
+    
+    $("[name='vita-en']").bootstrapSwitch({
+      onText: 'ON',
+      offText: 'OFF',
+      size: 'mini',
+      onColor: 'success'
+   });
 });
 
 // socket.io connection
@@ -185,6 +192,10 @@ $("#dac_dither_mixer_enable").on('switchChange.bootstrapSwitch', function(event,
 $("#dac_dither_amplitude_select").change(function() {
    $("#dac_dither_amplitude_display").text('+' + ($(this).val()) + ' dB');
    socket.emit('prop_wr', { file: cur_root + '/rf/dac/dither_sra_sel', message: $(this).val() });
+});
+
+$("#vita_enable").on('switchChange.bootstrapSwitch', function(event, state) {
+   socket.emit('prop_wr', { file: cur_root + '/link/vita_en', message: ( state ? '1' : '0' ) });
 });
 
 $("#gpiox_dump").click(function() {
@@ -686,6 +697,8 @@ socket.on('prop_ret', function (data) {
       $("#dac_dither_amplitude_display").text('+' + parseInt(data.message) + ' dB');
    } else if (data.file == cur_root + '/dsp/loopback') {
       $('#loopback').bootstrapSwitch('state', parseInt(data.message) != 0, true);
+   } else if (data.file == cur_root + '/link/vita_en') {
+      $('#vita_enable').bootstrapSwitch('state', parseInt(data.message) != 0, true);
    } else if (data.file == cur_root + '/source/ref') {
       $('#ext_ref').bootstrapSwitch('state', data.message.indexOf('external') > -1, true);
    } else if (data.file == cur_root + '/source/ref_dac') {
@@ -773,6 +786,7 @@ function write_tx() {
    socket.emit('prop_wr', { file: cur_root + '/dsp/nco_adj'   		, message: $('#dsp_nco').val()});
    socket.emit('prop_wr', { file: cur_root + '/dsp/rate'      		, message: $('#sr').val()});
    socket.emit('prop_wr', { file: cur_root + '/link/port'     		, message: $('#port').val()});
+   socket.emit('prop_wr', { file: cur_root + '/link/vita_en'  		, message: $('#vita_enable').bootstrapSwitch('state') ? '1' : '0'});
 }
 
 // Loading config data
@@ -818,6 +832,7 @@ function load_tx (isLoad) {
    socket.emit('prop_rd', { file: cur_root + '/dsp/nco_adj'   			,debug: isLoad});
    socket.emit('prop_rd', { file: cur_root + '/dsp/rate'      			,debug: isLoad});
    socket.emit('prop_rd', { file: cur_root + '/link/port'     			,debug: isLoad});
+   socket.emit('prop_rd', { file: cur_root + '/link/vita_en'     	    	,debug: isLoad});
    
    var dac_dither_en = $('#dac_dither_enable').bootstrapSwitch('state') == 'on' ? true : false;
    $('#dac_dither_mixer_enable').bootstrapSwitch('readonly', ! dac_dither_en );
