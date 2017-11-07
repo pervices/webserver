@@ -1,0 +1,89 @@
+extends ./layout.jade
+
+block content
+   b This section is for experienced users who would like RX and TX to be routed to / from an external trigger. As of now, this feature should only be reserved for Per Vices for demonstration purposes. Be aware that using this feature might cause the board to be in an improper state and result in a malfunction with the boards.
+   br
+   h3 SMA Configuration
+   .container-fluid
+      .row
+         .col-md-1
+            //- default direction is output
+            p
+               b Input
+            input(type="checkbox", name='sma-dir', unchecked)#sma_dir
+         .col-md-2
+            //- default mode is level-triggered
+            p
+               b Edge Triggered
+            input(type="checkbox", name='sma-mode', unchecked)#sma_mode  
+         .col-md-3
+            //- default polarity is active low / falling edge
+            p
+               b Active High / Rising Edge
+            input(type="checkbox", name='sma-pol', unchecked)#sma_pol       
+   hr
+   ul.nav.nav-tabs
+      li.active(role="presentation")
+         a#chan_a Channel A
+      li(role="presentation")
+         a#chan_b Channel B
+      li(role="presentation")
+         a#chan_c Channel C
+      li(role="presentation")
+         a#chan_d Channel D
+   br
+   ul.nav.nav-tabs
+      li.active(role="presentation")
+         a#rx RX
+      li(role="presentation")
+         a#tx TX
+   br
+   h3 Trigger Settings
+   .container-fluid
+      .row
+         .col-md-1
+            //- The following are combined to form the "trig_sel" property 
+            p
+               b SMA
+            input.input-xs(type="checkbox", name='trig-sel-sma')#trig_sel_sma
+            p
+               b UFL
+            input.input-xs(type="checkbox", name='trig-sel-ufl')#trig_sel_ufl
+         .col-md-2
+            p
+               b Backoff
+            input.input-xs(type="number", name='edge-backoff')#edge_backoff
+         .col-md-3
+            p
+               b Samples
+            input.input-xs(type="number", name='edge-samples')#edge_samples
+   br
+   h3 UFL Configuration
+   .container-fluid
+      .row
+         .col-md-1
+            //- default direction is output
+            p
+               b Input
+            input(type="checkbox", name='ufl-dir', unchecked)#ufl_dir
+         .col-md-2
+            //- default mode is level-triggered
+            p
+               b Edge Triggered
+            input(type="checkbox", name='ufl-mode', unchecked)#ufl_mode  
+         .col-md-3
+            //- default polarity is active low / falling edge
+            p
+               b Active High / Rising Edge
+            input(type="checkbox", name='ufl-pol', unchecked)#ufl_pol
+if tx
+   br
+   h3 TX Gating
+   .container-fluid
+      .row
+         .col-md-1
+            //- default gating is output
+            p
+               b DSP Gating
+            input(type="checkbox", name='gating', unchecked)#gating
+				

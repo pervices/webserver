@@ -42,6 +42,18 @@ app.get('/debug', function (req, res) {
   });
 });
 
+app.get('/trigger', function (req, res) {
+  res.render('trigger', {
+     title: "Trigger (Beta)"
+  });
+});
+
+app.get('/trigger', function (req, res) {
+  res.render('trigger', {
+     title: "Trigger (Beta)"
+  });
+});
+
 var io = require('socket.io').listen(app.listen(80, function () {
     var host = this.address().address;
     var port = this.address().port;
