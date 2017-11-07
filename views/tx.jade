@@ -57,6 +57,21 @@ block content
             input(type='range', min='0', max='127', step='1')#gain_range
             p
                #gain_display.inline-block
+      .row
+         .col-md-1
+            p
+               b Dither
+            input(type="checkbox", name='dither-en', unchecked)#dac_dither_enable
+         .col-md-2
+            p
+               b Dither Up-Conversion (+Fs/2)
+            input(type="checkbox", name='dither-mixer-en', unchecked)#dac_dither_mixer_enable
+         .col-md-3
+            p
+               b Dither Amplitude
+            input(type="range", min=6, max=96, step=6, name='dither-sra-sel')#dac_dither_amplitude_select
+            p
+               #dac_dither_amplitude_display.inline-block
                   
    img(src="/img/tx_chain.svg", style="width: 100%; height: 100%;").center
    h3 TX DSP Chain
@@ -84,7 +99,8 @@ block content
                   button.btn.btn-default.btn-xs#sr_set Set
             .row(style="padding-top:10px;")
                .col-md-12
-                  | Actual: 322265625 * 
+                  | Actual: 325000000 * 
+                  #sr_resamp_display.inline-block
                   #sr_div_display.inline-block
                   |  = 
                   #sr_display.inline-block
@@ -109,6 +125,12 @@ block content
                   | UDP Port
                .col-md-4
                   input.width-150.input-xs(type="text")#port
+      .row
+         .col-md-1
+        p
+            b Vita Enable
+        input(type="checkbox", name='vita-en', unchecked)#vita_enable
+
    br
    br
    img(src="/img/tx_dsp.svg", style="width: 75%; height: 75%;").center

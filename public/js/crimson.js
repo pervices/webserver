@@ -14,6 +14,27 @@ $(document).ready(function() {
       size: 'mini',
       onColor: 'success'
    });
+
+   $("[name='dither-en']").bootstrapSwitch({
+      onText: 'ON',
+      offText: 'OFF',
+      size: 'mini',
+      onColor: 'success'
+   });
+
+   $("[name='dither-mixer-en']").bootstrapSwitch({
+      onText: 'ON',
+      offText: 'OFF',
+      size: 'mini',
+      onColor: 'success'
+   });
+    
+    $("[name='vita-en']").bootstrapSwitch({
+      onText: 'ON',
+      offText: 'OFF',
+      size: 'mini',
+      onColor: 'success'
+   });
 });
 
 // socket.io connection
@@ -48,6 +69,9 @@ $("#chan_a,#chan_b,#chan_c,#chan_d").click(function() {
 $("#chan_en").on('switchChange.bootstrapSwitch', function(event, state) {
    socket.emit('prop_wr', { file: cur_root + '/pwr', message: state ? '1' : '0' });
    var is_rx = cur_root.indexOf('rx') > -1;
+   if (is_rx) {
+      socket.emit('prop_wr', { file: cur_root + '/stream', message: state ? '1' : '0' });
+   }
 
    // if turn on, overwrite with the current settings
    if (state) {
@@ -155,6 +179,25 @@ $("#dac_dump").click(function() {
    socket.emit('raw_cmd', { message: "echo 'dump -c " + cur_chan + " -d' | mcu -f t" });
 });
 
+$("#dac_dither_enable").on('switchChange.bootstrapSwitch', function(event, state) {
+   socket.emit('prop_wr', { file: cur_root + '/rf/dac/dither_en', message: ( state ? '1' : '0' ) });
+   $('#dac_dither_mixer_enable').bootstrapSwitch('readonly', !state);
+   $("#dac_dither_amplitude_select").prop('disabled', !state);
+   socket.emit('prop_rd', { file: cur_root + '/rf/dac/dither_sra_sel', debug: true });
+});
+$("#dac_dither_mixer_enable").on('switchChange.bootstrapSwitch', function(event, state) {
+   socket.emit('prop_wr', { file: cur_root + '/rf/dac/dither_mixer_en', message: ( state ? '1' : '0' ) });
+});
+
+$("#dac_dither_amplitude_select").change(function() {
+   $("#dac_dither_amplitude_display").text('+' + ($(this).val()) + ' dB');
+   socket.emit('prop_wr', { file: cur_root + '/rf/dac/dither_sra_sel', message: $(this).val() });
+});
+
+$("#vita_enable").on('switchChange.bootstrapSwitch', function(event, state) {
+   socket.emit('prop_wr', { file: cur_root + '/link/vita_en', message: ( state ? '1' : '0' ) });
+});
+
 $("#gpiox_dump").click(function() {
    if (cur_board == 'tx')
       socket.emit('raw_cmd', { message: "echo 'dump -c " + cur_chan + " -g' | mcu -f t" });
@@ -208,6 +251,7 @@ $("#sr_set").click(function(){
    // read the actual values for the sample rate
    setTimeout(function() {
       socket.emit('raw_cmd', { message: "mem rr " + cur_board + cur_chan + "1" });
+      socket.emit('raw_cmd', { message: "mem rr " + cur_board + cur_chan + "4" });
    }, 500);
 });
 
@@ -493,8 +537,26 @@ socket.on('raw_reply', function (data) {
    if (data.cmd == ("mem rr " + cur_board + cur_chan + "1")) {
       var val = parseInt(data.message) + 1;
       $("#sr_div_display").text("1/" + val);
-      $("#sr_display").text((322265625 / val));
+      if ($("#sr_resamp_display").text() != "") {
+	  $("#sr_display").text((325000000 * 4 / 5 / val));
+      } else {
+	$("#sr_display").text((325000000 / val));
+      }
       return;
+   }
+
+   if (data.cmd == ("mem rr " + cur_board + cur_chan + "4")) {
+       var val = parseInt(data.message.substring(0, data.message.length-1));
+       var div = $("#sr_div_display").text();
+       div = div.substring(2, div.length);
+       if (val >= 0x8000) {
+	   $("#sr_resamp_display").text("4/5 * ");
+	   $("#sr_display").text((325000000 * 4 / 5 / parseInt(div)));
+       } else {
+	   $("#sr_resamp_display").text("");
+	   $("#sr_display").text((325000000 / parseInt(div)));
+       }
+       return;
    }
 
    //console.log("Raw reply: " + data.message);
@@ -601,6 +663,7 @@ socket.on('prop_ret', function (data) {
       // read the actual values for the sample rate
       setTimeout(function() {
          socket.emit('raw_cmd', { message: "mem rr " + cur_board + cur_chan + "1" });
+	 socket.emit('raw_cmd', { message: "mem rr " + cur_board + cur_chan + "4" });
       }, 500);
    } else if (data.file == cur_root + '/rf/freq/i_bias') {
       $('#ibias_range').val(parseInt(data.message)*100);
@@ -610,11 +673,24 @@ socket.on('prop_ret', function (data) {
       $("#qbias_display").text('Q: ' + parseInt(data.message)*100 + ' mV');
    } else if (data.file == cur_root + '/rf/dac/nco') {
       $('#dac_nco').val(data.message);
+   } else if (data.file == cur_root + '/rf/dac/dither_en') {
+      var dac_dither_en = 0 == parseInt(data.message) ? false : true;
+	  $('#dac_dither_enable').bootstrapSwitch( 'state', dac_dither_en );
+	  $('#dac_dither_mixer_enable').bootstrapSwitch('readonly', ! dac_dither_en );
+	  $("#dac_dither_amplitude_select").prop('disabled', ! dac_dither_en );
+   } else if (data.file == cur_root + '/rf/dac/dither_mixer_en') {
+      $('#dac_dither_mixer_enable').bootstrapSwitch( 'state', 0 == parseInt(data.message) ? false : true );
+   } else if (data.file == cur_root + '/rf/dac/dither_sra_sel') {
+      $('#dac_dither_amplitude_select').val( data.message );
+      $("#dac_dither_amplitude_display").text('+' + parseInt(data.message) + ' dB');
    } else if (data.file == cur_root + '/dsp/loopback') {
       $('#loopback').bootstrapSwitch('state', parseInt(data.message) != 0, true);
+   } else if (data.file == cur_root + '/link/vita_en') {
+      $('#vita_enable').bootstrapSwitch('state', parseInt(data.message) != 0, true);
    } else if (data.file == cur_root + '/source/ref') {
       $('#ext_ref').bootstrapSwitch('state', data.message.indexOf('external') > -1, true);
-//   } else if (data.file == cur_root + '/source/devclk') {
+   } 
+    //   } else if (data.file == cur_root + '/source/devclk') {
 //      $('#out_devclk_en').bootstrapSwitch('state', data.message.indexOf('external') > -1, true);
 //   } else if (data.file == cur_root + '/source/pll') {
 //      $('#out_pll_en').bootstrapSwitch('state', data.message.indexOf('external') > -1, true);
@@ -622,7 +698,7 @@ socket.on('prop_ret', function (data) {
 //      $('#out_sysref_en').bootstrapSwitch('state', data.message.indexOf('external') > -1, true);
 //   } else if (data.file == cur_root + '/source/vco') {
 //      $('#out_vco_en').bootstrapSwitch('state', data.message.indexOf('external') > -1, true);
-   }
+//   }
 
 });
 
@@ -652,6 +728,9 @@ function activateControls_tx(state) {
    $("#synth_freq").prop('disabled', !(state && $('#rf_band').bootstrapSwitch('state')));
    $("#synth_freq_set").prop('disabled', !(state && $('#rf_band').bootstrapSwitch('state')));
    $("#dac_nco").prop('disabled', !state);
+   $('#dac_dither_en').bootstrapSwitch('readonly', !state);
+   $('#dac_dither_mixer_en').bootstrapSwitch('readonly', !state);
+   $("#dac_dither_sra_sel").prop('disabled', !state);
    $("#dac_nco_set").prop('disabled', !state);
    $("#ibias_range").prop('disabled', !state);
    $("#qbias_range").prop('disabled', !state);
@@ -682,15 +761,19 @@ function write_rx() {
 }
 
 function write_tx() {
-   socket.emit('prop_wr', { file: cur_root + '/rf/freq/i_bias', message: $('#ibias_range').val()/100});
-   socket.emit('prop_wr', { file: cur_root + '/rf/freq/q_bias', message: $('#qbias_range').val()/100});
-   socket.emit('prop_wr', { file: cur_root + '/rf/freq/band'  , message: $('#rf_band').bootstrapSwitch('state') ? '1' : '0'});
-   socket.emit('prop_wr', { file: cur_root + '/rf/gain/val'   , message: $('#gain_range').val()});
-   socket.emit('prop_wr', { file: cur_root + '/rf/dac/nco'    , message: $('#dac_nco').val()});
-   socket.emit('prop_wr', { file: cur_root + '/rf/freq/val'   , message: $('#synth_freq').val()});
-   socket.emit('prop_wr', { file: cur_root + '/dsp/nco_adj'   , message: $('#dsp_nco').val()});
-   socket.emit('prop_wr', { file: cur_root + '/dsp/rate'      , message: $('#sr').val()});
-   socket.emit('prop_wr', { file: cur_root + '/link/port'     , message: $('#port').val()});
+   socket.emit('prop_wr', { file: cur_root + '/rf/freq/i_bias'		, message: $('#ibias_range').val()/100});
+   socket.emit('prop_wr', { file: cur_root + '/rf/freq/q_bias'		, message: $('#qbias_range').val()/100});
+   socket.emit('prop_wr', { file: cur_root + '/rf/freq/band'  		, message: $('#rf_band').bootstrapSwitch('state') ? '1' : '0'});
+   socket.emit('prop_wr', { file: cur_root + '/rf/gain/val'   		, message: $('#gain_range').val()});
+   socket.emit('prop_wr', { file: cur_root + '/rf/dac/nco'    		, message: $('#dac_nco').val()});
+   socket.emit('prop_wr', { file: cur_root + '/rf/dac/dither_en'	, message: $('#dac_dither_enable').bootstrapSwitch('state') ? '1' : '0'});
+   socket.emit('prop_wr', { file: cur_root + '/rf/dac/dither_mixer_en'	, message: $('#dac_dither_mixer_enable').bootstrapSwitch('state') ? '1' : '0'});
+   socket.emit('prop_wr', { file: cur_root + '/rf/dac/dither_sra_sel'   , message: $('#dac_dither_amplitude_select').val()});
+   socket.emit('prop_wr', { file: cur_root + '/rf/freq/val'   		, message: $('#synth_freq').val()});
+   socket.emit('prop_wr', { file: cur_root + '/dsp/nco_adj'   		, message: $('#dsp_nco').val()});
+   socket.emit('prop_wr', { file: cur_root + '/dsp/rate'      		, message: $('#sr').val()});
+   socket.emit('prop_wr', { file: cur_root + '/link/port'     		, message: $('#port').val()});
+   socket.emit('prop_wr', { file: cur_root + '/link/vita_en'  		, message: $('#vita_enable').bootstrapSwitch('state') ? '1' : '0'});
 }
 
 // Loading config data
@@ -723,16 +806,24 @@ function load_rx (isLoad) {
 }
 
 function load_tx (isLoad) {
-   socket.emit('prop_rd', { file: cur_root + '/pwr'           ,debug: isLoad});
-   socket.emit('prop_rd', { file: cur_root + '/rf/freq/i_bias',debug: isLoad});
-   socket.emit('prop_rd', { file: cur_root + '/rf/freq/q_bias',debug: isLoad});
-   socket.emit('prop_rd', { file: cur_root + '/rf/freq/band'  ,debug: isLoad});
-   socket.emit('prop_rd', { file: cur_root + '/rf/freq/val'   ,debug: isLoad});
-   socket.emit('prop_rd', { file: cur_root + '/rf/gain/val'   ,debug: isLoad});
-   socket.emit('prop_rd', { file: cur_root + '/rf/dac/nco'    ,debug: isLoad});
-   socket.emit('prop_rd', { file: cur_root + '/dsp/nco_adj'   ,debug: isLoad});
-   socket.emit('prop_rd', { file: cur_root + '/dsp/rate'      ,debug: isLoad});
-   socket.emit('prop_rd', { file: cur_root + '/link/port'     ,debug: isLoad});
+   socket.emit('prop_rd', { file: cur_root + '/pwr'           			,debug: isLoad});
+   socket.emit('prop_rd', { file: cur_root + '/rf/freq/i_bias'			,debug: isLoad});
+   socket.emit('prop_rd', { file: cur_root + '/rf/freq/q_bias'			,debug: isLoad});
+   socket.emit('prop_rd', { file: cur_root + '/rf/freq/band'  			,debug: isLoad});
+   socket.emit('prop_rd', { file: cur_root + '/rf/freq/val'   			,debug: isLoad});
+   socket.emit('prop_rd', { file: cur_root + '/rf/gain/val'   			,debug: isLoad});
+   socket.emit('prop_rd', { file: cur_root + '/rf/dac/nco'    			,debug: isLoad});
+   socket.emit('prop_rd', { file: cur_root + '/rf/dac/dither_en'		,debug: isLoad});
+   socket.emit('prop_rd', { file: cur_root + '/rf/dac/dither_mixer_en'	,debug: isLoad});
+   socket.emit('prop_rd', { file: cur_root + '/rf/dac/dither_sra_sel'	,debug: isLoad});
+   socket.emit('prop_rd', { file: cur_root + '/dsp/nco_adj'   			,debug: isLoad});
+   socket.emit('prop_rd', { file: cur_root + '/dsp/rate'      			,debug: isLoad});
+   socket.emit('prop_rd', { file: cur_root + '/link/port'     			,debug: isLoad});
+   socket.emit('prop_rd', { file: cur_root + '/link/vita_en'     	    	,debug: isLoad});
+   
+   var dac_dither_en = $('#dac_dither_enable').bootstrapSwitch('state') == 'on' ? true : false;
+   $('#dac_dither_mixer_enable').bootstrapSwitch('readonly', ! dac_dither_en );
+   $("#dac_dither_amplitude_select").prop('disabled', ! dac_dither_en );
 }
 
 function load_clock (isLoad) {
@@ -740,7 +831,7 @@ function load_clock (isLoad) {
 //   socket.emit('prop_rd', { file: cur_root + '/source/sysref' ,debug: isLoad});
 //   socket.emit('prop_rd', { file: cur_root + '/source/devclk' ,debug: isLoad});
 //   socket.emit('prop_rd', { file: cur_root + '/source/pll'    ,debug: isLoad});
-   socket.emit('prop_rd', { file: cur_root + '/source/ref'    ,debug: isLoad});
+//   socket.emit('prop_rd', { file: cur_root + '/source/ref_dac'    ,debug: isLoad});
 }
 
 // determine which page is currently loaded
@@ -774,5 +865,4 @@ window.onload = function() {
    }
 
    loadFunc(true);
-   //var refreshID = setInterval(loadFunc, 3000);
 }
