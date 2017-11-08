@@ -9,17 +9,17 @@ block content
          .col-md-1
             //- default direction is output
             p
-               b Input
+               b Direction
             input(type="checkbox", name='sma-dir', unchecked)#sma_dir
          .col-md-2
             //- default mode is level-triggered
             p
-               b Edge Triggered
+               b Trigger Mode
             input(type="checkbox", name='sma-mode', unchecked)#sma_mode  
          .col-md-3
             //- default polarity is active low / falling edge
             p
-               b Active High / Rising Edge
+               b Polarity (-VE := active low / falling edge, +VE := active high / rising edge)
             input(type="checkbox", name='sma-pol', unchecked)#sma_pol       
    hr
    ul.nav.nav-tabs
@@ -64,17 +64,17 @@ block content
          .col-md-1
             //- default direction is output
             p
-               b Input
+               b Direction
             input(type="checkbox", name='ufl-dir', unchecked)#ufl_dir
          .col-md-2
             //- default mode is level-triggered
             p
-               b Edge Triggered
+               b Trigger Mode
             input(type="checkbox", name='ufl-mode', unchecked)#ufl_mode  
          .col-md-3
             //- default polarity is active low / falling edge
             p
-               b Active High / Rising Edge
+               b Polarity (-VE := active low / falling edge, +VE := active high / rising edge)
             input(type="checkbox", name='ufl-pol', unchecked)#ufl_pol
 if tx
    br
