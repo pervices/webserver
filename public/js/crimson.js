@@ -1008,7 +1008,7 @@ function load_clock (isLoad) {
 //   socket.emit('prop_rd', { file: cur_root + '/source/ref_dac'    ,debug: isLoad});
 }
 
-function load_trigger() {
+function load_trigger (isLoad) {
    socket.emit('prop_rd', { file: 'fpga/trigger/sma_dir'     ,debug: isLoad});
    socket.emit('prop_rd', { file: 'fpga/trigger/sma_mode'    ,debug: isLoad});
    socket.emit('prop_rd', { file: 'fpga/trigger/sma_pol'     ,debug: isLoad});
@@ -1022,7 +1022,12 @@ function load_trigger() {
 
    socket.emit('prop_rd', { file: cur_root + '/trigger/trig_sel'     ,debug: isLoad});
 
-   socket.emit('prop_rd', { file: cur_root + '/trigger/gating'     ,debug: isLoad});
+   if ( 'tx' == cur_board ) {
+      socket.emit('prop_rd', { file: cur_root + '/trigger/gating'     ,debug: isLoad});
+      $('#gating_div').show();
+   } else {
+      $('#gating_div').hide();
+   }
 }
 
 // determine which page is currently loaded
