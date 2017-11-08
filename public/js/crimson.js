@@ -129,21 +129,21 @@ $("#chan_a,#chan_b,#chan_c,#chan_d").click(function() {
    // load the channel state
    if      (pathname.indexOf('rx') > -1) load_rx();
    else if (pathname.indexOf('tx') > -1) load_tx();
-   else if (pathname.indexOf('tx') > -1) load_trigger();
+   else if (pathname.indexOf('trigger') > -1) load_trigger();
 });
 
 // Switch channel views
 // This function will load the current states of the channel onto the page
-$("#rx,#tx").click(function() {
+$("#trigger_rx,#trigger_tx").click(function() {
    $(this).parent().parent().children().removeClass('active');
    $(this).parent().attr('class', 'active');
 
    // update the channel
-   cur_board = $(this).attr('id');
+   cur_board = $(this).attr('id').replace('trigger_','');
    cur_root = cur_board + '_' + cur_chan;
 
    // load the channel state
-   if (pathname.indexOf('tx') > -1) load_trigger();
+   if (pathname.indexOf('trigger') > -1) load_trigger();
 });
 
 // En/disable channel
@@ -495,6 +495,61 @@ $("#program_hexfile").change( function() {
       $("#program_start").removeClass('disabled');
 });
 
+$("#edge_backoff").click(function() {
+   var val = $("#edge_backoff").val();
+   if (val) {
+         val = parseInt( val );
+         val = val < 0 ? -val : val;
+      socket.emit('prop_wr', { file: cur_root + '/trigger/edge_backoff', message: val });
+   }
+});
+
+$("#edge_samples").click(function() {
+   var val = $("#edge_samples").val();
+   if (val) {
+         val = parseInt( val );
+         val = val < 0 ? -val : val;
+      socket.emit('prop_wr', { file: cur_root + '/trigger/edge_sample_num', message: val });
+   }
+});
+
+$("#sma_dir").on('switchChange.bootstrapSwitch', function(event, state) {
+   socket.emit('prop_wr', { file: 'fpga/trigger/sma_dir', message: state ? 'in' : 'out' });
+});
+$("#sma_pol").on('switchChange.bootstrapSwitch', function(event, state) {
+   socket.emit('prop_wr', { file: 'fpga/trigger/sma_pol', message: state ? 'positive' : 'negative' });
+});
+$("#sma_mode").on('switchChange.bootstrapSwitch', function(event, state) {
+   socket.emit('prop_wr', { file: 'fpga/trigger/sma_mode', message: state ? 'edge' : 'level' });
+});
+
+$("#trig_sel_sma").on('switchChange.bootstrapSwitch', function(event, state) {
+   var trig_sel_ufl = ( $('#trig_sel_ufl').prop('state') ? 1 : 0 ) << 1;
+   var trig_sel_sma = ( state ? 0 : 1 ) << 0;
+   var trig_sel = trig_sel_ufl | trig_sel_sma;
+   socket.emit('prop_wr', { file: cur_root + '/trigger/trig_sel', message: '' + trig_sel });
+});
+$("#trig_sel_ufl").on('switchChange.bootstrapSwitch', function(event, state) {
+   var trig_sel_sma = ( $('#trig_sel_sma').prop('state') ? 1 : 0 ) << 0;
+   var trig_sel_ufl = ( state ? 0 : 1 ) << 1;
+   var trig_sel = trig_sel_ufl | trig_sel_sma;
+   socket.emit('prop_wr', { file: cur_root + '/trigger/trig_sel', message: '' + trig_sel });
+});
+
+$("#ufl_dir").on('switchChange.bootstrapSwitch', function(event, state) {
+   socket.emit('prop_wr', { file: cur_root + '/trigger/ufl_dir', message: state ? 'in' : 'out' });
+});
+$("#ufl_pol").on('switchChange.bootstrapSwitch', function(event, state) {
+   socket.emit('prop_wr', { file: cur_root + '/trigger/ufl_pol', message: state ? 'positive' : 'negative' });
+});
+$("#ufl_mode").on('switchChange.bootstrapSwitch', function(event, state) {
+   socket.emit('prop_wr', { file: cur_root + '/trigger/ufl_mode', message: state ? 'edge' : 'level' });
+});
+
+$("#gating").on('switchChange.bootstrapSwitch', function(event, state) {
+   socket.emit('prop_wr', { file: cur_root + '/trigger/gating', message: state ? 'dsp' : 'output' });
+});
+
 /////////////////////////////////////////////////////////////////////
 // Pressing ENTER on Textboxes activates their button press events //
 /////////////////////////////////////////////////////////////////////
@@ -609,6 +664,20 @@ $("#uart_cmd").keyup(function(e) {
 		e.preventDefault();
 		$("#send_uart_cmd").click();
 	}
+});
+
+$("#edge_backoff").keyup(function(e) {
+       if (e.keyCode == 13) {
+               e.preventDefault();
+               $("#edge_backoff").click();
+       }
+});
+
+$("#edge_samples").keyup(function(e) {
+       if (e.keyCode == 13) {
+               e.preventDefault();
+               $("#edge_samples").click();
+       }
 });
 
 
@@ -770,6 +839,30 @@ socket.on('prop_ret', function (data) {
       $('#vita_enable').bootstrapSwitch('state', parseInt(data.message) != 0, true);
    } else if (data.file == cur_root + '/source/ref') {
       $('#ext_ref').bootstrapSwitch('state', data.message.indexOf('external') > -1, true);
+   } else if (data.file == 'fpga/trigger/sma_dir') {
+      $('#sma_dir').bootstrapSwitch('state', 'out' == data.message, true);
+   } else if (data.file == 'fpga/trigger/sma_mode') {
+      $('#sma_mode').bootstrapSwitch('state', 'edge' == data.message, true);
+   } else if (data.file == 'fpga/trigger/sma_pol') {
+      $('#sma_pol').bootstrapSwitch('state', 'positive' == data.message, true);
+   } else if (data.file == cur_root + '/trigger/edge_backoff') {
+      $('#edge_backoff').val( parseInt( data.message ) );
+   } else if (data.file == cur_root + '/trigger/edge_sample_num') {
+      $('#edge_samples').val( parseInt( data.message ) );
+   } else if (data.file == cur_root + '/trigger/ufl_dir') {
+      $('#ufl_dir').bootstrapSwitch('state', 'out' == data.message, true);
+   } else if (data.file == cur_root + '/trigger/ufl_mode') {
+      $('#ufl_mode').bootstrapSwitch('state', 'edge' == data.message, true);
+   } else if (data.file == cur_root + '/trigger/ufl_pol') {
+      $('#ufl_pol').bootstrapSwitch('state', 'positive' == data.message, true);
+   } else if (data.file == cur_root + '/trigger/trig_sel') {
+      var trig_sel = parseInt(data.message);
+      var trig_sel_sma = 1 == ( (trig_sel >> 0) & 1 );
+      var trig_sel_ufl = 1 == ( (trig_sel >> 1) & 1 );
+      $('#trig_sel_sma').bootstrapSwitch('state', trig_sel_sma, true);
+      $('#trig_sel_ufl').bootstrapSwitch('state', trig_sel_ufl, true);
+   } else if (data.file == cur_root + '/trigger/gating') {
+      $('#gating').bootstrapSwitch('state', 'dsp' == data.message, true);
    } 
     //   } else if (data.file == cur_root + '/source/devclk') {
 //      $('#out_devclk_en').bootstrapSwitch('state', data.message.indexOf('external') > -1, true);
@@ -915,11 +1008,21 @@ function load_clock (isLoad) {
 //   socket.emit('prop_rd', { file: cur_root + '/source/ref_dac'    ,debug: isLoad});
 }
 
-function load_trigger (isLoad) {
-   socket.emit('prop_rd', { file: 'fpga/trigger/sma_dir'    ,debug: isLoad});
-   //socket.emit('prop_rd', { file: 'fpga/trigger/sma_mode'    ,debug: isLoad});
-   socket.emit('prop_rd', { file: 'fpga/trigger/sma_pol'    ,debug: isLoad});
-   socket.emit('prop_rd', { file: cur_root + '/source/vco'    ,debug: isLoad});
+function load_trigger() {
+   socket.emit('prop_rd', { file: 'fpga/trigger/sma_dir'     ,debug: isLoad});
+   socket.emit('prop_rd', { file: 'fpga/trigger/sma_mode'    ,debug: isLoad});
+   socket.emit('prop_rd', { file: 'fpga/trigger/sma_pol'     ,debug: isLoad});
+
+   socket.emit('prop_rd', { file: cur_root + '/trigger/edge_backoff'     ,debug: isLoad});
+   socket.emit('prop_rd', { file: cur_root + '/trigger/edge_sample_num'  ,debug: isLoad});
+
+   socket.emit('prop_rd', { file: 'fpga/trigger/sma_dir'     ,debug: isLoad});
+   socket.emit('prop_rd', { file: 'fpga/trigger/sma_mode'    ,debug: isLoad});
+   socket.emit('prop_rd', { file: 'fpga/trigger/sma_pol'     ,debug: isLoad});
+
+   socket.emit('prop_rd', { file: cur_root + '/trigger/trig_sel'     ,debug: isLoad});
+
+   socket.emit('prop_rd', { file: cur_root + '/trigger/gating'     ,debug: isLoad});
 }
 
 // determine which page is currently loaded
@@ -946,6 +1049,10 @@ window.onload = function() {
       cur_board = 'tx';
       cur_root = cur_board + '_' + cur_chan;
       loadFunc = load_tx;
+   } else if (pathname.indexOf('trigger') > -1) {
+      cur_board = 'rx';
+      cur_root = cur_board + '_' + cur_chan;
+      loadFunc = load_trigger;
    } else {
       cur_board = 'coverpage';
       cur_root = cur_board;
