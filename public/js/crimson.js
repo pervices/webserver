@@ -524,14 +524,14 @@ $("#sma_mode").on('switchChange.bootstrapSwitch', function(event, state) {
 });
 
 $("#trig_sel_sma").on('switchChange.bootstrapSwitch', function(event, state) {
-   var trig_sel_ufl = ( $('#trig_sel_ufl').prop('state') ? 1 : 0 ) << 1;
-   var trig_sel_sma = ( state ? 0 : 1 ) << 0;
+   var trig_sel_ufl = ( $('#trig_sel_ufl').bootstrapSwitch('state') ? 1 : 0 ) << 1;
+   var trig_sel_sma = ( state ? 1 : 0 ) << 0;
    var trig_sel = trig_sel_ufl | trig_sel_sma;
    socket.emit('prop_wr', { file: cur_root + '/trigger/trig_sel', message: '' + trig_sel });
 });
 $("#trig_sel_ufl").on('switchChange.bootstrapSwitch', function(event, state) {
-   var trig_sel_sma = ( $('#trig_sel_sma').prop('state') ? 1 : 0 ) << 0;
-   var trig_sel_ufl = ( state ? 0 : 1 ) << 1;
+   var trig_sel_sma = ( $('#trig_sel_sma').bootstrapSwitch('state') ? 1 : 0 ) << 0;
+   var trig_sel_ufl = ( state ? 1 : 0 ) << 1;
    var trig_sel = trig_sel_ufl | trig_sel_sma;
    socket.emit('prop_wr', { file: cur_root + '/trigger/trig_sel', message: '' + trig_sel });
 });
