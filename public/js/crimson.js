@@ -123,16 +123,27 @@ $("#chan_a,#chan_b,#chan_c,#chan_d").click(function() {
    $(this).parent().attr('class', 'active');
 
    // update the channel
-   var chan = $(this).attr('id');
-   if     (chan == 'chan_a') cur_chan = 'a';
-   else if(chan == 'chan_b') cur_chan = 'b';
-   else if(chan == 'chan_c') cur_chan = 'c';
-   else if(chan == 'chan_d') cur_chan = 'd';
+   cur_chan = $(this).attr('id').replace('chan_','');
    cur_root = cur_board + '_' + cur_chan;
 
    // load the channel state
    if      (pathname.indexOf('rx') > -1) load_rx();
    else if (pathname.indexOf('tx') > -1) load_tx();
+   else if (pathname.indexOf('tx') > -1) load_trigger();
+});
+
+// Switch channel views
+// This function will load the current states of the channel onto the page
+$("#rx,#tx").click(function() {
+   $(this).parent().parent().children().removeClass('active');
+   $(this).parent().attr('class', 'active');
+
+   // update the channel
+   cur_board = $(this).attr('id');
+   cur_root = cur_board + '_' + cur_chan;
+
+   // load the channel state
+   if (pathname.indexOf('tx') > -1) load_trigger();
 });
 
 // En/disable channel
@@ -902,6 +913,13 @@ function load_clock (isLoad) {
 //   socket.emit('prop_rd', { file: cur_root + '/source/devclk' ,debug: isLoad});
 //   socket.emit('prop_rd', { file: cur_root + '/source/pll'    ,debug: isLoad});
 //   socket.emit('prop_rd', { file: cur_root + '/source/ref_dac'    ,debug: isLoad});
+}
+
+function load_trigger (isLoad) {
+   socket.emit('prop_rd', { file: 'fpga/trigger/sma_dir'    ,debug: isLoad});
+   //socket.emit('prop_rd', { file: 'fpga/trigger/sma_mode'    ,debug: isLoad});
+   socket.emit('prop_rd', { file: 'fpga/trigger/sma_pol'    ,debug: isLoad});
+   socket.emit('prop_rd', { file: cur_root + '/source/vco'    ,debug: isLoad});
 }
 
 // determine which page is currently loaded

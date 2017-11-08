@@ -19,7 +19,9 @@ block content
          .col-md-3
             //- default polarity is active low / falling edge
             p
-               b Polarity (-VE := active low / falling edge, +VE := active high / rising edge)
+               //- TODO: use e.g. bootstrap to create tooltips where necessary
+               //- (-VE := active low / falling edge, +VE := active high / rising edge)
+               b Polarity
             input(type="checkbox", name='sma-pol', unchecked)#sma_pol       
    hr
    ul.nav.nav-tabs
@@ -74,16 +76,16 @@ block content
          .col-md-3
             //- default polarity is active low / falling edge
             p
-               b Polarity (-VE := active low / falling edge, +VE := active high / rising edge)
+               //- (-VE := active low / falling edge, +VE := active high / rising edge)
+               b Polarity
             input(type="checkbox", name='ufl-pol', unchecked)#ufl_pol
-if tx
-   br
-   h3 TX Gating
-   .container-fluid
-      .row
-         .col-md-1
-            //- default gating is output
-            p
-               b DSP Gating
-            input(type="checkbox", name='gating', unchecked)#gating
-            
+   .div(id='gating-div')
+     br
+     h3 TX Gating
+     .container-fluid
+        .row
+           .col-md-1
+              //- default gating is output
+              p
+                 b DSP Gating
+              input(type="checkbox", name='gating', unchecked)#gating
