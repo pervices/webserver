@@ -11,12 +11,7 @@ block content
             p
                b Direction
             input(type="checkbox", name='sma-dir', unchecked)#sma_dir
-         .col-md-2
-            //- default mode is level-triggered
-            p
-               b Trigger Mode
-            input(type="checkbox", name='sma-mode', unchecked)#sma_mode  
-         .col-md-3
+         .col-md-1
             //- default polarity is active low / falling edge
             p
                //- TODO: use e.g. bootstrap to create tooltips where necessary
@@ -44,6 +39,11 @@ block content
    .container-fluid
       .row
          .col-md-1
+            //- default mode is level-triggered
+            p
+               b SMA Mode
+            input(type="checkbox", name='sma-mode', unchecked)#sma_mode
+         .col-md-1
             //- The following are combined to form the "trig_sel" property 
             p
                b SMA
@@ -51,11 +51,11 @@ block content
             p
                b UFL
             input.input-xs(type="checkbox", name='trig-sel-ufl')#trig_sel_ufl
-         .col-md-2
+         .col-md-1
             p
                b Backoff
             input.input-xs(type="number", name='edge-backoff')#edge_backoff
-         .col-md-3
+         .col-md-1
             p
                b Samples
             input.input-xs(type="number", name='edge-samples')#edge_samples
@@ -68,12 +68,12 @@ block content
             p
                b Direction
             input(type="checkbox", name='ufl-dir', unchecked)#ufl_dir
-         .col-md-2
+         .col-md-1
             //- default mode is level-triggered
             p
                b Trigger Mode
             input(type="checkbox", name='ufl-mode', unchecked)#ufl_mode  
-         .col-md-3
+         .col-md-1
             //- default polarity is active low / falling edge
             p
                //- (-VE := active low / falling edge, +VE := active high / rising edge)

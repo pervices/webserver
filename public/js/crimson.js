@@ -520,7 +520,7 @@ $("#sma_pol").on('switchChange.bootstrapSwitch', function(event, state) {
    socket.emit('prop_wr', { file: 'fpga/trigger/sma_pol', message: state ? 'positive' : 'negative' });
 });
 $("#sma_mode").on('switchChange.bootstrapSwitch', function(event, state) {
-   socket.emit('prop_wr', { file: 'fpga/trigger/sma_mode', message: state ? 'edge' : 'level' });
+   socket.emit('prop_wr', { file: cur_root + '/trigger/sma_mode', message: state ? 'edge' : 'level' });
 });
 
 $("#trig_sel_sma").on('switchChange.bootstrapSwitch', function(event, state) {
@@ -841,7 +841,7 @@ socket.on('prop_ret', function (data) {
       $('#ext_ref').bootstrapSwitch('state', data.message.indexOf('external') > -1, true);
    } else if (data.file == 'fpga/trigger/sma_dir') {
       $('#sma_dir').bootstrapSwitch('state', 'out' == data.message, true);
-   } else if (data.file == 'fpga/trigger/sma_mode') {
+   } else if (data.file == cur_root + '/trigger/sma_mode') {
       $('#sma_mode').bootstrapSwitch('state', 'edge' == data.message, true);
    } else if (data.file == 'fpga/trigger/sma_pol') {
       $('#sma_pol').bootstrapSwitch('state', 'positive' == data.message, true);
@@ -1009,18 +1009,17 @@ function load_clock (isLoad) {
 }
 
 function load_trigger (isLoad) {
-   socket.emit('prop_rd', { file: 'fpga/trigger/sma_dir'     ,debug: isLoad});
-   socket.emit('prop_rd', { file: 'fpga/trigger/sma_mode'    ,debug: isLoad});
-   socket.emit('prop_rd', { file: 'fpga/trigger/sma_pol'     ,debug: isLoad});
+   socket.emit('prop_rd', { file: 'fpga/trigger/sma_dir'                ,debug: isLoad});
+   socket.emit('prop_rd', { file: 'fpga/trigger/sma_pol'                ,debug: isLoad});
 
-   socket.emit('prop_rd', { file: cur_root + '/trigger/edge_backoff'     ,debug: isLoad});
-   socket.emit('prop_rd', { file: cur_root + '/trigger/edge_sample_num'  ,debug: isLoad});
+   socket.emit('prop_rd', { file: cur_root + '/trigger/sma_mode'        ,debug: isLoad});
+   socket.emit('prop_rd', { file: cur_root + '/trigger/trig_sel'        ,debug: isLoad});
+   socket.emit('prop_rd', { file: cur_root + '/trigger/edge_backoff'    ,debug: isLoad});
+   socket.emit('prop_rd', { file: cur_root + '/trigger/edge_sample_num' ,debug: isLoad});
 
-   socket.emit('prop_rd', { file: 'fpga/trigger/sma_dir'     ,debug: isLoad});
-   socket.emit('prop_rd', { file: 'fpga/trigger/sma_mode'    ,debug: isLoad});
-   socket.emit('prop_rd', { file: 'fpga/trigger/sma_pol'     ,debug: isLoad});
-
-   socket.emit('prop_rd', { file: cur_root + '/trigger/trig_sel'     ,debug: isLoad});
+   socket.emit('prop_rd', { file: cur_root + '/trigger/ufl_dir'         ,debug: isLoad});
+   socket.emit('prop_rd', { file: cur_root + '/trigger/ufl_mode'        ,debug: isLoad});
+   socket.emit('prop_rd', { file: cur_root + '/trigger/ufl_pol'         ,debug: isLoad});
 
    if ( 'tx' == cur_board ) {
       socket.emit('prop_rd', { file: cur_root + '/trigger/gating'     ,debug: isLoad});
