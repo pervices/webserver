@@ -840,7 +840,7 @@ socket.on('prop_ret', function (data) {
    } else if (data.file == cur_root + '/source/ref') {
       $('#ext_ref').bootstrapSwitch('state', data.message.indexOf('external') > -1, true);
    } else if (data.file == 'fpga/trigger/sma_dir') {
-      $('#sma_dir').bootstrapSwitch('state', 'out' == data.message, true);
+      $('#sma_dir').bootstrapSwitch('state', 'in' == data.message, true);
    } else if (data.file == cur_root + '/trigger/sma_mode') {
       $('#sma_mode').bootstrapSwitch('state', 'edge' == data.message, true);
    } else if (data.file == 'fpga/trigger/sma_pol') {
@@ -850,7 +850,7 @@ socket.on('prop_ret', function (data) {
    } else if (data.file == cur_root + '/trigger/edge_sample_num') {
       $('#edge_samples').val( parseInt( data.message ) );
    } else if (data.file == cur_root + '/trigger/ufl_dir') {
-      $('#ufl_dir').bootstrapSwitch('state', 'out' == data.message, true);
+      $('#ufl_dir').bootstrapSwitch('state', 'in' == data.message, true);
    } else if (data.file == cur_root + '/trigger/ufl_mode') {
       $('#ufl_mode').bootstrapSwitch('state', 'edge' == data.message, true);
    } else if (data.file == cur_root + '/trigger/ufl_pol') {
