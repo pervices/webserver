@@ -64,41 +64,6 @@ $(document).ready(function() {
       onColor: 'success'
    });
 
-   $("[name='trig-sel-ufl']").bootstrapSwitch({
-      onText: 'ON',
-      offText: 'OFF',
-      size: 'mini',
-      onColor: 'success'
-   });
-
-   $("[name='trig-sel-ufl']").bootstrapSwitch({
-      onText: 'ON',
-      offText: 'OFF',
-      size: 'mini',
-      onColor: 'success'
-   });
-
-   $("[name='ufl-dir']").bootstrapSwitch({
-      onText: 'IN',
-      offText: 'OUT',
-      size: 'mini',
-      onColor: 'success'
-   });
-
-   $("[name='ufl-mode']").bootstrapSwitch({
-      onText: 'EDGE',
-      offText: 'LEVEL',
-      size: 'mini',
-      onColor: 'success'
-   });
-
-   $("[name='ufl-pol']").bootstrapSwitch({
-      onText: '+VE',
-      offText: '-VE',
-      size: 'mini',
-      onColor: 'success'
-   });
-
    $("[name='gating']").bootstrapSwitch({
       onText: 'DSP',
       offText: 'OUTPUT',
@@ -524,26 +489,9 @@ $("#sma_mode").on('switchChange.bootstrapSwitch', function(event, state) {
 });
 
 $("#trig_sel_sma").on('switchChange.bootstrapSwitch', function(event, state) {
-   var trig_sel_ufl = ( $('#trig_sel_ufl').bootstrapSwitch('state') ? 1 : 0 ) << 1;
    var trig_sel_sma = ( state ? 1 : 0 ) << 0;
-   var trig_sel = trig_sel_ufl | trig_sel_sma;
+   var trig_sel = trig_sel_sma;
    socket.emit('prop_wr', { file: cur_root + '/trigger/trig_sel', message: '' + trig_sel });
-});
-$("#trig_sel_ufl").on('switchChange.bootstrapSwitch', function(event, state) {
-   var trig_sel_sma = ( $('#trig_sel_sma').bootstrapSwitch('state') ? 1 : 0 ) << 0;
-   var trig_sel_ufl = ( state ? 1 : 0 ) << 1;
-   var trig_sel = trig_sel_ufl | trig_sel_sma;
-   socket.emit('prop_wr', { file: cur_root + '/trigger/trig_sel', message: '' + trig_sel });
-});
-
-$("#ufl_dir").on('switchChange.bootstrapSwitch', function(event, state) {
-   socket.emit('prop_wr', { file: cur_root + '/trigger/ufl_dir', message: state ? 'in' : 'out' });
-});
-$("#ufl_pol").on('switchChange.bootstrapSwitch', function(event, state) {
-   socket.emit('prop_wr', { file: cur_root + '/trigger/ufl_pol', message: state ? 'positive' : 'negative' });
-});
-$("#ufl_mode").on('switchChange.bootstrapSwitch', function(event, state) {
-   socket.emit('prop_wr', { file: cur_root + '/trigger/ufl_mode', message: state ? 'edge' : 'level' });
 });
 
 $("#gating").on('switchChange.bootstrapSwitch', function(event, state) {
@@ -849,18 +797,10 @@ socket.on('prop_ret', function (data) {
       $('#edge_backoff').val( parseInt( data.message ) );
    } else if (data.file == cur_root + '/trigger/edge_sample_num') {
       $('#edge_samples').val( parseInt( data.message ) );
-   } else if (data.file == cur_root + '/trigger/ufl_dir') {
-      $('#ufl_dir').bootstrapSwitch('state', 'in' == data.message, true);
-   } else if (data.file == cur_root + '/trigger/ufl_mode') {
-      $('#ufl_mode').bootstrapSwitch('state', 'edge' == data.message, true);
-   } else if (data.file == cur_root + '/trigger/ufl_pol') {
-      $('#ufl_pol').bootstrapSwitch('state', 'positive' == data.message, true);
    } else if (data.file == cur_root + '/trigger/trig_sel') {
       var trig_sel = parseInt(data.message);
       var trig_sel_sma = 1 == ( (trig_sel >> 0) & 1 );
-      var trig_sel_ufl = 1 == ( (trig_sel >> 1) & 1 );
       $('#trig_sel_sma').bootstrapSwitch('state', trig_sel_sma, true);
-      $('#trig_sel_ufl').bootstrapSwitch('state', trig_sel_ufl, true);
    } else if (data.file == cur_root + '/trigger/gating') {
       $('#gating').bootstrapSwitch('state', 'dsp' == data.message, true);
    } 
@@ -1016,10 +956,6 @@ function load_trigger (isLoad) {
    socket.emit('prop_rd', { file: cur_root + '/trigger/trig_sel'        ,debug: isLoad});
    socket.emit('prop_rd', { file: cur_root + '/trigger/edge_backoff'    ,debug: isLoad});
    socket.emit('prop_rd', { file: cur_root + '/trigger/edge_sample_num' ,debug: isLoad});
-
-   socket.emit('prop_rd', { file: cur_root + '/trigger/ufl_dir'         ,debug: isLoad});
-   socket.emit('prop_rd', { file: cur_root + '/trigger/ufl_mode'        ,debug: isLoad});
-   socket.emit('prop_rd', { file: cur_root + '/trigger/ufl_pol'         ,debug: isLoad});
 
    if ( 'tx' == cur_board ) {
       socket.emit('prop_rd', { file: cur_root + '/trigger/gating'     ,debug: isLoad});
