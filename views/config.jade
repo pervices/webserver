@@ -117,3 +117,21 @@ block content
             b Console Output
             br
             textarea.form-control#cout(rows='10', readonly)
+
+   h3 SMA Configuration
+   hr
+   .container-fluid
+      .row
+         .col-md-1
+            //- default direction is output
+            p
+               b Direction
+            input(type="checkbox", name='sma-dir', unchecked)#sma_dir
+         .col-md-1
+            //- default polarity is active low / falling edge
+            p
+               //- TODO: use e.g. bootstrap to create tooltips where necessary
+               //- (-VE := active low / falling edge, +VE := active high / rising edge)
+               b Polarity
+            input(type="checkbox", name='sma-pol', unchecked)#sma_pol       
+            

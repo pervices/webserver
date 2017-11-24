@@ -175,3 +175,26 @@ block content
             b Console Output
             br
             textarea.form-control#cout(rows='10', readonly)
+
+   h3 Trigger Settings
+   hr
+   .container-fluid
+      .row
+         .col-md-1
+            //- default mode is level-triggered
+            p
+               b Sensitivity
+            input(type="checkbox", name='sma-mode', unchecked)#sma_mode
+         .col-md-1
+            //- The following are combined to form the "trig_sel" property 
+            p
+               b SMA
+            input.input-xs(type="checkbox", name='trig-sel-sma')#trig_sel_sma
+         .col-md-1
+            p
+               b Backoff
+            input.input-xs(type="number", name='edge-backoff')#edge_backoff
+         .col-md-1
+            p
+               b Samples
+            input.input-xs(type="number", name='edge-samples')#edge_samples
