@@ -63,48 +63,6 @@ $(document).ready(function() {
       size: 'mini',
       onColor: 'success'
    });
-
-   $("[name='trig-sel-ufl']").bootstrapSwitch({
-      onText: 'ON',
-      offText: 'OFF',
-      size: 'mini',
-      onColor: 'success'
-   });
-
-   $("[name='trig-sel-ufl']").bootstrapSwitch({
-      onText: 'ON',
-      offText: 'OFF',
-      size: 'mini',
-      onColor: 'success'
-   });
-
-   $("[name='ufl-dir']").bootstrapSwitch({
-      onText: 'IN',
-      offText: 'OUT',
-      size: 'mini',
-      onColor: 'success'
-   });
-
-   $("[name='ufl-mode']").bootstrapSwitch({
-      onText: 'EDGE',
-      offText: 'LEVEL',
-      size: 'mini',
-      onColor: 'success'
-   });
-
-   $("[name='ufl-pol']").bootstrapSwitch({
-      onText: '+VE',
-      offText: '-VE',
-      size: 'mini',
-      onColor: 'success'
-   });
-
-   $("[name='gating']").bootstrapSwitch({
-      onText: 'DSP',
-      offText: 'OUTPUT',
-      size: 'mini',
-      onColor: 'success'
-   });
 });
 
 // socket.io connection
@@ -129,21 +87,6 @@ $("#chan_a,#chan_b,#chan_c,#chan_d").click(function() {
    // load the channel state
    if      (pathname.indexOf('rx') > -1) load_rx();
    else if (pathname.indexOf('tx') > -1) load_tx();
-   else if (pathname.indexOf('trigger') > -1) load_trigger();
-});
-
-// Switch channel views
-// This function will load the current states of the channel onto the page
-$("#trigger_rx,#trigger_tx").click(function() {
-   $(this).parent().parent().children().removeClass('active');
-   $(this).parent().attr('class', 'active');
-
-   // update the channel
-   cur_board = $(this).attr('id').replace('trigger_','');
-   cur_root = cur_board + '_' + cur_chan;
-
-   // load the channel state
-   if (pathname.indexOf('trigger') > -1) load_trigger();
 });
 
 // En/disable channel
@@ -524,30 +467,9 @@ $("#sma_mode").on('switchChange.bootstrapSwitch', function(event, state) {
 });
 
 $("#trig_sel_sma").on('switchChange.bootstrapSwitch', function(event, state) {
-   var trig_sel_ufl = ( $('#trig_sel_ufl').bootstrapSwitch('state') ? 1 : 0 ) << 1;
    var trig_sel_sma = ( state ? 1 : 0 ) << 0;
-   var trig_sel = trig_sel_ufl | trig_sel_sma;
+   var trig_sel = trig_sel_sma;
    socket.emit('prop_wr', { file: cur_root + '/trigger/trig_sel', message: '' + trig_sel });
-});
-$("#trig_sel_ufl").on('switchChange.bootstrapSwitch', function(event, state) {
-   var trig_sel_sma = ( $('#trig_sel_sma').bootstrapSwitch('state') ? 1 : 0 ) << 0;
-   var trig_sel_ufl = ( state ? 1 : 0 ) << 1;
-   var trig_sel = trig_sel_ufl | trig_sel_sma;
-   socket.emit('prop_wr', { file: cur_root + '/trigger/trig_sel', message: '' + trig_sel });
-});
-
-$("#ufl_dir").on('switchChange.bootstrapSwitch', function(event, state) {
-   socket.emit('prop_wr', { file: cur_root + '/trigger/ufl_dir', message: state ? 'in' : 'out' });
-});
-$("#ufl_pol").on('switchChange.bootstrapSwitch', function(event, state) {
-   socket.emit('prop_wr', { file: cur_root + '/trigger/ufl_pol', message: state ? 'positive' : 'negative' });
-});
-$("#ufl_mode").on('switchChange.bootstrapSwitch', function(event, state) {
-   socket.emit('prop_wr', { file: cur_root + '/trigger/ufl_mode', message: state ? 'edge' : 'level' });
-});
-
-$("#gating").on('switchChange.bootstrapSwitch', function(event, state) {
-   socket.emit('prop_wr', { file: cur_root + '/trigger/gating', message: state ? 'dsp' : 'output' });
 });
 
 /////////////////////////////////////////////////////////////////////
@@ -849,20 +771,10 @@ socket.on('prop_ret', function (data) {
       $('#edge_backoff').val( parseInt( data.message ) );
    } else if (data.file == cur_root + '/trigger/edge_sample_num') {
       $('#edge_samples').val( parseInt( data.message ) );
-   } else if (data.file == cur_root + '/trigger/ufl_dir') {
-      $('#ufl_dir').bootstrapSwitch('state', 'in' == data.message, true);
-   } else if (data.file == cur_root + '/trigger/ufl_mode') {
-      $('#ufl_mode').bootstrapSwitch('state', 'edge' == data.message, true);
-   } else if (data.file == cur_root + '/trigger/ufl_pol') {
-      $('#ufl_pol').bootstrapSwitch('state', 'positive' == data.message, true);
    } else if (data.file == cur_root + '/trigger/trig_sel') {
       var trig_sel = parseInt(data.message);
       var trig_sel_sma = 1 == ( (trig_sel >> 0) & 1 );
-      var trig_sel_ufl = 1 == ( (trig_sel >> 1) & 1 );
       $('#trig_sel_sma').bootstrapSwitch('state', trig_sel_sma, true);
-      $('#trig_sel_ufl').bootstrapSwitch('state', trig_sel_ufl, true);
-   } else if (data.file == cur_root + '/trigger/gating') {
-      $('#gating').bootstrapSwitch('state', 'dsp' == data.message, true);
    } 
     //   } else if (data.file == cur_root + '/source/devclk') {
 //      $('#out_devclk_en').bootstrapSwitch('state', data.message.indexOf('external') > -1, true);
@@ -961,6 +873,8 @@ function load_config (isLoad) {
    socket.emit('prop_rd', { file: 'fpga/link/net/dhcp_en'     ,debug: isLoad});
    socket.emit('prop_rd', { file: 'fpga/link/net/hostname'    ,debug: isLoad});
    socket.emit('prop_rd', { file: 'fpga/link/net/ip_addr'     ,debug: isLoad});
+   socket.emit('prop_rd', { file: 'fpga/trigger/sma_dir'                ,debug: isLoad});
+   socket.emit('prop_rd', { file: 'fpga/trigger/sma_pol'                ,debug: isLoad});
 }
 
 function load_rx (isLoad) {
@@ -977,6 +891,10 @@ function load_rx (isLoad) {
    socket.emit('prop_rd', { file: cur_root + '/link/port'     ,debug: isLoad});
    socket.emit('prop_rd', { file: cur_root + '/link/ip_dest'  ,debug: isLoad});
    socket.emit('prop_rd', { file: cur_root + '/link/mac_dest' ,debug: isLoad});
+   socket.emit('prop_rd', { file: cur_root + '/trigger/sma_mode'        ,debug: isLoad});
+   socket.emit('prop_rd', { file: cur_root + '/trigger/trig_sel'        ,debug: isLoad});
+   socket.emit('prop_rd', { file: cur_root + '/trigger/edge_backoff'    ,debug: isLoad});
+   socket.emit('prop_rd', { file: cur_root + '/trigger/edge_sample_num' ,debug: isLoad});
 }
 
 function load_tx (isLoad) {
@@ -998,6 +916,11 @@ function load_tx (isLoad) {
    var dac_dither_en = $('#dac_dither_enable').bootstrapSwitch('state') == 'on' ? true : false;
    $('#dac_dither_mixer_enable').bootstrapSwitch('readonly', ! dac_dither_en );
    $("#dac_dither_amplitude_select").prop('disabled', ! dac_dither_en );
+   
+   socket.emit('prop_rd', { file: cur_root + '/trigger/sma_mode'        ,debug: isLoad});
+   socket.emit('prop_rd', { file: cur_root + '/trigger/trig_sel'        ,debug: isLoad});
+   socket.emit('prop_rd', { file: cur_root + '/trigger/edge_backoff'    ,debug: isLoad});
+   socket.emit('prop_rd', { file: cur_root + '/trigger/edge_sample_num' ,debug: isLoad});
 }
 
 function load_clock (isLoad) {
@@ -1006,27 +929,6 @@ function load_clock (isLoad) {
 //   socket.emit('prop_rd', { file: cur_root + '/source/devclk' ,debug: isLoad});
 //   socket.emit('prop_rd', { file: cur_root + '/source/pll'    ,debug: isLoad});
 //   socket.emit('prop_rd', { file: cur_root + '/source/ref_dac'    ,debug: isLoad});
-}
-
-function load_trigger (isLoad) {
-   socket.emit('prop_rd', { file: 'fpga/trigger/sma_dir'                ,debug: isLoad});
-   socket.emit('prop_rd', { file: 'fpga/trigger/sma_pol'                ,debug: isLoad});
-
-   socket.emit('prop_rd', { file: cur_root + '/trigger/sma_mode'        ,debug: isLoad});
-   socket.emit('prop_rd', { file: cur_root + '/trigger/trig_sel'        ,debug: isLoad});
-   socket.emit('prop_rd', { file: cur_root + '/trigger/edge_backoff'    ,debug: isLoad});
-   socket.emit('prop_rd', { file: cur_root + '/trigger/edge_sample_num' ,debug: isLoad});
-
-   socket.emit('prop_rd', { file: cur_root + '/trigger/ufl_dir'         ,debug: isLoad});
-   socket.emit('prop_rd', { file: cur_root + '/trigger/ufl_mode'        ,debug: isLoad});
-   socket.emit('prop_rd', { file: cur_root + '/trigger/ufl_pol'         ,debug: isLoad});
-
-   if ( 'tx' == cur_board ) {
-      socket.emit('prop_rd', { file: cur_root + '/trigger/gating'     ,debug: isLoad});
-      $('#gating_div').show();
-   } else {
-      $('#gating_div').hide();
-   }
 }
 
 // determine which page is currently loaded
@@ -1053,10 +955,6 @@ window.onload = function() {
       cur_board = 'tx';
       cur_root = cur_board + '_' + cur_chan;
       loadFunc = load_tx;
-   } else if (pathname.indexOf('trigger') > -1) {
-      cur_board = 'rx';
-      cur_root = cur_board + '_' + cur_chan;
-      loadFunc = load_trigger;
    } else {
       cur_board = 'coverpage';
       cur_root = cur_board;
