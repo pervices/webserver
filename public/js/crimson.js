@@ -36,6 +36,13 @@ $(document).ready(function() {
       onColor: 'success'
    });
 
+   $("[name='lut-en']").bootstrapSwitch({
+      onText: 'ON',
+      offText: 'OFF',
+      size: 'mini',
+      onColor: 'success'
+   });
+
    $("[name='sma-dir']").bootstrapSwitch({
       onText: 'IN',
       offText: 'OUT',
