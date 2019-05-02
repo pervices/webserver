@@ -12,10 +12,10 @@ module.exports = function(io) {
 
          // read the data from fs
          fs.readFile( state_dir + data.file, 'utf8', function(err, data){
-            if (err) throw err;
+            if (err) console.log("File Read error: ",state_dir ); //throw err;
 
             // send the data back to the client
-            io.sockets.emit('prop_ret', {file: file, message: data, debug: debug});
+            io.sockets.emit('prop_ret', {file: file, message: '1', debug: debug});
          }); 
       });
 
@@ -23,7 +23,7 @@ module.exports = function(io) {
       socket.on('prop_wr', function (data) {
          // write to file
          fs.writeFile( state_dir + data.file, data.message , function(err, fd){
-            if (err) throw err;
+            if (err) console.log("File open error", state_dir + data.file); //throw err;
          });
 
          // send the data back to the client
@@ -36,7 +36,7 @@ module.exports = function(io) {
       // Handle raw system cmds
       socket.on('raw_cmd', function (data) {
          exec(data.message, function(err, stdout, stderr) {
-            if (err) throw err;
+            if (err) console.log("CMD error:", stdout,stderr); //throw err;
             io.sockets.emit('raw_reply', {cmd: data.message, message: stdout});
             console.log('Raw cmd: ' + data.message);
          });
