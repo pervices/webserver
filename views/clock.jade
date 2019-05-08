@@ -98,7 +98,7 @@ block content
                 
                 span.glyphicon.glyphicon-ok#jesd_pll2_ok(style="color:green;", onload ='myFunction()')
                 span.glyphicon.glyphicon-remove#jesd_pll2_no(style="color:red;", onload ='myFunction()')
-                &nbsp &nbsp &nbsp &nbsp &nbsp   
+                &nbsp &nbsp &nbsp &nbsp    
                 
                 span.glyphicon.glyphicon-ok#pll_pll1_ok(style="color:green;", onclick ='myFunction()')
                 span.glyphicon.glyphicon-remove#pll_pll1_no(style="color:red;", onclick ='myFunction()')
@@ -139,11 +139,11 @@ block content
                     function myFunction() {
                         var val = 2;
                     
-                        if ($("#jesd_pll1").val() == "Locked" || val == 1) {
+                        if ($("#jesd_pll1").val() == "Locked") {
                             document.getElementById("jesd_pll1_ok").style.visibility = "visible";
                             document.getElementById("jesd_pll1_no").style.visibility = "hidden";
                             }
-                        else if ($("#jesd_pll1").val() == "Unlocked" || val == 2){
+                        else if ($("#jesd_pll1").val() == "Unlocked"){
                             document.getElementById("jesd_pll1_ok").style.visibility = "hidden";
                             document.getElementById("jesd_pll1_no").style.visibility = "visible";
                             }

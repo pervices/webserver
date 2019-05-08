@@ -137,7 +137,7 @@ $("#led").click(function() {
     
 // START  Initial debug only
 //
-//     socket.emit('prop_wr', { file: cur_root + '/status/lmk_lockdetect_jesd_pll1', message: 'Unlocked' });
+    socket.emit('prop_wr', { file: cur_root + '/status/lmk_lockdetect_jesd_pll1', message: 'Unlocked' });
 //     socket.emit('prop_wr', { file: cur_root + '/status/lmk_lockdetect_jesd_pll2', message: 'Locked' });
 //     socket.emit('prop_wr', { file: cur_root + '/status/lmk_lockdetect_pll_pll1', message:  'Locked' });
 //     socket.emit('prop_wr', { file: cur_root + '/status/lmk_lockdetect_pll_pll2', message:  'Locked' });
@@ -147,8 +147,8 @@ $("#led").click(function() {
 //     socket.emit('prop_wr', { file: cur_root + '/status/lmk_lossoflock_pll_pll1', message:  'Interupted' });
 //     socket.emit('prop_wr', { file: cur_root + '/status/lmk_lossoflock_pll_pll2', message:  'Continuous' });
 //
-    socket.emit('prop_wr', { file: 'time/status/lmk_lockdetect_jesd_pll1', message: $("#jesd_pll1").val() });
-    socket.emit('prop_wr', { file: cur_root + '/link/ip_dest', message: $("#ip").val() });
+//     socket.emit('prop_rd', { file: 'time/status/lmk_lockdetect_jesd_pll1', debug: true });
+//     socket.emit('prop_wr', { file: cur_root + '/link/ip_dest', message: $("#ip").val() });
 //
 // END Initial debug only
     
@@ -250,8 +250,7 @@ $("#vita_enable").on('switchChange.bootstrapSwitch', function(event, state) {
 });
 
 $("#lut_enable").on('switchChange.bootstrapSwitch', function(event, state) {
-   $('/calibration-data').remove();
-   //socket.emit('prop_wr', {file: 'var/crimson/calibration-data', message: "rm -rf"); //delete all calibration files
+   $(cur_root + '/calibration-data').remove();
    socket.emit('prop_wr', { file: cur_root + '/rf/freq/lut_en', message: ( state ? '1' : '0' ) }); //regenerate files through enabling LUT
    //socket.emit('prop_wr', {file: '/{t,r}x/{a,b,c,d}/rf/freq/lut_en' message: (echo 1 |sudo tee) });
 });
@@ -815,21 +814,21 @@ socket.on('prop_ret', function (data) {
       var trig_sel = parseInt(data.message);
       var trig_sel_sma = 1 == ( (trig_sel >> 0) & 1 );
       $('#trig_sel_sma').bootstrapSwitch('state', trig_sel_sma, true);
-   } else if (data.file == 'time/status/lmk_lockdetect_jesd_pll1') {
+   } else if (data.file == cur_root + 'time/status/lmk_lockdetect_jesd_pll1') {
        $('#jesd_pll1').val(data.message);
-   } else if (data.file == 'time/status/lmk_lockdetect_jesd_pll2') {
+   } else if (data.file == cur_root + 'time/status/lmk_lockdetect_jesd_pll2') {
       $('#jesd_pll2').val(data.message);
-   } else if (data.file == 'time/status/lmk_lockdetect_pll_pll1') {
+   } else if (data.file == cur_root + 'time/status/lmk_lockdetect_pll_pll1') {
        $('#pll_pll1').val(data.message);
-   } else if (data.file == 'time/status/lmk_lockdetect_pll_pll2') {
+   } else if (data.file == cur_root + 'time/status/lmk_lockdetect_pll_pll2') {
       $('#pll_pll2').val(data.message);
-   } else if (data.file == 'time/status/lmk_lossoflock_jesd_pll1') {
+   } else if (data.file == cur_root + 'time/status/lmk_lossoflock_jesd_pll1') {
       $('#lol_jesd_pll1').val(data.message);
-   } else if (data.file == 'time/status/lmk_lossoflock_jesd_pll2') {
+   } else if (data.file == cur_root + 'time/status/lmk_lossoflock_jesd_pll2') {
       $('#lol_jesd_pll2').val(data.message);
-   } else if (data.file == 'time/status/lmk_lossoflock_pll_pll1') {
+   } else if (data.file == cur_root + 'time/status/lmk_lossoflock_pll_pll1') {
       $('#lol_pll_pll1').val(data.message);
-   } else if (data.file == 'time/status/lmk_lossoflock_pll_pll2') {
+   } else if (data.file == cur_root +'time/status/lmk_lossoflock_pll_pll2') {
       $('#lol_pll_pll2').val(data.message);
    }
     //   } else if (data.file == cur_root + '/source/devclk') {
@@ -992,14 +991,14 @@ function load_clock (isLoad) {
   // socket.emit('prop_rd', { file: cur_root + '/source/ref_dac'    ,debug: isLoad});
    
    
-   /*socket.emit('prop_rd', { file: cur_root + 'time/status/lmk_lockdetect_jesd_pll1', debug: isLoad );
+   socket.emit('prop_rd', { file: cur_root + 'time/status/lmk_lockdetect_jesd_pll1', debug: isLoad );
    socket.emit('prop_rd', { file: cur_root + 'time/status/lmk_lockdetect_jesd_pll2', debug: isLoad) ;
    socket.emit('prop_rd', { file: cur_root + 'time/status/lmk_lockdetect_pll_pll1', debug: isLoad);
    socket.emit('prop_rd', { file: cur_root + 'time/status/lmk_lockdetect_pll_pll2', debug: isLoad );
    socket.emit('prop_rd', { file: cur_root + 'time/status/lmk_lossoflock_jesd_pll1', debug: isLoad );
    socket.emit('prop_rd', { file: cur_root + 'time/status/lmk_lossoflock_jesd_pll2', debug: isLoad) ;
    socket.emit('prop_rd', { file: cur_root + 'time/status/lmk_lossoflock_pll_pll1', debug: isLoad);
-   socket.emit('prop_rd', { file: cur_root + 'time/status/lmk_lossoflock_pll_pll1', debug: isLoad );*/
+   socket.emit('prop_rd', { file: cur_root + 'time/status/lmk_lossoflock_pll_pll1', debug: isLoad );
 }
 // determine which page is currently loaded
 window.onload = function() {
