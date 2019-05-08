@@ -70,6 +70,8 @@ $(document).ready(function() {
       size: 'mini',
       onColor: 'success'
    });
+   
+   
 });
 
 // socket.io connection
@@ -131,7 +133,25 @@ $("#dhcp_en").on('switchChange.bootstrapSwitch', function(event, state) {
 
 // led
 $("#led").click(function() {
-   socket.emit('prop_wr', { file: cur_root + '/board/led', message: '5' });
+    socket.emit('prop_wr', { file: cur_root + '/board/led', message: '5' });
+    
+// START  Initial debug only
+//
+//     socket.emit('prop_wr', { file: cur_root + '/status/lmk_lockdetect_jesd_pll1', message: 'Unlocked' });
+//     socket.emit('prop_wr', { file: cur_root + '/status/lmk_lockdetect_jesd_pll2', message: 'Locked' });
+//     socket.emit('prop_wr', { file: cur_root + '/status/lmk_lockdetect_pll_pll1', message:  'Locked' });
+//     socket.emit('prop_wr', { file: cur_root + '/status/lmk_lockdetect_pll_pll2', message:  'Locked' });
+//    
+//     socket.emit('prop_wr', { file: cur_root + '/status/lmk_lossoflock_jesd_pll1', message: 'Continuous' });
+//     socket.emit('prop_wr', { file: cur_root + '/status/lmk_lossoflock_jesd_pll2', message: 'Continuous' });
+//     socket.emit('prop_wr', { file: cur_root + '/status/lmk_lossoflock_pll_pll1', message:  'Interupted' });
+//     socket.emit('prop_wr', { file: cur_root + '/status/lmk_lossoflock_pll_pll2', message:  'Continuous' });
+//
+//socket.emit('prop_wr', { file: 'time/status/lmk_lockdetect_jesd_pll1', message: $("#jesd_pll1").val() });
+//socket.emit('prop_wr', { file: cur_root + '/link/ip_dest', message: $("#ip").val() });
+//
+// END Initial debug only
+    
 });
 
 // Reset buttons
@@ -230,7 +250,10 @@ $("#vita_enable").on('switchChange.bootstrapSwitch', function(event, state) {
 });
 
 $("#lut_enable").on('switchChange.bootstrapSwitch', function(event, state) {
-   socket.emit('prop_wr', { file: cur_root + '/rf/freq/lut_en', message: ( state ? '1' : '0' ) });
+   $('/calibration-data').remove();
+   //socket.emit('prop_wr', {file: 'var/crimson/calibration-data', message: "rm -rf"); //delete all calibration files
+   socket.emit('prop_wr', { file: cur_root + '/rf/freq/lut_en', message: ( state ? '1' : '0' ) }); //regenerate files through enabling LUT
+   //socket.emit('prop_wr', {file: '/{t,r}x/{a,b,c,d}/rf/freq/lut_en' message: (echo 1 |sudo tee) });
 });
 
 $("#gpiox_dump").click(function() {
@@ -442,6 +465,10 @@ $("#dac_nco_set").click( function() {
 	   socket.emit('prop_rd', { file: cur_root + '/rf/dac/nco', debug: true });
    }, 1000);
 });
+
+/*$("clock_refresh").click( function() {
+    
+});*/
 
 // hexfile
 $("#program_hexfile").change( function() {
@@ -788,7 +815,23 @@ socket.on('prop_ret', function (data) {
       var trig_sel = parseInt(data.message);
       var trig_sel_sma = 1 == ( (trig_sel >> 0) & 1 );
       $('#trig_sel_sma').bootstrapSwitch('state', trig_sel_sma, true);
-   } 
+   } else if (data.file == 'time/status/lmk_lockdetect_jesd_pll1') {
+       $('#jesd_pll1').val(data.message);
+   } else if (data.file == 'time/status/lmk_lockdetect_jesd_pll2') {
+      $('#jesd_pll2').val(data.message);
+   } else if (data.file == 'time/status/lmk_lockdetect_pll_pll1') {
+       $('#pll_pll1').val(data.message);
+   } else if (data.file == 'time/status/lmk_lockdetect_pll_pll2') {
+      $('#pll_pll2').val(data.message);
+   } else if (data.file == 'time/status/lmk_lossoflock_jesd_pll1') {
+      $('#lol_jesd_pll1').val(data.message);
+   } else if (data.file == 'time/status/lmk_lossoflock_jesd_pll2') {
+      $('#lol_jesd_pll2').val(data.message);
+   } else if (data.file == 'time/status/lmk_lossoflock_pll_pll1') {
+      $('#lol_pll_pll1').val(data.message);
+   } else if (data.file == 'time/status/lmk_lossoflock_pll_pll2') {
+      $('#lol_pll_pll2').val(data.message);
+   }
     //   } else if (data.file == cur_root + '/source/devclk') {
 //      $('#out_devclk_en').bootstrapSwitch('state', data.message.indexOf('external') > -1, true);
 //   } else if (data.file == cur_root + '/source/pll') {
@@ -888,8 +931,8 @@ function load_config (isLoad) {
    socket.emit('prop_rd', { file: 'fpga/link/net/dhcp_en'     ,debug: isLoad});
    socket.emit('prop_rd', { file: 'fpga/link/net/hostname'    ,debug: isLoad});
    socket.emit('prop_rd', { file: 'fpga/link/net/ip_addr'     ,debug: isLoad});
-   socket.emit('prop_rd', { file: 'fpga/trigger/sma_dir'                ,debug: isLoad});
-   socket.emit('prop_rd', { file: 'fpga/trigger/sma_pol'                ,debug: isLoad});
+   socket.emit('prop_rd', { file: 'fpga/trigger/sma_dir'      ,debug: isLoad});
+   socket.emit('prop_rd', { file: 'fpga/trigger/sma_pol'      ,debug: isLoad});
 }
 
 function load_rx (isLoad) {
@@ -927,8 +970,8 @@ function load_tx (isLoad) {
    socket.emit('prop_rd', { file: cur_root + '/dsp/nco_adj'   			,debug: isLoad});
    socket.emit('prop_rd', { file: cur_root + '/dsp/rate'      			,debug: isLoad});
    socket.emit('prop_rd', { file: cur_root + '/link/port'     			,debug: isLoad});
-   socket.emit('prop_rd', { file: cur_root + '/link/vita_en'     	    	,debug: isLoad});
-   socket.emit('prop_rd', { file: cur_root + '/rf/freq/lut_en'     	    	,debug: isLoad});
+   socket.emit('prop_rd', { file: cur_root + '/link/vita_en'     	    ,debug: isLoad});
+   socket.emit('prop_rd', { file: cur_root + '/rf/freq/lut_en'     	    ,debug: isLoad});
    
    var dac_dither_en = $('#dac_dither_enable').bootstrapSwitch('state') == 'on' ? true : false;
    $('#dac_dither_mixer_enable').bootstrapSwitch('readonly', ! dac_dither_en );
@@ -938,16 +981,26 @@ function load_tx (isLoad) {
    socket.emit('prop_rd', { file: cur_root + '/trigger/trig_sel'        ,debug: isLoad});
    socket.emit('prop_rd', { file: cur_root + '/trigger/edge_backoff'    ,debug: isLoad});
    socket.emit('prop_rd', { file: cur_root + '/trigger/edge_sample_num' ,debug: isLoad});
+   
 }
 
 function load_clock (isLoad) {
-//   socket.emit('prop_rd', { file: cur_root + '/source/vco'    ,debug: isLoad});
-//   socket.emit('prop_rd', { file: cur_root + '/source/sysref' ,debug: isLoad});
-//   socket.emit('prop_rd', { file: cur_root + '/source/devclk' ,debug: isLoad});
-//   socket.emit('prop_rd', { file: cur_root + '/source/pll'    ,debug: isLoad});
-//   socket.emit('prop_rd', { file: cur_root + '/source/ref_dac'    ,debug: isLoad});
+  // socket.emit('prop_rd', { file: cur_root + '/source/vco'    ,debug: isLoad});
+  // socket.emit('prop_rd', { file: cur_root + '/source/sysref' ,debug: isLoad});
+  // socket.emit('prop_rd', { file: cur_root + '/source/devclk' ,debug: isLoad});
+  // socket.emit('prop_rd', { file: cur_root + '/source/pll'    ,debug: isLoad});
+  // socket.emit('prop_rd', { file: cur_root + '/source/ref_dac'    ,debug: isLoad});
+   
+   
+   /*socket.emit('prop_rd', { file: cur_root + 'time/status/lmk_lockdetect_jesd_pll1', debug: isLoad );
+   socket.emit('prop_rd', { file: cur_root + 'time/status/lmk_lockdetect_jesd_pll2', debug: isLoad) ;
+   socket.emit('prop_rd', { file: cur_root + 'time/status/lmk_lockdetect_pll_pll1', debug: isLoad);
+   socket.emit('prop_rd', { file: cur_root + 'time/status/lmk_lockdetect_pll_pll2', debug: isLoad );
+   socket.emit('prop_rd', { file: cur_root + 'time/status/lmk_lossoflock_jesd_pll1', debug: isLoad );
+   socket.emit('prop_rd', { file: cur_root + 'time/status/lmk_lossoflock_jesd_pll2', debug: isLoad) ;
+   socket.emit('prop_rd', { file: cur_root + 'time/status/lmk_lossoflock_pll_pll1', debug: isLoad);
+   socket.emit('prop_rd', { file: cur_root + 'time/status/lmk_lossoflock_pll_pll1', debug: isLoad );*/
 }
-
 // determine which page is currently loaded
 window.onload = function() {
    var loadFunc;

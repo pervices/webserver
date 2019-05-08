@@ -133,5 +133,28 @@ block content
                //- TODO: use e.g. bootstrap to create tooltips where necessary
                //- (-VE := active low / falling edge, +VE := active high / rising edge)
                b Polarity
-            input(type="checkbox", name='sma-pol', unchecked)#sma_pol       
+            input(type="checkbox", name='sma-pol', unchecked)#sma_pol      
             
+    h3 Generate Look Up Table 
+    hr
+    .container-fluid
+        .row
+            .col-md-1
+                 button.btn.btn-default.btn-xs.btn-block#lut_enable(onclick ='generateLut()') Generate
+                 p#output_time
+                 script.
+                    var minCounter = 0;
+                    var min = 44;
+                    function generateLut() {
+                       var sec = 59;
+                       var timer = setInterval(function(){
+                       document.getElementById('output_time').innerHTML=  min + " : " + sec;
+                       sec--;
+                       if(sec == 0) {
+                        sec = 59;
+                        minCounter++;
+                        min--;}
+                       if (minCounter == 45) {
+                        clearInterval(timer);}}
+                       , 1000);
+                    }
