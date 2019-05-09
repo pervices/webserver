@@ -137,7 +137,7 @@ $("#led").click(function() {
     
 // START  Initial debug only
 //
-    socket.emit('prop_wr', { file: cur_root + '/status/lmk_lockdetect_jesd_pll1', message: 'Unlocked' });
+//     socket.emit('prop_wr', { file: cur_root + '/status/lmk_lockdetect_jesd_pll1', message: 'Unlocked' });
 //     socket.emit('prop_wr', { file: cur_root + '/status/lmk_lockdetect_jesd_pll2', message: 'Locked' });
 //     socket.emit('prop_wr', { file: cur_root + '/status/lmk_lockdetect_pll_pll1', message:  'Locked' });
 //     socket.emit('prop_wr', { file: cur_root + '/status/lmk_lockdetect_pll_pll2', message:  'Locked' });
@@ -989,16 +989,14 @@ function load_clock (isLoad) {
   // socket.emit('prop_rd', { file: cur_root + '/source/devclk' ,debug: isLoad});
   // socket.emit('prop_rd', { file: cur_root + '/source/pll'    ,debug: isLoad});
   // socket.emit('prop_rd', { file: cur_root + '/source/ref_dac'    ,debug: isLoad});
-   
-   
-   socket.emit('prop_rd', { file: cur_root + 'time/status/lmk_lockdetect_jesd_pll1', debug: isLoad );
-   socket.emit('prop_rd', { file: cur_root + 'time/status/lmk_lockdetect_jesd_pll2', debug: isLoad) ;
-   socket.emit('prop_rd', { file: cur_root + 'time/status/lmk_lockdetect_pll_pll1', debug: isLoad);
-   socket.emit('prop_rd', { file: cur_root + 'time/status/lmk_lockdetect_pll_pll2', debug: isLoad );
-   socket.emit('prop_rd', { file: cur_root + 'time/status/lmk_lossoflock_jesd_pll1', debug: isLoad );
-   socket.emit('prop_rd', { file: cur_root + 'time/status/lmk_lossoflock_jesd_pll2', debug: isLoad) ;
-   socket.emit('prop_rd', { file: cur_root + 'time/status/lmk_lossoflock_pll_pll1', debug: isLoad);
-   socket.emit('prop_rd', { file: cur_root + 'time/status/lmk_lossoflock_pll_pll1', debug: isLoad );
+   socket.emit('prop_rd', { file: cur_root + 'time/status/lmk_lockdetect_jesd_pll1' ,debug: isLoad});
+   socket.emit('prop_rd', { file: cur_root + 'time/status/lmk_lockdetect_jesd_pll2' ,debug: isLoad});
+   socket.emit('prop_rd', { file: cur_root + 'time/status/lmk_lockdetect_pll_pll1'  ,debug: isLoad});
+   socket.emit('prop_rd', { file: cur_root + 'time/status/lmk_lockdetect_pll_pll2'  ,debug: isLoad});
+   socket.emit('prop_rd', { file: cur_root + 'time/status/lmk_lossoflock_jesd_pll1' ,debug: isLoad});
+   socket.emit('prop_rd', { file: cur_root + 'time/status/lmk_lossoflock_jesd_pll2' ,debug: isLoad});
+   socket.emit('prop_rd', { file: cur_root + 'time/status/lmk_lossoflock_pll_pll1'  ,debug: isLoad});
+   socket.emit('prop_rd', { file: cur_root + 'time/status/lmk_lossoflock_pll_pll1'  ,debug: isLoad});
 }
 // determine which page is currently loaded
 window.onload = function() {
