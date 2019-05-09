@@ -250,8 +250,8 @@ $("#vita_enable").on('switchChange.bootstrapSwitch', function(event, state) {
 });
 
 $("#lut_enable").on('switchChange.bootstrapSwitch', function(event, state) {
-   //socket.emit('prop_wr', { file: cur_root + 
-    //$(cur_root + '/calibration-data').remove();
+   //$(cur_root + '/calibration-data').remove();
+   socket.emit('prop_wr', { 'raw_cmd', message: "rm -rf /var/crimson/calibration-data/" });
    socket.emit('prop_wr', { file: cur_root + '/rf/freq/lut_en', message: ( state ? '1' : '0' ) }); //regenerate files through enabling LUT
    //socket.emit('prop_wr', {file: '/{t,r}x/{a,b,c,d}/rf/freq/lut_en' message: (echo 1 |sudo tee) });
 });

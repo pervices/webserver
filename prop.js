@@ -16,7 +16,7 @@ module.exports = function(io) {
 
             // send the data back to the client
             //io.sockets.emit('prop_ret', {file: file, message: '1', debug: debug});
-            io.sockets.emit('prop_ret', {file: file, message: '1', debug: debug});
+            io.sockets.emit('prop_ret', {file: file, message: data, debug: debug});
          }); 
       });
 
