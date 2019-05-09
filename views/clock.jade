@@ -87,40 +87,40 @@ block content
                 &nbsp &nbsp &nbsp &nbsp &nbsp 
                 
                 |10
-                &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp
+                &nbsp &nbsp &nbsp &nbsp &nbsp
                 
                 |100
             
             .row
-                span.glyphicon.glyphicon-ok#jesd_pll1_ok(style="color:green;", onload ='myFunction()') 
-                span.glyphicon.glyphicon-remove#jesd_pll1_no(style="color:red;", onload ='myFunction()')
+                span.glyphicon.glyphicon-ok#jesd_pll1_ok(style="color:green;") 
+                span.glyphicon.glyphicon-remove#jesd_pll1_no(style="color:red;")
                 &nbsp &nbsp &nbsp &nbsp   
                 
-                span.glyphicon.glyphicon-ok#jesd_pll2_ok(style="color:green;", onload ='myFunction()')
-                span.glyphicon.glyphicon-remove#jesd_pll2_no(style="color:red;", onload ='myFunction()')
+                span.glyphicon.glyphicon-ok#jesd_pll2_ok(style="color:green;")
+                span.glyphicon.glyphicon-remove#jesd_pll2_no(style="color:red;")
                 &nbsp &nbsp &nbsp &nbsp &nbsp   
                 
-                span.glyphicon.glyphicon-ok#pll_pll1_ok(style="color:green;", onclick ='myFunction()')
-                span.glyphicon.glyphicon-remove#pll_pll1_no(style="color:red;", onclick ='myFunction()')
+                span.glyphicon.glyphicon-ok#pll_pll1_ok(style="color:green;")
+                span.glyphicon.glyphicon-remove#pll_pll1_no(style="color:red;")
                 &nbsp &nbsp &nbsp &nbsp &nbsp  
                 
-                span.glyphicon.glyphicon-ok#pll_pll2_ok(style="color:green;", onclick ='myFunction()')
-                span.glyphicon.glyphicon-remove#pll_pll2_no(style="color:red;", onclick ='myFunction()')
+                span.glyphicon.glyphicon-ok#pll_pll2_ok(style="color:green;")
+                span.glyphicon.glyphicon-remove#pll_pll2_no(style="color:red;")
             .row
-                span.glyphicon.glyphicon-ok#lol_jesd_pll1_ok(style="color:green;", onload ='myFunction()')
-                span.glyphicon.glyphicon-remove#lol_jesd_pll1_no(style="color:red;", onload ='myFunction()')
+                span.glyphicon.glyphicon-ok#lol_jesd_pll1_ok(style="color:green;")
+                span.glyphicon.glyphicon-remove#lol_jesd_pll1_no(style="color:red;")
                 &nbsp &nbsp &nbsp &nbsp 
                 
-                span.glyphicon.glyphicon-ok#lol_jesd_pll2_ok(style="color:green;", onload ='myFunction()')
-                span.glyphicon.glyphicon-remove#lol_jesd_pll2_no(style="color:red;", onload ='myFunction()')
+                span.glyphicon.glyphicon-ok#lol_jesd_pll2_ok(style="color:green;")
+                span.glyphicon.glyphicon-remove#lol_jesd_pll2_no(style="color:red;")
                 &nbsp &nbsp &nbsp &nbsp &nbsp 
                 
-                span.glyphicon.glyphicon-ok#lol_pll_pll1_ok(style="color:green;", onclick ='myFunction()')
-                span.glyphicon.glyphicon-remove#lol_pll_pll1_no(style="color:red;", onclick ='myFunction()')
+                span.glyphicon.glyphicon-ok#lol_pll_pll1_ok(style="color:green;")
+                span.glyphicon.glyphicon-remove#lol_pll_pll1_no(style="color:red;")
                 &nbsp &nbsp &nbsp &nbsp &nbsp  
                 
-                span.glyphicon.glyphicon-ok#lol_pll_pll2_ok(style="color:green;", onclick ='myFunction()')
-                span.glyphicon.glyphicon-remove#lol_pll_pll2_no(style="color:red;", onclick ='myFunction()')
+                span.glyphicon.glyphicon-ok#lol_pll_pll2_ok(style="color:green;")
+                span.glyphicon.glyphicon-remove#lol_pll_pll2_no(style="color:red;")
                 
             script.
                 document.getElementById("jesd_pll1_no").style.visibility = "hidden";
@@ -134,83 +134,8 @@ block content
                 document.getElementById("lol_pll_pll2_no").style.visibility = "hidden";
     
             .col-md-11.top-buffer-20
-                button.btn.btn-default.btn-xs.btn-block#refreshClock(onclick ='myFunction()') Refresh
-                script.
-                    var val = 1;
-                    function myFunction() {
-                        if ($("#jesd_pll1").val() == "PLL1 Locked") {
-                            document.getElementById("jesd_pll1_ok").style.visibility = "visible";
-                            document.getElementById("jesd_pll1_no").style.visibility = "hidden";
-                            }
-                        else if ($("#jesd_pll1").val() == "PLL1 Unlocked"){
-                            document.getElementById("jesd_pll1_ok").style.visibility = "hidden";
-                            document.getElementById("jesd_pll1_no").style.visibility = "visible";
-                            }
-                        
-                        if ($("#jesd_pll2").val() == "PLL2 Locked") {
-                            document.getElementById("jesd_pll2_ok").style.visibility = "visible";
-                            document.getElementById("jesd_pll2_no").style.visibility = "hidden";
-                            }
-                        else if ($("#jesd_pll2").val() == "PLL2 Unlocked"){
-                            document.getElementById("jesd_pll2_ok").style.visibility = "hidden";
-                            document.getElementById("jesd_pll2_no").style.visibility = "visible";
-                            }
-                            
-                        if ($("#pll_pll1").val() == "PLL1 Locked") {
-                            document.getElementById("pll_pll1_ok").style.visibility = "visible";
-                            document.getElementById("pll_pll1_no").style.visibility = "hidden";
-                            }
-                        else if ($("#pll_pll1").val() == "PLL1 Unlocked"){
-                            document.getElementById("pll_pll1_ok").style.visibility = "hidden";
-                            document.getElementById("pll_pll1_no").style.visibility = "visible";
-                            }
-                        
-                        if ($("#pll_pll2").val() == "PLL2 Locked") {
-                            document.getElementById("pll_pll2_ok").style.visibility = "visible";
-                            document.getElementById("pll_pll2_no").style.visibility = "hidden";
-                            }
-                        else if ($("#pll_pll2").val() == "PLL2 Unlocked"){
-                            document.getElementById("pll_pll2_ok").style.visibility = "hidden";
-                            document.getElementById("pll_pll2_no").style.visibility = "visible";
-                            }
-                            
-                            
-                        if ($("#lol_jesd_pll1").val() == "PLL1 Continuous Lock") {
-                            document.getElementById("lol_jesd_pll1_ok").style.visibility = "visible";
-                            document.getElementById("lol_jesd_pll1_no").style.visibility = "hidden";
-                            }
-                        else if ($("#lol_jesd_pll1").val() == "PLL1 Interupted Lock"){
-                            document.getElementById("lol_jesd_pll1_ok").style.visibility = "hidden";
-                            document.getElementById("lol_jesd_pll1_no").style.visibility = "visible";
-                            }
-                        
-                        if ($("#lol_jesd_pll2").val() == "PLL2 Continuous Lock") {
-                            document.getElementById("lol_jesd_pll2_ok").style.visibility = "visible";
-                            document.getElementById("lol_jesd_pll2_no").style.visibility = "hidden";
-                            }
-                        else if ($("#lol_jesd_pll2").val() == "PLL2 Interupted Lock"){
-                            document.getElementById("lol_jesd_pll2_ok").style.visibility = "hidden";
-                            document.getElementById("lol_jesd_pll2_no").style.visibility = "visible";
-                            }
-                            
-                        if ($("#lol_pll_pll1").val() == "PLL1 Continuous Lock") {
-                            document.getElementById("lol_pll_pll1_ok").style.visibility = "visible";
-                            document.getElementById("lol_pll_pll1_no").style.visibility = "hidden";
-                            }
-                        else if ($("#lol_pll_pll1").val() == "PLL1 Interupted Lock"){
-                            document.getElementById("lol_pll_pll1_ok").style.visibility = "hidden";
-                            document.getElementById("lol_pll_pll1_no").style.visibility = "visible";
-                            }
-                        
-                        if ($("#lol_pll_pll2").val() == "PLL2 Continuous Lock") {
-                            document.getElementById("lol_pll_pll2_ok").style.visibility = "visible";
-                            document.getElementById("lol_pll_pll2_no").style.visibility = "hidden";
-                            }
-                        else if ($("#lol_pll_pll2").val() == "PLL2 Interupted Lock"){
-                            document.getElementById("lol_pll_pll2_ok").style.visibility = "hidden";
-                            document.getElementById("lol_pll_pll2_no").style.visibility = "visible";
-                            }
-                        }
+                button.btn.btn-default.btn-xs.btn-block#refreshClock Refresh
+                    
 
          .col-md-7
             b Console Output
