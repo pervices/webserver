@@ -1,6 +1,6 @@
 var fs = require('fs');
 var state_dir = '/var/crimson/state/';
-var sys = require('sys');
+var sys = require('util');
 var exec = require('child_process').exec;
 
 module.exports = function(io) {

@@ -250,7 +250,8 @@ $("#vita_enable").on('switchChange.bootstrapSwitch', function(event, state) {
 });
 
 $("#lut_enable").on('switchChange.bootstrapSwitch', function(event, state) {
-   $(cur_root + '/calibration-data').remove();
+   //socket.emit('prop_wr', { file: cur_root + 
+    //$(cur_root + '/calibration-data').remove();
    socket.emit('prop_wr', { file: cur_root + '/rf/freq/lut_en', message: ( state ? '1' : '0' ) }); //regenerate files through enabling LUT
    //socket.emit('prop_wr', {file: '/{t,r}x/{a,b,c,d}/rf/freq/lut_en' message: (echo 1 |sudo tee) });
 });
@@ -989,14 +990,14 @@ function load_clock (isLoad) {
   // socket.emit('prop_rd', { file: cur_root + '/source/devclk' ,debug: isLoad});
   // socket.emit('prop_rd', { file: cur_root + '/source/pll'    ,debug: isLoad});
   // socket.emit('prop_rd', { file: cur_root + '/source/ref_dac'    ,debug: isLoad});
-   socket.emit('prop_rd', { file: cur_root + 'time/status/lmk_lockdetect_jesd_pll1' ,debug: isLoad});
-   socket.emit('prop_rd', { file: cur_root + 'time/status/lmk_lockdetect_jesd_pll2' ,debug: isLoad});
-   socket.emit('prop_rd', { file: cur_root + 'time/status/lmk_lockdetect_pll_pll1'  ,debug: isLoad});
-   socket.emit('prop_rd', { file: cur_root + 'time/status/lmk_lockdetect_pll_pll2'  ,debug: isLoad});
-   socket.emit('prop_rd', { file: cur_root + 'time/status/lmk_lossoflock_jesd_pll1' ,debug: isLoad});
-   socket.emit('prop_rd', { file: cur_root + 'time/status/lmk_lossoflock_jesd_pll2' ,debug: isLoad});
-   socket.emit('prop_rd', { file: cur_root + 'time/status/lmk_lossoflock_pll_pll1'  ,debug: isLoad});
-   socket.emit('prop_rd', { file: cur_root + 'time/status/lmk_lossoflock_pll_pll1'  ,debug: isLoad});
+   socket.emit('prop_rd', { file: cur_root + '/status/lmk_lockdetect_jesd_pll1' ,debug: isLoad});
+   socket.emit('prop_rd', { file: cur_root + '/status/lmk_lockdetect_pll_pll1'  ,debug: isLoad});
+   socket.emit('prop_rd', { file: cur_root + '/status/lmk_lockdetect_jesd_pll2' ,debug: isLoad});
+   socket.emit('prop_rd', { file: cur_root + '/status/lmk_lockdetect_pll_pll2'  ,debug: isLoad});
+   socket.emit('prop_rd', { file: cur_root + '/status/lmk_lossoflock_jesd_pll1' ,debug: isLoad});
+   socket.emit('prop_rd', { file: cur_root + '/status/lmk_lossoflock_jesd_pll2' ,debug: isLoad});
+   socket.emit('prop_rd', { file: cur_root + '/status/lmk_lossoflock_pll_pll1'  ,debug: isLoad});
+   socket.emit('prop_rd', { file: cur_root + '/status/lmk_lossoflock_pll_pll1'  ,debug: isLoad});
 }
 // determine which page is currently loaded
 window.onload = function() {

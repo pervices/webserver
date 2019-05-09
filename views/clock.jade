@@ -94,7 +94,7 @@ block content
             .row
                 span.glyphicon.glyphicon-ok#jesd_pll1_ok(style="color:green;", onload ='myFunction()') 
                 span.glyphicon.glyphicon-remove#jesd_pll1_no(style="color:red;", onload ='myFunction()')
-                &nbsp &nbsp &nbsp &nbsp &nbsp  
+                &nbsp &nbsp &nbsp &nbsp   
                 
                 span.glyphicon.glyphicon-ok#jesd_pll2_ok(style="color:green;", onload ='myFunction()')
                 span.glyphicon.glyphicon-remove#jesd_pll2_no(style="color:red;", onload ='myFunction()')
@@ -109,7 +109,7 @@ block content
             .row
                 span.glyphicon.glyphicon-ok#lol_jesd_pll1_ok(style="color:green;", onload ='myFunction()')
                 span.glyphicon.glyphicon-remove#lol_jesd_pll1_no(style="color:red;", onload ='myFunction()')
-                &nbsp &nbsp &nbsp &nbsp &nbsp
+                &nbsp &nbsp &nbsp &nbsp 
                 
                 span.glyphicon.glyphicon-ok#lol_jesd_pll2_ok(style="color:green;", onload ='myFunction()')
                 span.glyphicon.glyphicon-remove#lol_jesd_pll2_no(style="color:red;", onload ='myFunction()')
@@ -137,77 +137,78 @@ block content
                 button.btn.btn-default.btn-xs.btn-block#refreshClock(onclick ='myFunction()') Refresh
                 script.
                     function myFunction() {
-                        var val = 2;
-                    
-                        if ($("#jesd_pll1").val() == "Locked") {
+                        cur_board = 'time';
+                        cur_root = cur_board;
+                        loadFunc = load_clock;
+                        if ($("#jesd_pll1").val() == "PLL1 Locked") {
                             document.getElementById("jesd_pll1_ok").style.visibility = "visible";
                             document.getElementById("jesd_pll1_no").style.visibility = "hidden";
                             }
-                        else if ($("#jesd_pll1").val() == "Unlocked"){
+                        else if ($("#jesd_pll1").val() == "PLL1 Unlocked"){
                             document.getElementById("jesd_pll1_ok").style.visibility = "hidden";
                             document.getElementById("jesd_pll1_no").style.visibility = "visible";
                             }
                         
-                        if ($("#jesd_pll2").val() == "Locked") {
+                        if ($("#jesd_pll2").val() == "PLL2 Locked") {
                             document.getElementById("jesd_pll2_ok").style.visibility = "visible";
                             document.getElementById("jesd_pll2_no").style.visibility = "hidden";
                             }
-                        else if ($("#jesd_pll2").val() == "Unlocked"){
+                        else if ($("#jesd_pll2").val() == "PLL2 Unlocked"){
                             document.getElementById("jesd_pll2_ok").style.visibility = "hidden";
                             document.getElementById("jesd_pll2_no").style.visibility = "visible";
                             }
                             
-                        if ($("#pll_pll1").val() == "Locked") {
+                        if ($("#pll_pll1").val() == "PLL1 Locked") {
                             document.getElementById("pll_pll1_ok").style.visibility = "visible";
                             document.getElementById("pll_pll1_no").style.visibility = "hidden";
                             }
-                        else if ($("#pll_pll1").val() == "Unlocked"){
+                        else if ($("#pll_pll1").val() == "PLL1 Unlocked"){
                             document.getElementById("pll_pll1_ok").style.visibility = "hidden";
                             document.getElementById("pll_pll1_no").style.visibility = "visible";
                             }
                         
-                        if ($("#pll_pll2").val() == "Locked") {
+                        if ($("#pll_pll2").val() == "PLL2 Locked") {
                             document.getElementById("pll_pll2_ok").style.visibility = "visible";
                             document.getElementById("pll_pll2_no").style.visibility = "hidden";
                             }
-                        else if ($("#pll_pll2").val() == "Unlocked"){
+                        else if ($("#pll_pll2").val() == "PLL2 Unlocked"){
                             document.getElementById("pll_pll2_ok").style.visibility = "hidden";
                             document.getElementById("pll_pll2_no").style.visibility = "visible";
                             }
                             
                             
-                        if ($("#lol_jesd_pll1").val() == "Continuous") {
+                        if ($("#lol_jesd_pll1").val() == "PLL1 Continuous Lock") {
                             document.getElementById("lol_jesd_pll1_ok").style.visibility = "visible";
                             document.getElementById("lol_jesd_pll1_no").style.visibility = "hidden";
                             }
-                        else if ($("#lol_jesd_pll1").val() == "Interupted"){
+                        else if ($("#lol_jesd_pll1").val() == "PLL1 Interupted Lock"){
                             document.getElementById("lol_jesd_pll1_ok").style.visibility = "hidden";
                             document.getElementById("lol_jesd_pll1_no").style.visibility = "visible";
                             }
                         
-                        if ($("#lol_jesd_pll2").val() == "Continuous") {
+                        if ($("#lol_jesd_pll2").val() == "PLL2 Continuous Lock") {
                             document.getElementById("lol_jesd_pll2_ok").style.visibility = "visible";
                             document.getElementById("lol_jesd_pll2_no").style.visibility = "hidden";
                             }
-                        else if ($("#lol_jesd_pll2").val() == "Interupted"){
+                        else if ($("#lol_jesd_pll2").val() == "PLL2 Interupted Lock"){
                             document.getElementById("lol_jesd_pll2_ok").style.visibility = "hidden";
                             document.getElementById("lol_jesd_pll2_no").style.visibility = "visible";
                             }
                             
-                        if ($("#lol_pll_pll1").val() == "Continuous") {
+                        if ($("#lol_pll_pll1").val() == "PLL1 Continuous Lock") {
                             document.getElementById("lol_pll_pll1_ok").style.visibility = "visible";
                             document.getElementById("lol_pll_pll1_no").style.visibility = "hidden";
                             }
-                        else if ($("#lol_pll_pll1").val() == "Interupted"){
+                        else if ($("#lol_pll_pll1").val() == "PLL1 Interupted Lock"){
                             document.getElementById("lol_pll_pll1_ok").style.visibility = "hidden";
                             document.getElementById("lol_pll_pll1_no").style.visibility = "visible";
                             }
                         
-                        if ($("#lol_pll_pll2").val() == "Continuous") {
+                        if ($("#lol_pll_pll2").val() == "PLL2 Continuous Lock") {
                             document.getElementById("lol_pll_pll2_ok").style.visibility = "visible";
                             document.getElementById("lol_pll_pll2_no").style.visibility = "hidden";
                             }
-                        else if ($("#lol_pll_pll2").val() == "Interupted"){
+                        else if ($("#lol_pll_pll2").val() == "PLL2 Interupted Lock"){
                             document.getElementById("lol_pll_pll2_ok").style.visibility = "hidden";
                             document.getElementById("lol_pll_pll2_no").style.visibility = "visible";
                             }
