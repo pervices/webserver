@@ -134,7 +134,7 @@ $("#dhcp_en").on('switchChange.bootstrapSwitch', function(event, state) {
 // led
 $("#led").click(function() {
     socket.emit('prop_wr', { file: cur_root + '/board/led', message: '5' });
-    
+    socket.emit('prop_wr', { file: cur_root + '/board/led', message: $("#jesd_pll").val() });
 // START  Initial debug only
 //
 //     socket.emit('prop_wr', { file: cur_root + '/status/lmk_lockdetect_jesd_pll1', message: 'Unlocked' });
