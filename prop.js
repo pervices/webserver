@@ -15,7 +15,8 @@ module.exports = function(io) {
             if (err) console.log("File Read error: ",state_dir ); //throw err;
 
             // send the data back to the client
-            io.sockets.emit('prop_ret', {file: file, message: '1', debug: debug});
+            //io.sockets.emit('prop_ret', {file: file, message: '1', debug: debug});
+            io.sockets.emit('prop_ret', {file: file, message: data, debug: debug});
          }); 
       });
 
