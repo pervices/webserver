@@ -148,7 +148,7 @@ $("#led").click(function() {
 //     socket.emit('prop_wr', { file: cur_root + '/status/lmk_lossoflock_pll_pll2', message:  'Continuous' });
 //
 //     socket.emit('prop_rd', { file: 'time/status/lmk_lockdetect_jesd_pll1', debug: true });
-     socket.emit('prop_wr', { file: cur_root + '/link/ip_dest', message: $("#jesd_pll1").val() });
+//     socket.emit('prop_wr', { file: cur_root + '/link/ip_dest', message: $("#ip").val() });
 //
 // END Initial debug only
     
