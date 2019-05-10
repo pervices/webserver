@@ -850,12 +850,12 @@ socket.on('prop_ret', function (data) {
        }
        
    } else if (data.file == cur_root + '/status/lmk_lossoflock_jesd_pll1') {
-       if(debug_msg.includes("PLL2 Synchronous Lock")) {
+       if(debug_msg.includes("PLL1 Synchronous Lock")) {
          document.getElementById("lol_jesd_pll1_ok").style.visibility = "visible";
          document.getElementById("lol_jesd_pll1_no").style.visibility = "hidden";
          clock_msg = "";
        }
-       else if(debug_msg.includes("PLL2 Interupted Lock")) {
+       else if(debug_msg.includes("PLL1 Interupted Lock")) {
          document.getElementById("lol_jesd_pll1_ok").style.visibility = "hidden"; 
          document.getElementById("lol_jesd_pll1_no").style.visibility = "visible";
          clock_msg = "";
@@ -863,39 +863,38 @@ socket.on('prop_ret', function (data) {
        
    } else if (data.file == cur_root + '/status/lmk_lossoflock_jesd_pll2') {  
        if(debug_msg.includes("PLL2 Synchronous Lock")) {
-         document.getElementById("lol_pll_pll2_ok").style.visibility = "visible";
-         document.getElementById("lol_pll_pll2_no").style.visibility = "hidden";
+         document.getElementById("lol_jesd_pll2_ok").style.visibility = "visible";
+         document.getElementById("lol_jesd_pll2_no").style.visibility = "hidden";
          clock_msg = "";
        }
        else if(debug_msg.includes("PLL2 Interupted Lock")) {
-         document.getElementById("lol_pll_pll2_ok").style.visibility = "hidden";
-         document.getElementById("lol_pll_pll2_no").style.visibility = "visible";
+         document.getElementById("lol_jesd_pll2_ok").style.visibility = "hidden";
+         document.getElementById("lol_jesd_pll2_no").style.visibility = "visible";
          clock_msg = "";
        }
-   } else if (data.file == cur_root + '/status/lmk_lossoflock_pll_pll1') {    
-       if(debug_msg.includes("PLL2 Synchronous Lock")) {
+   } else if (data.file == cur_root + '/status/lmk_lossoflock_pll_pll1') {  
+       if(debug_msg.includes("PLL1 Synchronous Lock")) {
          document.getElementById("lol_pll_pll1_ok").style.visibility = "visible";
          document.getElementById("lol_pll_pll1_no").style.visibility = "hidden";
          clock_msg = "";
        }
        else if(debug_msg.includes("PLL2 Interupted Lock")) {
-         document.getElementById("lol_pll_pll1_ok").style.visibility = "hidden"; 
+         document.getElementById("lol_pll_pll1_ok").style.visibility = "hidden";
          document.getElementById("lol_pll_pll1_no").style.visibility = "visible";
          clock_msg = "";
        }
    } else if (data.file == cur_root + '/status/lmk_lossoflock_pll_pll2') {  
-       if(debug_msg.includes("PLL2 Synchronous Lock")) {
-         document.getElementById("lol_pll_pll2_ok").style.visibility = "visible";
+       if(debug_msg.includes("PLL1 Synchronous Lock")) {
+         document.getElementById("lol_pll_pll2_ok").style.visibility = "visible"
          document.getElementById("lol_pll_pll2_no").style.visibility = "hidden";
          clock_msg = "";
        }
        else if(debug_msg.includes("PLL2 Interupted Lock")) {
          document.getElementById("lol_pll_pll2_ok").style.visibility = "hidden";
-         document.getElementById("lol_pll_pll2_no").style.visibility = "visible";
+         document.getElementById("lol_pll_pll2_no").style.visibility = "visible"
          clock_msg = "";
        }
-   }
-
+   } 
 });
 
 
@@ -1054,20 +1053,23 @@ function load_tx (isLoad) {
 function load_clock (isLoad) {
     
 
-// socket.emit('prop_rd', { file: cur_root + '/source/vco'    ,debug: isLoad});
-// socket.emit('prop_rd', { file: cur_root + '/source/sysref' ,debug: isLoad});
-// socket.emit('prop_rd', { file: cur_root + '/source/devclk' ,debug: isLoad});
-// socket.emit('prop_rd', { file: cur_root + '/source/pll'    ,debug: isLoad});
-// socket.emit('prop_rd', { file: cur_root + '/source/ref_dac'    ,debug: isLoad});
-    
+   socket.emit('prop_wr', { file: cur_root + '/status/lmk_lockdetect_jesd_pll1' ,message: 'PLL1 Locked'});
+   socket.emit('prop_wr', { file: cur_root + '/status/lmk_lockdetect_jesd_pll2' ,message: 'PLL2 Locked'});
+   socket.emit('prop_wr', { file: cur_root + '/status/lmk_lockdetect_pll_pll1'  ,message: 'PLL1 Locked'});
+   socket.emit('prop_wr', { file: cur_root + '/status/lmk_lockdetect_pll_pll2'  ,message: 'PLL2 Locked'});
+   socket.emit('prop_wr', { file: cur_root + '/status/lmk_lossoflock_jesd_pll1' ,message: 'PLL1 Synchronous Lock'});
+   socket.emit('prop_wr', { file: cur_root + '/status/lmk_lossoflock_jesd_pll2' ,message: 'PLL2 Synchronous Lock'});
+   socket.emit('prop_wr', { file: cur_root + '/status/lmk_lossoflock_pll_pll1'  ,message: 'PLL1 Synchronous Lock'});
+   socket.emit('prop_wr', { file: cur_root + '/status/lmk_lossoflock_pll_pll2'  ,message: 'PLL2 Synchronous Lock'});
+   
    socket.emit('prop_rd', { file: cur_root + '/status/lmk_lockdetect_jesd_pll1' ,debug: isLoad});
-   socket.emit('prop_rd', { file: cur_root + '/status/lmk_lockdetect_pll_pll1'  ,debug: isLoad});
-   socket.emit('prop_rd', { file: cur_root + '/status/lmk_lockdetect_jesd_pll2' ,debug: isLoad});
+   socket.emit('prop_rd', { file: cur_root + '/status/lmk_lockdetect_jesd_pll2'  ,debug: isLoad});
+   socket.emit('prop_rd', { file: cur_root + '/status/lmk_lockdetect_pll_pll1' ,debug: isLoad});
    socket.emit('prop_rd', { file: cur_root + '/status/lmk_lockdetect_pll_pll2'  ,debug: isLoad});
    socket.emit('prop_rd', { file: cur_root + '/status/lmk_lossoflock_jesd_pll1' ,debug: isLoad});
    socket.emit('prop_rd', { file: cur_root + '/status/lmk_lossoflock_jesd_pll2' ,debug: isLoad});
    socket.emit('prop_rd', { file: cur_root + '/status/lmk_lossoflock_pll_pll1'  ,debug: isLoad});
-   socket.emit('prop_rd', { file: cur_root + '/status/lmk_lossoflock_pll_pll1'  ,debug: isLoad});
+   socket.emit('prop_rd', { file: cur_root + '/status/lmk_lossoflock_pll_pll2'  ,debug: isLoad});
 
 }
 
