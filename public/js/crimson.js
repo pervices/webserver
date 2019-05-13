@@ -231,12 +231,10 @@ $("#vita_enable").on('switchChange.bootstrapSwitch', function(event, state) {
    socket.emit('prop_wr', { file: cur_root + '/link/vita_en', message: ( state ? '1' : '0' ) });
 });
 
-$("#lut_enable").on('switchChange.bootstrapSwitch', function(event, state) {
-   //$(cur_root + '/calibration-data').remove();
+$("#lut_enable").click(function() {
    socket.emit('raw_cmd', { message: "rm -rf /var/crimson/calibration-data/" });
    socket.emit('raw_cmd', { message: "echo 1 |sudo tee /var/crimson/state/{t,r}x/{a,b,c,d}/rf/freq/lut_en" });
-   socket.emit('prop_wr', { file: cur_root + '/rf/freq/lut_en', message: ( state ? '1' : '0' ) }); //regenerate files through enabling LUT
-   //socket.emit('prop_wr', {file: '/{t,r}x/{a,b,c,d}/rf/freq/lut_en' message: (echo 1 |sudo tee) });
+   //socket.emit('prop_wr', { file: cur_root + '/rf/freq/lut_en', message: ( state ? '1' : '0' ) }); //regenerate files through enabling LUT
 });
 
 $("#gpiox_dump").click(function() {
@@ -434,6 +432,7 @@ $("#sfpb_set").click( function() {
    socket.emit('prop_wr', { file: 'fpga/link/sfpb/pay_len', message: $("#sfpb_paylen").val() });
 });
 
+//go to the load clock function
 $("#refreshClock").click( function() {
    load_clock(true);
 });
@@ -878,13 +877,13 @@ socket.on('prop_ret', function (data) {
          document.getElementById("lol_pll_pll1_no").style.visibility = "hidden";
          clock_msg = "";
        }
-       else if(debug_msg.includes("PLL2 Interupted Lock")) {
+       else if(debug_msg.includes("PLL1 Interupted Lock")) {
          document.getElementById("lol_pll_pll1_ok").style.visibility = "hidden";
          document.getElementById("lol_pll_pll1_no").style.visibility = "visible";
          clock_msg = "";
        }
    } else if (data.file == cur_root + '/status/lmk_lossoflock_pll_pll2') {  
-       if(debug_msg.includes("PLL1 Synchronous Lock")) {
+       if(debug_msg.includes("PLL2 Synchronous Lock")) {
          document.getElementById("lol_pll_pll2_ok").style.visibility = "visible"
          document.getElementById("lol_pll_pll2_no").style.visibility = "hidden";
          clock_msg = "";
@@ -910,6 +909,7 @@ socket.on('prop_ret', function (data) {
 //   }
 
 //  });
+
 // en/disable the configurations
 function activateControls_rx(state) {
    $('#rf_band').bootstrapSwitch('readonly', !state);
@@ -1051,17 +1051,11 @@ function load_tx (isLoad) {
 }
 
 function load_clock (isLoad) {
-    
+   //write to the lockdetect/lossoflock to update the directories 
+   socket.emit('prop_wr', { file: cur_root + '/status/lmk_lockdetect' ,message: '0'});
+   socket.emit('prop_wr', { file: cur_root + '/status/lmk_lossoflock' ,message: '0'});
 
-   socket.emit('prop_wr', { file: cur_root + '/status/lmk_lockdetect_jesd_pll1' ,message: 'PLL1 Locked'});
-   socket.emit('prop_wr', { file: cur_root + '/status/lmk_lockdetect_jesd_pll2' ,message: 'PLL2 Locked'});
-   socket.emit('prop_wr', { file: cur_root + '/status/lmk_lockdetect_pll_pll1'  ,message: 'PLL1 Locked'});
-   socket.emit('prop_wr', { file: cur_root + '/status/lmk_lockdetect_pll_pll2'  ,message: 'PLL2 Locked'});
-   socket.emit('prop_wr', { file: cur_root + '/status/lmk_lossoflock_jesd_pll1' ,message: 'PLL1 Synchronous Lock'});
-   socket.emit('prop_wr', { file: cur_root + '/status/lmk_lossoflock_jesd_pll2' ,message: 'PLL2 Synchronous Lock'});
-   socket.emit('prop_wr', { file: cur_root + '/status/lmk_lossoflock_pll_pll1'  ,message: 'PLL1 Synchronous Lock'});
-   socket.emit('prop_wr', { file: cur_root + '/status/lmk_lossoflock_pll_pll2'  ,message: 'PLL2 Synchronous Lock'});
-   
+   //read from all of the directories
    socket.emit('prop_rd', { file: cur_root + '/status/lmk_lockdetect_jesd_pll1' ,debug: isLoad});
    socket.emit('prop_rd', { file: cur_root + '/status/lmk_lockdetect_jesd_pll2'  ,debug: isLoad});
    socket.emit('prop_rd', { file: cur_root + '/status/lmk_lockdetect_pll_pll1' ,debug: isLoad});
@@ -1070,7 +1064,6 @@ function load_clock (isLoad) {
    socket.emit('prop_rd', { file: cur_root + '/status/lmk_lossoflock_jesd_pll2' ,debug: isLoad});
    socket.emit('prop_rd', { file: cur_root + '/status/lmk_lossoflock_pll_pll1'  ,debug: isLoad});
    socket.emit('prop_rd', { file: cur_root + '/status/lmk_lossoflock_pll_pll2'  ,debug: isLoad});
-
 }
 
 // determine which page is currently loaded
