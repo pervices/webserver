@@ -85,7 +85,7 @@ var pathname = window.location.pathname;
 
 // Switch channel views
 // This function will load the current states of the channel onto the page
-$("#chan_a,#chan_b,#chan_c,#chan_d,#chan_e,#chan_f,#chan_g,#chan_h,#chan_i,#chan_j,#chan_k,#chan_l,#chan_m,#chan_n,#chan_o,#chan_p,#chan_q,#chan_r,#chan_s,#chan_t,#chan_u,#chan_v,#chan_w,#chan_x,#chan_y,#chan_z").click(function() {
+$("#chan_a,#chan_b,#chan_c,#chan_d,#chan_e,#chan_f,#chan_g,#chan_h").click(function() {
    $(this).parent().parent().children().removeClass('active');
    $(this).parent().attr('class', 'active');
    // update the channel
@@ -162,7 +162,7 @@ $("#jesdsync").click( function() {
 // board version
 $("#version").click( function() {
    if (cur_board == 'time')
-      socket.emit('raw_cmd', { message: "echo 'board -v' | mcu -f s" });
+      socket.emit('raw_cmd', { message: "echo 'board -v' | m -f s" });
    else if (cur_board == 'fpga')
       socket.emit('raw_cmd', { message: "echo 'board -v' | mcu" });
    else if (cur_board == 'tx')
@@ -181,6 +181,18 @@ $("#temperature").click(function() {
       socket.emit('raw_cmd', { message: "echo 'board -c 15 -t' | mcu -f t" });
    else if (cur_board == 'rx')
       socket.emit('raw_cmd', { message: "echo 'board -c 15 -u' | mcu -f r" });
+});
+
+// board Diagnostic
+$("#diagnostic").click(function() {
+   if (cur_board == 'time')
+      socket.emit('raw_cmd', { message: "echo 'board -e' | mcu -f s" });
+   else if (cur_board == 'fpga')
+      socket.emit('raw_cmd', { message: "echo 'board -e' | mcu" });
+   else if (cur_board == 'tx')
+      socket.emit('raw_cmd', { message: "echo 'board -e' | mcu -f t" });
+   else if (cur_board == 'rx')
+      socket.emit('raw_cmd', { message: "echo 'board -e' | mcu -f r" });
 });
 
 // system reset
@@ -1089,7 +1101,8 @@ window.onload = function() {
       cur_board = 'tx';
       cur_root = cur_board + '_' + cur_chan;
       loadFunc = load_tx;
-   } else {
+   } 
+   else {
       cur_board = 'coverpage';
       cur_root = cur_board;
       return;

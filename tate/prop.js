@@ -45,12 +45,14 @@ module.exports = function(io) {
 
       // handle hex-files for programming
       socket.on('hexfile', function (data) {
-         console.log('/home/root/pv_mcu/' + data.board + '.hex');
-         fs.writeFile( '/home/root/pv_mcu/' + data.board + '.hex', data.buf, function(err) {
+         console.log('/lib/mcu/tate-' + data.board + '.hex');
+         fs.writeFile( '/lib/mcu/tate-' + data.board + '.hex', data.buf, function(err) {
             if (err) throw err;
             console.log("Sent hexfile to server!");
 
-            exec("/home/root/pv_mcu/flash.sh " + data.board, function(err, stdout, stderr) {
+	// TODO: The current flash utility does not support board identification or 
+	// the number of active boards.
+            exec("/lib/mcu/flash w " + data.board + " cyan all", function(err, stdout, stderr) {
                if (err) throw err;
                io.sockets.emit('raw_reply', {cmd: data.message, message: stdout});
                console.log('Raw cmd: ' + data.message);

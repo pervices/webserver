@@ -1,7 +1,7 @@
 {
   "name": "cyan-webserver",
   "version": "0.0.0",
-  "description": "Cyan's NodeJS Server",
+  "description": "Cyan NodeJS Server",
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",

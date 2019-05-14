@@ -13,10 +13,10 @@ module.exports = function(io) {
          // read the data from fs
          fs.readFile( state_dir + data.file, 'utf8', function(err, data){
             if (err) console.log("File Read error: ",state_dir ); //throw err;
-
             // send the data back to the client
-            //io.sockets.emit('prop_ret', {file: file, message: '1', debug: debug});
             io.sockets.emit('prop_ret', {file: file, message: data, debug: debug});
+	    // DEBUG/DEV: To run locally, comment out the above line, and uncomment the line below.
+            //io.sockets.emit('prop_ret', {file: file, message: '1', debug: debug}); 
          }); 
       });
 
@@ -45,12 +45,12 @@ module.exports = function(io) {
 
       // handle hex-files for programming
       socket.on('hexfile', function (data) {
-         console.log('/home/root/pv_mcu/' + data.board + '.hex');
-         fs.writeFile( '/home/root/pv_mcu/' + data.board + '.hex', data.buf, function(err) {
+         console.log('/lib/mcu/vaunt-' + data.board + '.hex');
+         fs.writeFile( '/lib/mcu/vaunt-' + data.board + '.hex', data.buf, function(err) {
             if (err) throw err;
             console.log("Sent hexfile to server!");
 
-            exec("/home/root/pv_mcu/flash.sh " + data.board, function(err, stdout, stderr) {
+            exec("/lib/mcu/flash w " + data.board + " crimson", function(err, stdout, stderr) {
                if (err) throw err;
                io.sockets.emit('raw_reply', {cmd: data.message, message: stdout});
                console.log('Raw cmd: ' + data.message);
