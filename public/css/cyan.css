@@ -29,20 +29,20 @@
 
 #head a {
 	text-decoration:none;
-	color: #cb2026;
+	color: #007fff;
 }
 
 h1 {
 	padding: 10px;
 	text-align: center;
 	font-family: futura-pt;
-	color: #cb2026;
+	color: #007fff;
 	font-weight: 400;
 }
 h2, h3 {
 	color: #58D3F7;
 	font-family: futura-pt;
-	color: #cb2026;    
+	color: #007fff;    
 	font-weight: 200;    
 }
 
@@ -55,7 +55,7 @@ body {
 }
 
 .nav-tabs li.active a, .nav-tabs li.active a:hover  {
-   color: #cb2026;
+   color: #007fff;
    font-weight: bold;
    font-size: 20px;
 }
@@ -119,11 +119,11 @@ select.no-arrow {
 }
 
 ::-moz-selection { 
-background-color: #cb2026; 
+background-color: #007fff; 
 color: #ffffff;
 }
 
 ::selection {
-background-color: #cb2026;
+background-color: #007fff;
 color: #ffffff;
 }
