@@ -85,7 +85,7 @@ var pathname = window.location.pathname;
 
 // Switch channel views
 // This function will load the current states of the channel onto the page
-$("#chan_a,#chan_b,#chan_c,#chan_d,#chan_e,#chan_f,#chan_g,#chan_h").click(function() {
+$("#chan_a,#chan_b,#chan_c,#chan_d,#chan_e,#chan_f,#chan_g,#chan_h,#chan_hl_a,#chan_hl_b,#chan_hl_c,#chan_hl_d,#chan_hl_e,#chan_hl_f,#chan_hl_g,#chan_hl_h").click(function() {
    $(this).parent().parent().children().removeClass('active');
    $(this).parent().attr('class', 'active');
    // update the channel
@@ -1097,7 +1097,11 @@ window.onload = function() {
       cur_board = 'rx';
       cur_root = cur_board + '_' + cur_chan;
       loadFunc = load_rx;
-   } else if (pathname.indexOf('tx') > -1) {
+   } else if (pathname.indexOf('tx_hdr') > -1) {
+      cur_board = 'rx';
+      cur_root = cur_board + '_' + cur_chan;
+      loadFunc = load_rx;
+   }else if (pathname.indexOf('tx') > -1) {
       cur_board = 'tx';
       cur_root = cur_board + '_' + cur_chan;
       loadFunc = load_tx;

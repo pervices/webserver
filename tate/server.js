@@ -23,6 +23,12 @@ app.get('/tx', function (req, res) {
   });
 });
 
+app.get('/tx_hdr', function (req, res) {
+  res.render('tx_hdr', {
+     title: "TX HDR Chain"
+  });
+});
+
 app.get('/clock', function (req, res) {
   res.render('clock', {
      title: "Clock"
