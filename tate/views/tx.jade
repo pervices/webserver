@@ -3,23 +3,24 @@ extends ./layout.jade
 block content
    p This page allows the configuration of the entire transmit chain from the digital backend to the RF frontend. Select the channel that is being configured.
    p The digital signal comes from the FPGA and gets interpolated through the DSP chain on the FPGA. The interpolation can go up to a maximum of 322 MSPS and can be frequency adjusted prior to DAC conversion. The digital signal is sent to the RF frontend using the JESD serial interface, providing the DAC with both IQ channel values. The analog signal passes through an RF switch for high band and low band selection. The high band is reserved for signals greater than 500 MHz and the low band is reserved for signals under 500 MHz. The high band offers a frequency mixer for up-conversion up to a maximum of 6 GHz.
-   ul.nav.nav-tabs
-      li.active(role="presentation")
-         a#chan_a Channel A
-      li(role="presentation")
-         a#chan_b Channel B
-      li(role="presentation")
-         a#chan_c Channel C
-      li(role="presentation")
-         a#chan_d Channel D
-      li(role="presentation")
-         a#chan_e Channel E
-      li(role="presentation")
-         a#chan_f Channel F
-      li(role="presentation")
-         a#chan_g Channel G
-      li(role="presentation")
-         a#chan_h Channel H
+   ul.nav.nav-tabs(role = "presentation")
+                
+    li(role="presentation")
+        a#chan_a Channel A
+     li(role="presentation")
+        a#chan_b Channel B
+     li(role="presentation")
+        a#chan_c Channel C
+     li(role="presentation")
+        a#chan_d Channel D
+     li(role="presentation")
+        a#chan_e Channel E
+     li(role="presentation")
+        a#chan_f Channel F
+     li(role="presentation")
+        a#chan_g Channel G
+     li(role="presentation")
+        a#chan_h Channel H
    br
    b Channel Enable 
    input(type="checkbox", name='en', unchecked)#chan_en
