@@ -4,23 +4,23 @@ block content
    p This page allows the configuration of the entire receive chain from the RF front end to the digital backend. Select the channel that is being configured.
    p The signal is first sampled from the antenna which is connected to the SMA connector on the Crimson. The analog signal is fed through an RF switch based on the frequency of the signal being sampled. High band is reserved for signals greater than 500 MHz, and the low band is reserved for signals less than 500 MHz. Crimson currently supports signals up to 6 GHz. Within the respective RF chains (high and low) it filters the analog signal and divides it into I and Q channels for advanced signal processing on the FPGA. The high band offers an LNA for weaker signals, and a frequency mixer for desired intermediate frequencies prior to signal processing. The low band offers a varactor circuit to fine tune the delay between the I and Q channel. An ADC driver is common between both bands (high and low) prior to the ADC. The ADC will send the data across to the DSP chain within the FPGA at a rate of 322 MSPS using the JESD serial interface. The DSP chain will downsample the samples resulting in an adjusted final sample rate. The frequency of the signal can be adjusted prior to decimation.
    
-    ul.nav.nav-tabs
-      li.active(role="presentation")
-          a#chan_a Channel A
-      li(role="presentation")
-         a#chan_b Channel B
-      li(role="presentation")
-         a#chan_c Channel C
-      li(role="presentation")
-         a#chan_d Channel D
-      li(role="presentation")
-         a#chan_e Channel E
-      li(role="presentation")
-         a#chan_f Channel F
-      li(role="presentation")
-         a#chan_g Channel G
-      li(role="presentation")
-        a#chan_h Channel H
+   // ul.nav.nav-tabs
+   //   li.active(role="presentation")
+   //       a#chan_a Channel A
+   //   li(role="presentation")
+   //      a#chan_b Channel B
+   //   li(role="presentation")
+   //      a#chan_c Channel C
+   //   li(role="presentation")
+   //      a#chan_d Channel D
+   //   li(role="presentation")
+   //      a#chan_e Channel E
+   //   li(role="presentation")
+   //      a#chan_f Channel F
+   //   li(role="presentation")
+   //      a#chan_g Channel G
+   //   li(role="presentation")
+   //      a#chan_h Channel H
    
    br
    b Channel Enable 
