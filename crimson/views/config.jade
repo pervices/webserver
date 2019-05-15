@@ -91,6 +91,11 @@ block content
             .row
                .col-md-4.top-buffer-5
                   button.btn.btn-default.btn-xs.btn-block#led Test
+            br
+            b Board Diagnostic
+            .row
+               .col-md-4.top-buffer-5
+                  button.btn.btn-default.btn-xs.btn-block#diagnostic Get
          .col-md-2
             b Board Version
             .row
@@ -117,7 +122,6 @@ block content
             b Console Output
             br
             textarea.form-control#cout(rows='10', readonly)
-
    h3 SMA Configuration
    hr
    .container-fluid
@@ -134,7 +138,7 @@ block content
                //- (-VE := active low / falling edge, +VE := active high / rising edge)
                b Polarity
             input(type="checkbox", name='sma-pol', unchecked)#sma_pol      
-            
+    
     h3 Generate Look Up Table 
     hr
     .container-fluid

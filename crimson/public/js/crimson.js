@@ -184,6 +184,19 @@ $("#temperature").click(function() {
       socket.emit('raw_cmd', { message: "echo 'board -c 15 -u' | mcu -f r" });
 });
 
+
+// board diagnostic
+$("#diagnostic").click(function() {
+   if (cur_board == 'time')
+      socket.emit('raw_cmd', { message: "echo 'board -e' | mcu -f s" });
+   else if (cur_board == 'fpga')
+      socket.emit('raw_cmd', { message: "echo 'board -e' | mcu" });
+   else if (cur_board == 'tx')
+      socket.emit('raw_cmd', { message: "echo 'board -e' | mcu -f t" });
+   else if (cur_board == 'rx')
+      socket.emit('raw_cmd', { message: "echo 'board -e' | mcu -f r" });
+});
+
 // system reset
 $("#reset_system").click(function() {
    socket.emit('prop_wr', { file: 'fpga/board/sys_rstreq', message: '1' });
