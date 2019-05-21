@@ -83,11 +83,17 @@ var cur_board = 'rx';
 var cur_root = 'rx_a';
 var pathname = window.location.pathname;
 
+//array with ordered channel names corresponding to their channel number for system control
+var channels = ['tx_a','tx_e','rx_a',"rx_e","tx_b","tx_f","rx_b","rx_f","tx_c","tx_g","rx_c","rx_g","tx_d","tx_h","rx_d","rx_h"];
+//variable to hold the value of the current Channel Number
+var chanNum = 0;
+
 // Switch channel views
 // This function will load the current states of the channel onto the page
 $("#chan_a,#chan_b,#chan_c,#chan_d,#chan_e,#chan_f,#chan_g,#chan_h").click(function() {
    $(this).parent().parent().children().removeClass('active');
    $(this).parent().attr('class', 'active');
+
    // update the channel
    cur_chan = $(this).attr('id').replace('chan_','');
    cur_root = cur_board + '_' + cur_chan;
@@ -99,7 +105,18 @@ $("#chan_a,#chan_b,#chan_c,#chan_d,#chan_e,#chan_f,#chan_g,#chan_h").click(funct
 
 // En/disable channel
 $("#chan_en").on('switchChange.bootstrapSwitch', function(event, state) {
-   socket.emit('prop_wr', { file: cur_root + '/pwr', message: state ? '1' : '0' });
+   
+   //loop through array with ordered channel numbers to determine the correct channel number
+   for (var i = 0; i<channels.length; i++) {
+        if (channels[i] == cur_root)
+            chanNum = i;
+   }
+   
+   //DEBUG ONLY
+   //socket.emit('prop_wr', {file: cur_root + '/pwr', message: state ? ('rfe_control ' + chanNum + ' on | tee /usr/bin') : ('rfe_control ' + chanNum + ' off | tee /usr/bin') });
+   
+   //using the determined value turn on or off the corresponding channel 
+   socket.emit('systctl', { message: state ? ('rfe_control ' + chanNum + ' on | tee /usr/bin') : ('rfe_control ' + chanNum + ' off | tee /usr/bin') });
    var is_rx = cur_root.indexOf('rx') > -1;
    if (is_rx) {
       socket.emit('prop_wr', { file: cur_root + '/stream', message: state ? '1' : '0' });
@@ -243,9 +260,12 @@ $("#vita_enable").on('switchChange.bootstrapSwitch', function(event, state) {
 });
 
 $("#lut_enable").click(function() {
-   socket.emit('raw_cmd', { message: "rm -rf /var/crimson/calibration-data/" });
-   socket.emit('raw_cmd', { message: "echo 1 |sudo tee /var/crimson/state/{t,r}x/{a,b,c,d}/rf/freq/lut_en" });
-   //socket.emit('prop_wr', { file: cur_root + '/rf/freq/lut_en', message: ( state ? '1' : '0' ) }); //regenerate files through enabling LUT
+   socket.emit('systctl', { message: "rm -rf | tee /var/crimson/calibration-data/" });
+   socket.emit('systctl', { message: "echo 1 | tee /var/crimson/state/{t,r}x/{a,b,c,d}/rf/freq/lut_en" });
+});
+
+$("#lut_switch").on('switchChange.bootstrapSwitch', function(event, state) {
+   socket.emit('prop_wr', { file: cur_root + '/rf/freq/lut_en', message: ( state ? '1' : '0' ) }); //regenerate files through enabling LUT
 });
 
 $("#gpiox_dump").click(function() {

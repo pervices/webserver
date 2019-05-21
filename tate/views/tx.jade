@@ -3,23 +3,35 @@ extends ./layout.jade
 block content
    p This page allows the configuration of the entire transmit chain from the digital backend to the RF frontend. Select the channel that is being configured.
    p The digital signal comes from the FPGA and gets interpolated through the DSP chain on the FPGA. The interpolation can go up to a maximum of 322 MSPS and can be frequency adjusted prior to DAC conversion. The digital signal is sent to the RF frontend using the JESD serial interface, providing the DAC with both IQ channel values. The analog signal passes through an RF switch for high band and low band selection. The high band is reserved for signals greater than 500 MHz and the low band is reserved for signals under 500 MHz. The high band offers a frequency mixer for up-conversion up to a maximum of 6 GHz.
+   
+   //Iteratively display channels with dynamic ID tag rendering
    ul.nav.nav-tabs(role = "presentation")
-    li(role="presentation")
-        a#chan_a Channel A
-    li(role="presentation")
-        a#chan_b Channel B
-    li(role="presentation")
-        a#chan_c Channel C
-    li(role="presentation")
-        a#chan_d Channel D
-    li(role="presentation")
-        a#chan_e Channel E
-    li(role="presentation")
-        a#chan_f Channel F
-    li(role="presentation")
-        a#chan_g Channel G
-    li(role="presentation")
-        a#chan_h Channel H
+    each channel in ["chan_a","chan_b","chan_c","chan_d","chan_e","chan_f","chan_g","chan_h"]
+        if channel == "chan_a"
+            li.active
+                a(id="#{channel}") Channel #{channel.replace("chan_","").toUpperCase()}
+        else
+            li
+                a(id="#{channel}") Channel #{channel.replace("chan_","").toUpperCase()}
+    
+   //OLD DISPLAY OF CHANNELS
+   //li(role="presentation")
+   //    a#chan_a Channel A
+   //li(role="presentation")
+   //    a#chan_b Channel B
+   //li(role="presentation")
+   //    a#chan_c Channel C
+   //li(role="presentation")
+   //    a#chan_d Channel D
+   //li(role="presentation")
+   //    a#chan_e Channel E
+   //li(role="presentation")
+   //    a#chan_f Channel F
+   //li(role="presentation")
+   //    a#chan_g Channel G
+   //li(role="presentation")
+   //    a#chan_h Channel H
+   //END
         
    br
    b Channel Enable 
@@ -173,7 +185,7 @@ block content
                .col-md-3.top-buffer-5.right-pad-0
                   button.btn.btn-default.btn-xs.btn-block#led Test
                .col-md-3.top-buffer-5.right-pad-0
-                  input(type="checkbox", name='lut-en', unchecked)#lut_enable
+                  input(type="checkbox", name='lut-en', unchecked)#lut_switch
          .col-md-2
             b Board Version
             .row

@@ -32,6 +32,16 @@ module.exports = function(io) {
          io.sockets.emit('prop_wr_ret', {message: debug_msg});
          //console.log(debug_msg);
       });
+      
+      // Send raw commands from the root instead of the state directory
+      socket.on('systctl', function (data) {
+         state_dir = ''; //change state directory to send commands to the channel control folder
+         exec(data.message, function(err, stdout, stderr) {
+            if (err) console.log("CMD error:", stdout,stderr); //throw err;
+            io.sockets.emit('raw_reply', {cmd: data.message, message: stdout});
+            console.log('Raw cmd: ' + data.message);
+         });
+      });
 
 
       // Handle raw system cmds
