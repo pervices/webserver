@@ -11,6 +11,7 @@ app.get('/', function (req, res) {
      title: "Crimson"
   });
 });
+
 app.get('/rx', function (req, res) {
   res.render('rx', {
      title: "RX Chain"

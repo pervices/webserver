@@ -6,13 +6,13 @@ block content
    
    //Iteratively display channels with dynamic ID tag rendering
    ul.nav.nav-tabs(role = "presentation")
-    each channel in []
+    each channel in ["chan_a","chan_b","chan_c","chan_d","chan_e","chan_f","chan_g","chan_h"]
         if channel == "chan_a"
             li.active
-                a(id="#{channel}") Channel #{channel.toUpperCase()}
+                a(id="#{channel}") Channel #{channel.replace("chan_","").toUpperCase()}
         else
             li
-                a(id="#{channel}") Channel #{channel.toUpperCase()}
+                a(id="#{channel}") Channel #{channel.replace("chan_","").toUpperCase()}
    
    //OLD DISPLAY OF CHANNELS
    //li.active(role="presentation")
