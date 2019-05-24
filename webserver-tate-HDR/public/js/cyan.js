@@ -1464,7 +1464,7 @@ function disableBoardTriggElements (state) {
    $("#lut_switch").bootstrapSwitch('readonly', state);
    $("#sma_mode").bootstrapSwitch('readonly', state);
    $("#trig_sel_sma").bootstrapSwitch('readonly', state);
-   $('#jesd_sync').prop('disabled', state);
+   $('#jesdsync').prop('disabled', state);
    $('#dac_dump').prop('disabled', state);
    $('#gpiox_dump').prop('disabled', state);
    $('#led').prop('disabled', state);
