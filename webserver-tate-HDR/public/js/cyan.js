@@ -89,8 +89,10 @@ var cur_chan = 'a';
 var cur_board = 'tx';
 var cur_root = 'tx_a';
 var pathname = window.location.pathname;
+
 //array with ordered channel names corresponding to their channel number for system control
 var channels = ['tx_a','tx_e','tx_i',"tx_m","tx_b","tx_f","tx_j","tx_n","tx_c","tx_g","tx_k","tx_o","tx_d","tx_h","tx_l","tx_p"];
+
 //variables to hold the value of the low and high power channels
 var lowPowerChan = 0;
 var highPowerChan = 0;
@@ -160,11 +162,11 @@ $("#chan_a,#chan_b,#chan_c,#chan_d,#chan_e,#chan_f,#chan_g,#chan_h").click(funct
    }
 });
 
+//low power channel 
 $("#chan_lp").click(function() {
     
    //deactivate the hdr channel 
    $("#chan_hdr").parent().attr('class','inactive');
-   
    disableHdrElements(true);
    document.getElementById("hdr_img").style.opacity = 0.2;
    
@@ -214,11 +216,11 @@ $("#chan_lp").click(function() {
     
 });
 
+//high power channel
 $("#chan_hp").click(function() {
     
    //deactivate the hdr channel 
    $("#chan_hdr").parent().attr('class','inactive');
-   
    disableHdrElements(true);
    document.getElementById("hdr_img").style.opacity = 0.2;
    
@@ -277,6 +279,9 @@ $("#chan_hp").click(function() {
 //******************************************************************************************** NEW SWITCHES AND SLIDER FOR HDR CHANNEL OPTION*****************************************************************************************// 
 //************************************************************************************************************************************************************************************************************************************//
 //************************************************************************************************************************************************************************************************************************************//
+//************************************************************************************************************************************************************************************************************************************//
+
+//hdr channel
 $("#chan_hdr").click(function() {
    $("#chan_lp").parent().attr('class','inactive');
    $("#chan_hp").parent().attr('class','inactive');
@@ -302,6 +307,7 @@ $("#chan_hdr").click(function() {
    cur_chan = hdr_chan;
 });
 
+//Switches for the HDR channel
 $("#sw_ovr").on('switchChange.bootstrapSwitch', function(event, state) {
     socket.emit('prop_wr', {file: 'hdrfe/sw_override_en', message: state ? 'true' : 'false' });
 });
@@ -314,18 +320,26 @@ $("#hdr_iso").on('switchChange.bootstrapSwitch', function(event, state) {
     socket.emit('prop_wr', {file: 'hdrfe/' + cur_root + '/isolation_en', message: state ? 'true' : 'false' });
 });
 
+//individual channel enable switch
 $("#chan_en_indiv").on('switchChange.bootstrapSwitch', function(event, state) {
     
+    //only allows individual channel enabling if the group channel enable is in the 'OFF' state
     if(!($('#chan_en').bootstrapSwitch('state'))) {
+        
+        //on
         if(state == true) {
             document.getElementById("chan_status").style.visibility = "hidden";
             write_tx();
             activateControls_tx(true);
         }
+        
+        //off
         else if (state == false) {
             document.getElementById("chan_status").style.visibility = "visible";
             activateControls_tx(false);
         }
+        
+        //determine if channel is low power 
         if (cur_chan == "a" || cur_chan == "c" || cur_chan == "e" || cur_chan == "g" || cur_chan == "i" || cur_chan == "k" || cur_chan == "m" || cur_chan == "o") {
             for (var i = 0; i<channels.length; i++) {
                 if (channels[i] == cur_root)
@@ -337,6 +351,7 @@ $("#chan_en_indiv").on('switchChange.bootstrapSwitch', function(event, state) {
             socket.emit('systctl', { message: state ? ('rfe_control ' + lowPowerChan + ' on | tee /usr/bin') : ('rfe_control ' + lowPowerChan + ' off | tee /usr/bin') });
         }
         
+        //determine if channel is high power
         else if (cur_chan == "b" || cur_chan == "d" || cur_chan == "f" || cur_chan == "h" || cur_chan == "j" || cur_chan == "l" || cur_chan == "n" || cur_chan == "p") {
             for (var i = 0; i<channels.length; i++) {
                 if (channels[i] == cur_root)
@@ -350,19 +365,27 @@ $("#chan_en_indiv").on('switchChange.bootstrapSwitch', function(event, state) {
     }
 });
 
+//individually enable the HDR channel
 $("#hdr_chan_en").on('switchChange.bootstrapSwitch', function(event, state) {
+    
+    //only allows individual channel enabling if the group channel enable is in the 'OFF' state
     if(!($('#chan_en').bootstrapSwitch('state'))) {
+        
+        //switch position either writes true or false to /hdrfe/pwr
         socket.emit('prop_wr', {file: 'hdrfe/' + cur_root + '/pwr', message: state ? 'true' : 'false' });
+        
+        //on
         if(state == true) {
             document.getElementById("chan_status").style.visibility = "hidden";
             write_tx();
             activateControls_tx(true);
         }
+        
+        //off
         else if (state == false) {
             document.getElementById("chan_status").style.visibility = "visible";
             activateControls_tx(false);
         }
-        
     }
 });
 
@@ -378,9 +401,13 @@ $("#hdr_chan_en").on('switchChange.bootstrapSwitch', function(event, state) {
 //************************************************************************************************************************************************************************************************************************************//
 //************************************************************************************************************************************************************************************************************************************//
 
-// En/disable channel
+// En/disable all channels
 $("#chan_en").on('switchChange.bootstrapSwitch', function(event, state) {
+   
+   //switch position either writes true or false to /hdrfe/pwr
    socket.emit('prop_wr', {file: 'hdrfe/tx_' + cur_path + '/pwr', message: state ? 'true' : 'false' }); 
+   
+   //turns on the low power channel based on root
    if (cur_chan == "a" || cur_chan == "c" || cur_chan == "e" || cur_chan == "g" || cur_chan == "i" || cur_chan == "k" || cur_chan == "m" || cur_chan == "o") {
             for (var i = 0; i<channels.length; i++) {
                 if (channels[i] == cur_root)
@@ -392,7 +419,8 @@ $("#chan_en").on('switchChange.bootstrapSwitch', function(event, state) {
             socket.emit('systctl', { message: state ? ('rfe_control ' + lowPowerChan + ' on | tee /usr/bin') : ('rfe_control ' + lowPowerChan + ' off | tee /usr/bin') });
             socket.emit('systctl', { message: state ? ('rfe_control ' + (lowPowerChan+4) + ' on | tee /usr/bin') : ('rfe_control ' + (lowPowerChan+4) + ' off | tee /usr/bin') });
    }
-        
+   
+   //turns on the high power channel based on root
    else if (cur_chan == "b" || cur_chan == "d" || cur_chan == "f" || cur_chan == "h" || cur_chan == "j" || cur_chan == "l" || cur_chan == "n" || cur_chan == "p") {
             for (var i = 0; i<channels.length; i++) {
                 if (channels[i] == cur_root)
@@ -405,6 +433,7 @@ $("#chan_en").on('switchChange.bootstrapSwitch', function(event, state) {
             socket.emit('systctl', { message: state ? ('rfe_control ' + (highPowerChan-4) + ' on | tee /usr/bin') : ('rfe_control ' + (highPowerChan-4) + ' off | tee /usr/bin') });
             
    }
+   
    var is_rx = cur_root.indexOf('rx') > -1;
    if (is_rx) {
       socket.emit('prop_wr', { file: cur_root + '/stream', message: state ? '1' : '0' });
@@ -1424,6 +1453,7 @@ function load_clock (isLoad) {
    socket.emit('prop_rd', { file: cur_root + '/status/lmk_lossoflock_pll_pll2'  ,debug: isLoad});
 }
 
+//hides/shows webpage elements based on 'state' boolean parameter
 function disableElements (state) {
     
    $("#chan_en_indiv").bootstrapSwitch('readonly', state);
@@ -1448,6 +1478,7 @@ function disableElements (state) {
     
 }
 
+//hides/shows webpage elements based on 'state' boolean parameter
 function disableHdrElements (state) {
    
    $("#hdr_atten_range").prop('disabled', state);
@@ -1459,6 +1490,7 @@ function disableHdrElements (state) {
    
 }
 
+//hides/shows webpage elements based on 'state' boolean parameter
 function disableBoardTriggElements (state) {
  
    $("#lut_switch").bootstrapSwitch('readonly', state);
