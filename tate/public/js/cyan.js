@@ -260,8 +260,8 @@ $("#vita_enable").on('switchChange.bootstrapSwitch', function(event, state) {
 });
 
 $("#lut_enable").click(function() {
-   socket.emit('systctl', { message: "rm -rf | tee /var/crimson/calibration-data/" });
-   socket.emit('systctl', { message: "echo 1 | tee /var/crimson/state/{t,r}x/{a,b,c,d}/rf/freq/lut_en" });
+   socket.emit('systctl', { message: "rm -rf | tee /var/cyan/calibration-data/" });
+   socket.emit('systctl', { message: "echo 1 | tee /var/cyan/state/{t,r}x/{a,b,c,d}/rf/freq/lut_en" });
 });
 
 $("#lut_switch").on('switchChange.bootstrapSwitch', function(event, state) {
