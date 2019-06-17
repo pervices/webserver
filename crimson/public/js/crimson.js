@@ -184,6 +184,19 @@ $("#temperature").click(function() {
       socket.emit('raw_cmd', { message: "echo 'board -c 15 -u' | mcu -f r" });
 });
 
+
+// board diagnostic
+$("#diagnostic").click(function() {
+   if (cur_board == 'time')
+      socket.emit('raw_cmd', { message: "echo 'board -e' | mcu -f s" });
+   else if (cur_board == 'fpga')
+      socket.emit('raw_cmd', { message: "echo 'board -e' | mcu" });
+   else if (cur_board == 'tx')
+      socket.emit('raw_cmd', { message: "echo 'board -e' | mcu -f t" });
+   else if (cur_board == 'rx')
+      socket.emit('raw_cmd', { message: "echo 'board -e' | mcu -f r" });
+});
+
 // system reset
 $("#reset_system").click(function() {
    socket.emit('prop_wr', { file: 'fpga/board/sys_rstreq', message: '1' });
@@ -232,8 +245,8 @@ $("#vita_enable").on('switchChange.bootstrapSwitch', function(event, state) {
 });
 
 $("#lut_enable").click(function() {
-   socket.emit('raw_cmd', { message: "rm -rf /var/crimson/calibration-data/" });
-   socket.emit('raw_cmd', { message: "echo 1 |sudo tee /var/crimson/state/{t,r}x/{a,b,c,d}/rf/freq/lut_en" });
+   socket.emit('systctl', { message: "rm -rf | tee /var/crimson/calibration-data/" });
+   socket.emit('systctl', { message: "echo 1 | tee /var/crimson/state/{t,r}x/{a,b,c,d}/rf/freq/lut_en" });
    //socket.emit('prop_wr', { file: cur_root + '/rf/freq/lut_en', message: ( state ? '1' : '0' ) }); //regenerate files through enabling LUT
 });
 
