@@ -60,7 +60,7 @@ module.exports = function(io) {
             if (err) throw err;
             console.log("Sent hexfile to server!");
 
-            exec("/lib/mcu/flash w " + data.board + " crimson", function(err, stdout, stderr) {
+            exec("/lib/mcu/flash w " + data.board + " cyan", function(err, stdout, stderr) {
                if (err) throw err;
                io.sockets.emit('raw_reply', {cmd: data.message, message: stdout});
                console.log('Raw cmd: ' + data.message);

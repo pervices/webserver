@@ -7,31 +7,8 @@ block content
    //Iteratively display channels with dynamic ID tag rendering
    ul.nav.nav-tabs(role = "presentation")
     each channel in [""]
-        if channel == "chan_a"
-            li.active
-                a(id="#{channel}") Channel #{channel.replace("chan_","").toUpperCase()}
-        else
-            li
-                a(id="#{channel}") Channel #{channel.replace("chan_","").toUpperCase()}
-   
-   //OLD DISPLAY OF CHANNELS
-   //li.active(role="presentation")
-   //    a#chan_a Channel A
-   //li(role="presentation")
-   //   a#chan_b Channel B
-   //li(role="presentation")
-   //   a#chan_c Channel C
-   //li(role="presentation")
-   //   a#chan_d Channel D
-   //li(role="presentation")
-   //   a#chan_e Channel E
-   //li(role="presentation")
-   //   a#chan_f Channel F
-   //li(role="presentation")
-   //   a#chan_g Channel G
-   //li(role="presentation")
-   //   a#chan_h Channel H
-   //END
+        li
+            a(id="#{channel}") Channel #{channel.replace("chan_","").toUpperCase()}
    
    br
    b Channel Enable 

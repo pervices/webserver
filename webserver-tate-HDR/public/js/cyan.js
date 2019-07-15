@@ -1,4 +1,5 @@
 $(document).ready(function() {
+    
    // bootstrap switches
    $("[name='en']").bootstrapSwitch({
       onText: 'ON',
@@ -100,7 +101,7 @@ var highPowerChan = 0;
 // Switch channel views
 // This function will load the current states of the channel onto the page
 $("#chan_a,#chan_b,#chan_c,#chan_d,#chan_e,#chan_f,#chan_g,#chan_h").click(function() {
-   
+    
    $(this).parent().parent().children().removeClass('active');
    $(this).parent().attr('class', 'active');
    
@@ -309,15 +310,15 @@ $("#chan_hdr").click(function() {
 
 //Switches for the HDR channel
 $("#sw_ovr").on('switchChange.bootstrapSwitch', function(event, state) {
-    socket.emit('prop_wr', {file: 'hdrfe/sw_override_en', message: state ? 'true' : 'false' });
+    socket.emit('prop_wr', {file: 'gpio/hdr/sw_override_en', message: state ? 'true' : 'false' });
 });
 
 $("#hdr_pwr").on('switchChange.bootstrapSwitch', function(event, state) {
-    socket.emit('prop_wr', {file: 'hdrfe/' + cur_root + '/pwr', message: state ? 'true' : 'false' });
+    socket.emit('prop_wr', {file: 'gpio/hdr/' + hdr_chan + '/pwr', message: state ? 'true' : 'false' });
 });
 
 $("#hdr_iso").on('switchChange.bootstrapSwitch', function(event, state) {
-    socket.emit('prop_wr', {file: 'hdrfe/' + cur_root + '/isolation_en', message: state ? 'true' : 'false' });
+    socket.emit('prop_wr', {file: 'gpio/hdr/' + hdr_chan + '/isolation_en', message: state ? 'true' : 'false' });
 });
 
 //individual channel enable switch
@@ -371,8 +372,8 @@ $("#hdr_chan_en").on('switchChange.bootstrapSwitch', function(event, state) {
     //only allows individual channel enabling if the group channel enable is in the 'OFF' state
     if(!($('#chan_en').bootstrapSwitch('state'))) {
         
-        //switch position either writes true or false to /hdrfe/pwr
-        socket.emit('prop_wr', {file: 'hdrfe/' + cur_root + '/pwr', message: state ? 'true' : 'false' });
+        //switch position either writes true or false to /hdr/pwr
+        socket.emit('prop_wr', {file: 'gpio/hdr/' + hdr_chan + '/pwr', message: state ? 'true' : 'false' });
         
         //on
         if(state == true) {
@@ -404,8 +405,8 @@ $("#hdr_chan_en").on('switchChange.bootstrapSwitch', function(event, state) {
 // En/disable all channels
 $("#chan_en").on('switchChange.bootstrapSwitch', function(event, state) {
    
-   //switch position either writes true or false to /hdrfe/pwr
-   socket.emit('prop_wr', {file: 'hdrfe/tx_' + cur_path + '/pwr', message: state ? 'true' : 'false' }); 
+   //switch position either writes true or false to /hdr/pwr
+   socket.emit('prop_wr', {file: 'gpio/hdrf/tx_' + hdr_chan + '/pwr', message: state ? 'true' : 'false' }); 
    
    //turns on the low power channel based on root
    if (cur_chan == "a" || cur_chan == "c" || cur_chan == "e" || cur_chan == "g" || cur_chan == "i" || cur_chan == "k" || cur_chan == "m" || cur_chan == "o") {
@@ -452,7 +453,8 @@ $("#chan_en").on('switchChange.bootstrapSwitch', function(event, state) {
          }
          $("#loadingModal").modal('hide');
       }, 500);
-   } else {
+   } 
+   else {
       if (is_rx)  activateControls_rx(false);
       else        activateControls_tx(false);
    }
@@ -628,7 +630,7 @@ $("#atten_range").change(function(){
 // hdr atten
 $("#hdr_atten_range").change(function(){
    $("#hdr_atten_display").text('-' + ($(this).val()) + ' dB');
-   socket.emit('prop_wr', { file: 'hdrfe/' + cur_root + '/rf/atten/val', message: $(this).val() });
+   socket.emit('prop_wr', { file: 'gpio/hdr/' + hdr_chan + '/rf/atten/val', message: $(this).val() });
 });
 
 // i-bias
@@ -1096,7 +1098,7 @@ socket.on('prop_ret', function (data) {
       $('#atten_range').val(parseInt(data.message));
       $('#atten_display').text('-' + (parseInt(data.message) / 4) + ' dB');
       $("#atten_range").prop('disabled', !($('#rf_band').bootstrapSwitch('state') && $('#chan_en').bootstrapSwitch('state')));
-   } else if (data.file == cur_root + '/hdrfe/atten/val') {
+   } else if (data.file == '/gpio/hdr/' + hdr_chan + '/atten/val') {
       $('#hdr_atten_range').val(parseInt(data.message));
       $('#hdr_atten_display').text('-' + (parseInt(data.message)) + ' dB');
       $("#hdr_atten_range").prop('disabled', !($('#chan_en').bootstrapSwitch('state')));
@@ -1257,15 +1259,15 @@ socket.on('prop_ret', function (data) {
          document.getElementById("lol_pll_pll2_no").style.visibility = "visible"
          clock_msg = "";
        }
-   } else if (data.file == cur_root + '/hdrfe/pwr') {
+   } else if (data.file == '/gpio/hdr/' + hdr_chan + '/pwr') {
       $('#hdr_pwr').bootstrapSwitch('state', parseInt(data.message) != 0, true);
-   } else if (data.file == cur_root + '/hdrfe/sw_override_en') {
+   } else if (data.file == '/gpio/hdr/' + hdr_chan + '/sw_override_en') {
       $('#sw_ovr').bootstrapSwitch('state', parseInt(data.message) != 0, true);
-   } else if (data.file == cur_root + '/hdrfe/isolation_en') {
+   } else if (data.file == cur_root + '/gpio/hdr/' + hdr_chan + '/isolation_en') {
       $('#hdr_iso').bootstrapSwitch('state', parseInt(data.message) != 0, true);
-   } else if (data.file == cur_root + '/hdrfe/isolation_en') {
+   } else if (data.file == cur_root + '/gpio/hdr/' + hdr_chan + '/isolation_en') {
       $('#hdr_chan_en').bootstrapSwitch('state', parseInt(data.message) != 0, true);
-   } else if (data.file == cur_root + '/hdrfe/isolation_en') {
+   } else if (data.file == cur_root + '/gpio/hdr/' + hdr_chan + '/isolation_en') {
       $('#chan_en_indiv').bootstrapSwitch('state', parseInt(data.message) != 0, true);
    }
    
@@ -1326,6 +1328,14 @@ function activateControls_tx(state) {
    $("#sr_set").prop('disabled', !state);
    $("#link_set").prop('disabled', !state);
    $("#port").prop('disabled', !state);
+   
+   //HDR elements
+   $("#hdr_atten_range").prop('disabled', !state);
+   $('#hdr_iso').bootstrapSwitch('readonly', !state);
+   $('#sw_ovr').bootstrapSwitch('readonly', !state);
+   $('#hdr_pwr').bootstrapSwitch('readonly', !state);
+   $('#hdr_iso').bootstrapSwitch('readonly', !state);
+   $('#hdr_chan_en').bootstrapSwitch('readonly', !state);
 }
 
 // write the current settings to SDR
@@ -1362,10 +1372,10 @@ function write_tx() {
    socket.emit('prop_wr', { file: cur_root + '/rf/freq/lut_en'  	    , message: $('#lut_switch').bootstrapSwitch('state') ? '1' : '0'});
    
    //NEW HDR Write and Channel Enable Write
-   socket.emit('prop_wr', { file: '/hdrfe/' + cur_root + '/pwr'           , message: $('#hdr_pwr').bootstrapSwitch('state') ? 'true' : 'false'});
-   socket.emit('prop_wr', { file: '/hdrfe/sw_override_en'                , message: $('#sw_ovr').bootstrapSwitch('state') ? 'true' : 'false'});
-   socket.emit('prop_wr', { file: '/hdrfe/' + cur_root + '/isolation_en'  , message: $('#hdr_iso').bootstrapSwitch('state') ? 'true' : 'false'});
-   socket.emit('prop_wr', { file: '/hdrfe/' + cur_root + '/rf/atten/val'  , message: $('#hdr_atten_range').val()});
+   socket.emit('prop_wr', { file: '/gpio/hdr/' + hdr_chan + '/pwr'           , message: $('#hdr_pwr').bootstrapSwitch('state') ? 'true' : 'false'});
+   socket.emit('prop_wr', { file: '/gpio/hdr/sw_override_en'                 , message: $('#sw_ovr').bootstrapSwitch('state') ? 'true' : 'false'});
+   socket.emit('prop_wr', { file: '/gpio/hdr/' + hdr_chan + '/isolation_en'  , message: $('#hdr_iso').bootstrapSwitch('state') ? 'true' : 'false'});
+   socket.emit('prop_wr', { file: '/gpio/hdr/' + hdr_chan + '/rf/atten/val'  , message: $('#hdr_atten_range').val()});
 }
 
 // Loading config data
@@ -1431,10 +1441,10 @@ function load_tx (isLoad) {
    socket.emit('prop_rd', { file: cur_root + '/trigger/edge_sample_num' ,debug: isLoad});
    
    //Load hdr data
-   socket.emit('prop_rd', { file: '/hdrfe/' + cur_root + '/pwr'           ,debug: isLoad});
-   socket.emit('prop_rd', { file: '/hdrfe/sw_override_en'                ,debug: isLoad});
-   socket.emit('prop_rd', { file: '/hdrfe/' + cur_root + '/isolation_en'  ,debug: isLoad});
-   socket.emit('prop_rd', { file: '/hdrfe/' + cur_root + '/rf/atten/val'  ,debug: isLoad});
+   socket.emit('prop_rd', { file: '/gpio/hdr/' + hdr_chan + '/pwr'           ,debug: isLoad});
+   socket.emit('prop_rd', { file: '/gpio/hdr/sw_override_en'                 ,debug: isLoad});
+   socket.emit('prop_rd', { file: '/gpio/hdr/' + hdr_chan + '/isolation_en'  ,debug: isLoad});
+   socket.emit('prop_rd', { file: '/gpio/hdr/' + hdr_chan + '/rf/atten/val'  ,debug: isLoad});
 }
 
 function load_clock (isLoad) {
@@ -1510,8 +1520,18 @@ function disableBoardTriggElements (state) {
 
 // determine which page is currently loaded
 window.onload = function() {
+    
+   // current channel and board/page
+   var cur_path = 'a';
+   var cur_chan = 'a';
+   var cur_board = 'tx';
+   var cur_root = 'tx_a';
+   var pathname = window.location.pathname; 
+   $(this).parent().parent().children().removeClass('active');
+   $(this).parent().attr('class', 'active'); 
    var loadFunc;
    var refreshFunc;
+   
    if (pathname.indexOf('config') > -1) {
       cur_board = 'fpga';
       cur_root = cur_board;
@@ -1528,11 +1548,68 @@ window.onload = function() {
       cur_board = 'rx';
       cur_root = cur_board + '_' + cur_chan;
       loadFunc = load_rx;
+      
    } else if (pathname.indexOf('tx') > -1) {
-      cur_board = 'tx';
-      cur_root = cur_board + '_' + cur_chan;
-      loadFunc = load_tx;
+   
+      //alert the user to select either hdr,low power or high power to operate on
+      document.getElementById("chan_alert").style.visibility = "visible";
+      document.getElementById("chan_alert2").style.visibility = "visible";
+      
+      //deactivate the hdr channel 
+      $("#chan_hdr").parent().attr('class','inactive');
+      disableHdrElements(true);
+      document.getElementById("hdr_img").style.opacity = 0.2;
+      
+      //diable lp and hp elements
+      $("#chan_lp").parent().attr('class','inactive');
+      $("#chan_hp").parent().attr('class','inactive');
+      disableElements(true);
+      document.getElementById("tx_chain").style.opacity = 0.2;
+      document.getElementById("tx_dsp_chain").style.opacity = 0.2;
+      
+      //disable board and trigger elements
+      disableBoardTriggElements(true);
+      
+      // update the channel path
+      cur_path = $(this).attr('id').replace('chan_','');
+      
+      //look through all of the possible channel locations with their corresponding roots 
+      if (cur_path == 'a') {
+              cur_root = 'tx_a';
+              cur_chan = 'a';
+              hdr_chan = 'a';
+      } else if (cur_path == 'b') {
+              cur_root = 'tx_c';
+              cur_chan = 'c';
+              hdr_chan = 'b';
+      } else if (cur_path == 'c') {
+              cur_root = 'tx_e';
+              cur_chan = 'e';
+              hdr_chan = 'c';
+      } else if (cur_path == 'd') {
+              cur_root = 'tx_g';
+              cur_chan = 'g';
+              hdr_chan = 'd';
+      } else if (cur_path == 'e') {
+              cur_root = 'tx_i';
+              cur_chan = 'i';
+              hdr_chan = 'e';
+      } else if (cur_path == 'f') {
+              cur_root = 'tx_k';
+              cur_chan = 'k';
+              hdr_chan = 'f';
+      } else if (cur_path == 'g') {
+              cur_root = 'tx_m';
+              cur_chan = 'm';
+              hdr_chan = 'g';
+      } else if (cur_path == 'h') {
+              cur_root = 'tx_o';
+              cur_chan = 'o';
+              hdr_chan = 'h';
+      }
    } 
+   
+   
    else {
       cur_board = 'coverpage';
       cur_root = cur_board;
