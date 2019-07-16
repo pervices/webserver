@@ -185,7 +185,7 @@ $("#chan_lp").click(function() {
    
    //enable board and trigger elements
    disableBoardTriggElements(false);
-   
+   disableHdrElements(true);
    //look through all of the possible channel locations with their corresponding roots 
    if (cur_path == 'a') {
         cur_root = 'tx_a';
@@ -239,7 +239,7 @@ $("#chan_hp").click(function() {
    
    //enable board and trigger elements
    disableBoardTriggElements(false);
-   
+   disableHdrElements(true);
    //look through all of the possible channel locations with their corresponding roots 
    if (cur_path == 'a') {
         cur_root = 'tx_b';
@@ -1361,12 +1361,12 @@ function activateControls_tx(state) {
    $("#port").prop('disabled', !state);
    
    //HDR elements
-   $("#hdr_atten_range").prop('disabled', !state);
-   $('#hdr_iso').bootstrapSwitch('readonly', !state);
-   $('#sw_ovr').bootstrapSwitch('readonly', !state);
-   $('#hdr_pwr').bootstrapSwitch('readonly', !state);
-   $('#hdr_iso').bootstrapSwitch('readonly', !state);
-   $('#hdr_chan_en').bootstrapSwitch('readonly', !state);
+   //$("#hdr_atten_range").prop('disabled', !state);
+   //$('#hdr_iso').bootstrapSwitch('readonly', !state);
+   //$('#sw_ovr').bootstrapSwitch('readonly', !state);
+   //$('#hdr_pwr').bootstrapSwitch('readonly', !state);
+   //$('#hdr_iso').bootstrapSwitch('readonly', !state);
+   //$('#hdr_chan_en').bootstrapSwitch('readonly', !state);
 }
 
 // write the current settings to SDR
@@ -1539,7 +1539,7 @@ function disableHdrElements (state) {
    
    $("#hdr_atten_range").prop('disabled', state);
    $('#hdr_iso').bootstrapSwitch('readonly', state);
-   $('#sw_ovr').bootstrapSwitch('readonly', state);
+   //$('#sw_ovr').bootstrapSwitch('readonly', state);
    $('#hdr_pwr').bootstrapSwitch('readonly', state);
    $('#hdr_iso').bootstrapSwitch('readonly', state);
    $('#hdr_chan_en').bootstrapSwitch('readonly', state);
