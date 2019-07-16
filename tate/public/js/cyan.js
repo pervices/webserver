@@ -967,12 +967,12 @@ function activateControls_tx(state) {
    $("#synth_freq").prop('disabled', !(state && $('#rf_band').bootstrapSwitch('state')));
    $("#synth_freq_set").prop('disabled', !(state && $('#rf_band').bootstrapSwitch('state')));
    $("#dac_nco").prop('disabled', !state);
-   $('#dac_dither_en').bootstrapSwitch('readonly', !state);
-   $('#dac_dither_mixer_en').bootstrapSwitch('readonly', !state);
-   $("#dac_dither_sra_sel").prop('disabled', !state);
+   //$('#dac_dither_en').bootstrapSwitch('readonly', !state);
+   //$('#dac_dither_mixer_en').bootstrapSwitch('readonly', !state);
+   //$("#dac_dither_sra_sel").prop('disabled', !state);
    $("#dac_nco_set").prop('disabled', !state);
-   $("#ibias_range").prop('disabled', !state);
-   $("#qbias_range").prop('disabled', !state);
+   //$("#ibias_range").prop('disabled', !state);
+   //$("#qbias_range").prop('disabled', !state);
    $("#gain_range").prop('disabled', !state);
    $("#dsp_reset").prop('disabled', !state);
    $("#dsp_nco").prop('disabled', !state);
@@ -997,24 +997,24 @@ function write_rx() {
    socket.emit('prop_wr', { file: cur_root + '/link/ip_dest'  , message: $('#ip').val()});
    socket.emit('prop_wr', { file: cur_root + '/link/mac_dest' , message: $('#mac').val()});
    socket.emit('prop_wr', { file: cur_root + '/dsp/loopback'  , message: $('#loopback').bootstrapSwitch('state') ? '1' : '0'});
-   socket.emit('prop_wr', { file: cur_root + '/rf/freq/lut_en', message: $('#lut_enable').bootstrapSwitch('state') ? '1' : '0'});
+   //socket.emit('prop_wr', { file: cur_root + '/rf/freq/lut_en', message: $('#lut_enable').bootstrapSwitch('state') ? '1' : '0'});
 }
 
 function write_tx() {
-   socket.emit('prop_wr', { file: cur_root + '/rf/freq/i_bias'		, message: $('#ibias_range').val()/100});
-   socket.emit('prop_wr', { file: cur_root + '/rf/freq/q_bias'		, message: $('#qbias_range').val()/100});
+   //socket.emit('prop_wr', { file: cur_root + '/rf/freq/i_bias'		, message: $('#ibias_range').val()/100});
+   //socket.emit('prop_wr', { file: cur_root + '/rf/freq/q_bias'		, message: $('#qbias_range').val()/100});
    socket.emit('prop_wr', { file: cur_root + '/rf/freq/band'  		, message: $('#rf_band').bootstrapSwitch('state') ? '1' : '0'});
    socket.emit('prop_wr', { file: cur_root + '/rf/gain/val'   		, message: $('#gain_range').val()});
    socket.emit('prop_wr', { file: cur_root + '/rf/dac/nco'    		, message: $('#dac_nco').val()});
-   socket.emit('prop_wr', { file: cur_root + '/rf/dac/dither_en'	, message: $('#dac_dither_enable').bootstrapSwitch('state') ? '1' : '0'});
-   socket.emit('prop_wr', { file: cur_root + '/rf/dac/dither_mixer_en'	, message: $('#dac_dither_mixer_enable').bootstrapSwitch('state') ? '1' : '0'});
-   socket.emit('prop_wr', { file: cur_root + '/rf/dac/dither_sra_sel'   , message: $('#dac_dither_amplitude_select').val()});
+   //socket.emit('prop_wr', { file: cur_root + '/rf/dac/dither_en'	, message: $('#dac_dither_enable').bootstrapSwitch('state') ? '1' : '0'});
+   //socket.emit('prop_wr', { file: cur_root + '/rf/dac/dither_mixer_en'	, message: $('#dac_dither_mixer_enable').bootstrapSwitch('state') ? '1' : '0'});
+   //socket.emit('prop_wr', { file: cur_root + '/rf/dac/dither_sra_sel'   , message: $('#dac_dither_amplitude_select').val()});
    socket.emit('prop_wr', { file: cur_root + '/rf/freq/val'   		, message: $('#synth_freq').val()});
    socket.emit('prop_wr', { file: cur_root + '/dsp/nco_adj'   		, message: $('#dsp_nco').val()});
    socket.emit('prop_wr', { file: cur_root + '/dsp/rate'      		, message: $('#sr').val()});
    socket.emit('prop_wr', { file: cur_root + '/link/port'     		, message: $('#port').val()});
    socket.emit('prop_wr', { file: cur_root + '/link/vita_en'  		, message: $('#vita_enable').bootstrapSwitch('state') ? '1' : '0'});
-   socket.emit('prop_wr', { file: cur_root + '/rf/freq/lut_en'  	, message: $('#lut_enable').bootstrapSwitch('state') ? '1' : '0'});
+   //socket.emit('prop_wr', { file: cur_root + '/rf/freq/lut_en'  	, message: $('#lut_enable').bootstrapSwitch('state') ? '1' : '0'});
 }
 
 // Loading config data
@@ -1050,29 +1050,29 @@ function load_rx (isLoad) {
    socket.emit('prop_rd', { file: cur_root + '/trigger/trig_sel'        ,debug: isLoad});
    socket.emit('prop_rd', { file: cur_root + '/trigger/edge_backoff'    ,debug: isLoad});
    socket.emit('prop_rd', { file: cur_root + '/trigger/edge_sample_num' ,debug: isLoad});
-   socket.emit('prop_rd', { file: cur_root + '/rf/freq/lut_en'     	    	,debug: isLoad});
+   //socket.emit('prop_rd', { file: cur_root + '/rf/freq/lut_en'     	    	,debug: isLoad});
 }
 
 function load_tx (isLoad) {
    socket.emit('prop_rd', { file: cur_root + '/pwr'           			,debug: isLoad});
-   socket.emit('prop_rd', { file: cur_root + '/rf/freq/i_bias'			,debug: isLoad});
-   socket.emit('prop_rd', { file: cur_root + '/rf/freq/q_bias'			,debug: isLoad});
+   //socket.emit('prop_rd', { file: cur_root + '/rf/freq/i_bias'			,debug: isLoad});
+   //socket.emit('prop_rd', { file: cur_root + '/rf/freq/q_bias'			,debug: isLoad});
    socket.emit('prop_rd', { file: cur_root + '/rf/freq/band'  			,debug: isLoad});
    socket.emit('prop_rd', { file: cur_root + '/rf/freq/val'   			,debug: isLoad});
    socket.emit('prop_rd', { file: cur_root + '/rf/gain/val'   			,debug: isLoad});
    socket.emit('prop_rd', { file: cur_root + '/rf/dac/nco'    			,debug: isLoad});
-   socket.emit('prop_rd', { file: cur_root + '/rf/dac/dither_en'		,debug: isLoad});
-   socket.emit('prop_rd', { file: cur_root + '/rf/dac/dither_mixer_en'	,debug: isLoad});
-   socket.emit('prop_rd', { file: cur_root + '/rf/dac/dither_sra_sel'	,debug: isLoad});
+   //socket.emit('prop_rd', { file: cur_root + '/rf/dac/dither_en'		,debug: isLoad});
+   //socket.emit('prop_rd', { file: cur_root + '/rf/dac/dither_mixer_en'	,debug: isLoad});
+   //socket.emit('prop_rd', { file: cur_root + '/rf/dac/dither_sra_sel'	,debug: isLoad});
    socket.emit('prop_rd', { file: cur_root + '/dsp/nco_adj'   			,debug: isLoad});
    socket.emit('prop_rd', { file: cur_root + '/dsp/rate'      			,debug: isLoad});
    socket.emit('prop_rd', { file: cur_root + '/link/port'     			,debug: isLoad});
    socket.emit('prop_rd', { file: cur_root + '/link/vita_en'     	    ,debug: isLoad});
-   socket.emit('prop_rd', { file: cur_root + '/rf/freq/lut_en'     	    ,debug: isLoad});
+   //socket.emit('prop_rd', { file: cur_root + '/rf/freq/lut_en'     	    ,debug: isLoad});
    
-   var dac_dither_en = $('#dac_dither_enable').bootstrapSwitch('state') == 'on' ? true : false;
-   $('#dac_dither_mixer_enable').bootstrapSwitch('readonly', ! dac_dither_en );
-   $("#dac_dither_amplitude_select").prop('disabled', ! dac_dither_en );
+   //var dac_dither_en = $('#dac_dither_enable').bootstrapSwitch('state') == 'on' ? true : false;
+   //$('#dac_dither_mixer_enable').bootstrapSwitch('readonly', ! dac_dither_en );
+   //$("#dac_dither_amplitude_select").prop('disabled', ! dac_dither_en );
    
    socket.emit('prop_rd', { file: cur_root + '/trigger/sma_mode'        ,debug: isLoad});
    socket.emit('prop_rd', { file: cur_root + '/trigger/trig_sel'        ,debug: isLoad});
@@ -1114,10 +1114,6 @@ window.onload = function() {
       cur_root = cur_board;
       return;
    } else if (pathname.indexOf('rx') > -1) {
-      cur_board = 'rx';
-      cur_root = cur_board + '_' + cur_chan;
-      loadFunc = load_rx;
-   } else if (pathname.indexOf('tx_hdr') > -1) {
       cur_board = 'rx';
       cur_root = cur_board + '_' + cur_chan;
       loadFunc = load_rx;

@@ -314,7 +314,7 @@ $("#sw_ovr").on('switchChange.bootstrapSwitch', function(event, state) {
 });
 
 $("#hdr_pwr").on('switchChange.bootstrapSwitch', function(event, state) {
-    socket.emit('prop_wr', {file: 'gpio/hdr/' + hdr_chan + '/pwr', message: state ? 'true' : 'false' });
+    socket.emit('prop_wr', {file: 'gpio/hdr/' + hdr_chan + '/pwr_en', message: state ? 'true' : 'false' });
 });
 
 $("#hdr_iso").on('switchChange.bootstrapSwitch', function(event, state) {
@@ -348,7 +348,7 @@ $("#chan_en_indiv").on('switchChange.bootstrapSwitch', function(event, state) {
             }
             //DEBUG ONLY
             //socket.emit('prop_wr', {file:  '/pwr', message: state ? ('rfe_control ' + lowPowerChan + ' on | tee /usr/bin') : ('rfe_control ' + lowPowerChan + ' off | tee /usr/bin') });
-            
+            socket.emit('prop_wr', {file: 'gpio/hdr/' + hdr_chan + '/pwr_en', message: state ? 'true' : 'false' });
             socket.emit('systctl', { message: state ? ('rfe_control ' + lowPowerChan + ' on | tee /usr/bin') : ('rfe_control ' + lowPowerChan + ' off | tee /usr/bin') });
         }
         
@@ -360,7 +360,7 @@ $("#chan_en_indiv").on('switchChange.bootstrapSwitch', function(event, state) {
             }
             //DEBUG ONLY
             //socket.emit('prop_wr', {file:  '/pwr', message: state ? ('rfe_control ' + highPowerChan + ' on | tee /usr/bin') : ('rfe_control ' + highPowerChan + ' off | tee /usr/bin') });
-            
+            socket.emit('prop_wr', {file: 'gpio/hdr/' + hdr_chan + '/high_pwr_en', message: state ? 'true' : 'false' });
             socket.emit('systctl', { message: state ? ('rfe_control ' + highPowerChan + ' on | tee /usr/bin') : ('rfe_control ' + highPowerChan + ' off | tee /usr/bin') });
         }
     }
@@ -373,7 +373,7 @@ $("#hdr_chan_en").on('switchChange.bootstrapSwitch', function(event, state) {
     if(!($('#chan_en').bootstrapSwitch('state'))) {
         
         //switch position either writes true or false to /hdr/pwr
-        socket.emit('prop_wr', {file: 'gpio/hdr/' + hdr_chan + '/pwr', message: state ? 'true' : 'false' });
+        socket.emit('prop_wr', {file: 'gpio/hdr/' + hdr_chan + '/pwr_en', message: state ? 'true' : 'false' });
         
         //on
         if(state == true) {
@@ -406,7 +406,7 @@ $("#hdr_chan_en").on('switchChange.bootstrapSwitch', function(event, state) {
 $("#chan_en").on('switchChange.bootstrapSwitch', function(event, state) {
    
    //switch position either writes true or false to /hdr/pwr
-   socket.emit('prop_wr', {file: 'gpio/hdrf/tx_' + hdr_chan + '/pwr', message: state ? 'true' : 'false' }); 
+   //socket.emit('prop_wr', {file: 'gpio/hdr/' + hdr_chan + '/pwr_en', message: state ? 'true' : 'false' }); 
    
    //turns on the low power channel based on root
    if (cur_chan == "a" || cur_chan == "c" || cur_chan == "e" || cur_chan == "g" || cur_chan == "i" || cur_chan == "k" || cur_chan == "m" || cur_chan == "o") {
@@ -416,7 +416,7 @@ $("#chan_en").on('switchChange.bootstrapSwitch', function(event, state) {
             }
             //DEBUG ONLY
             //socket.emit('prop_wr', {file:  '/pwr', message: state ? ('rfe_control ' + lowPowerChan + ' on | tee /usr/bin') : ('rfe_control ' + lowPowerChan + ' off | tee /usr/bin') });
-            
+            socket.emit('prop_wr', {file: 'gpio/hdr/' + hdr_chan + '/pwr_en', message: state ? 'true' : 'false' });
             socket.emit('systctl', { message: state ? ('rfe_control ' + lowPowerChan + ' on | tee /usr/bin') : ('rfe_control ' + lowPowerChan + ' off | tee /usr/bin') });
             socket.emit('systctl', { message: state ? ('rfe_control ' + (lowPowerChan+4) + ' on | tee /usr/bin') : ('rfe_control ' + (lowPowerChan+4) + ' off | tee /usr/bin') });
    }
@@ -429,7 +429,7 @@ $("#chan_en").on('switchChange.bootstrapSwitch', function(event, state) {
             }
             //DEBUG ONLY
             //socket.emit('prop_wr', {file:  '/pwr', message: state ? ('rfe_control ' + highPowerChan + ' on | tee /usr/bin') : ('rfe_control ' + highPowerChan + ' off | tee /usr/bin') });
-            
+            socket.emit('prop_wr', {file: 'gpio/hdr/' + hdr_chan + '/high_pwr_en', message: state ? 'true' : 'false' });
             socket.emit('systctl', { message: state ? ('rfe_control ' + highPowerChan + ' on | tee /usr/bin') : ('rfe_control ' + highPowerChan + ' off | tee /usr/bin') });
             socket.emit('systctl', { message: state ? ('rfe_control ' + (highPowerChan-4) + ' on | tee /usr/bin') : ('rfe_control ' + (highPowerChan-4) + ' off | tee /usr/bin') });
             
@@ -630,7 +630,38 @@ $("#atten_range").change(function(){
 // hdr atten
 $("#hdr_atten_range").change(function(){
    $("#hdr_atten_display").text('-' + ($(this).val()) + ' dB');
-   socket.emit('prop_wr', { file: 'gpio/hdr/' + hdr_chan + '/rf/atten/val', message: $(this).val() });
+   var value = $(this).val();
+   //socket.emit('prop_wr', { file: 'gpio/hdr/' + hdr_chan + '/rf/atten/val', message: $(this).val() });
+   var calculatedVal;
+   var multiplier = 64;
+   
+   var hdrAtten = ['atten64','atten32','atten16','atten8','atten4','atten2','atten1'];
+   
+   for( var x = 0; x <7; x++) {
+       if (value == multiplier) {
+          socket.emit('prop_wr', { file: 'gpio/hdr/' + hdr_chan + '/' + hdrAtten[x], message: '1' });
+          calculatedVal = 0; 
+          value = 0;
+       }
+       else if (value != multiplier) {
+          calculatedVal = value - multiplier;
+
+          if (calculatedVal == multiplier) {
+                  socket.emit('prop_wr', { file: 'gpio/hdr/' + hdr_chan + '/' + hdrAtten[x], message: '1' });
+                  value = 0;
+          }
+          else if(calculatedVal > 0) {
+                  socket.emit('prop_wr', { file: 'gpio/hdr/' + hdr_chan + '/' + hdrAtten[x], message: '1' });
+                  value = calculatedVal;
+          }
+          else if (calculatedVal <0) {
+                  socket.emit('prop_wr', { file: 'gpio/hdr/' + hdr_chan + '/' + hdrAtten[x], message: '0' });
+                  calculatedVal = value;
+          }
+       }
+       multiplier = multiplier / 2;
+   }
+   
 });
 
 // i-bias
@@ -1314,12 +1345,12 @@ function activateControls_tx(state) {
    $("#synth_freq").prop('disabled', !(state && $('#rf_band').bootstrapSwitch('state')));
    $("#synth_freq_set").prop('disabled', !(state && $('#rf_band').bootstrapSwitch('state')));
    $("#dac_nco").prop('disabled', !state);
-   $('#dac_dither_en').bootstrapSwitch('readonly', !state);
-   $('#dac_dither_mixer_en').bootstrapSwitch('readonly', !state);
-   $("#dac_dither_sra_sel").prop('disabled', !state);
+   //$('#dac_dither_en').bootstrapSwitch('readonly', !state);
+   //$('#dac_dither_mixer_en').bootstrapSwitch('readonly', !state);
+   //$("#dac_dither_sra_sel").prop('disabled', !state);
    $("#dac_nco_set").prop('disabled', !state);
-   $("#ibias_range").prop('disabled', !state);
-   $("#qbias_range").prop('disabled', !state);
+   //$("#ibias_range").prop('disabled', !state);
+   //$("#qbias_range").prop('disabled', !state);
    $("#gain_range").prop('disabled', !state);
    $("#dsp_reset").prop('disabled', !state);
    $("#dsp_nco").prop('disabled', !state);
@@ -1352,30 +1383,38 @@ function write_rx() {
    socket.emit('prop_wr', { file: cur_root + '/link/ip_dest'  , message: $('#ip').val()});
    socket.emit('prop_wr', { file: cur_root + '/link/mac_dest' , message: $('#mac').val()});
    socket.emit('prop_wr', { file: cur_root + '/dsp/loopback'  , message: $('#loopback').bootstrapSwitch('state') ? '1' : '0'});
-   socket.emit('prop_wr', { file: cur_root + '/rf/freq/lut_en', message: $('#lut_switch').bootstrapSwitch('state') ? '1' : '0'});
+   //socket.emit('prop_wr', { file: cur_root + '/rf/freq/lut_en', message: $('#lut_switch').bootstrapSwitch('state') ? '1' : '0'});
 }
 
 function write_tx() {
-   socket.emit('prop_wr', { file: cur_root + '/rf/freq/i_bias'		    , message: $('#ibias_range').val()/100});
-   socket.emit('prop_wr', { file: cur_root + '/rf/freq/q_bias'		    , message: $('#qbias_range').val()/100});
+   //socket.emit('prop_wr', { file: cur_root + '/rf/freq/i_bias'		    , message: $('#ibias_range').val()/100});
+   //socket.emit('prop_wr', { file: cur_root + '/rf/freq/q_bias'		    , message: $('#qbias_range').val()/100});
    socket.emit('prop_wr', { file: cur_root + '/rf/freq/band'  		    , message: $('#rf_band').bootstrapSwitch('state') ? '1' : '0'});
    socket.emit('prop_wr', { file: cur_root + '/rf/gain/val'   		    , message: $('#gain_range').val()});
    socket.emit('prop_wr', { file: cur_root + '/rf/dac/nco'    		    , message: $('#dac_nco').val()});
-   socket.emit('prop_wr', { file: cur_root + '/rf/dac/dither_en'	    , message: $('#dac_dither_enable').bootstrapSwitch('state') ? '1' : '0'});
-   socket.emit('prop_wr', { file: cur_root + '/rf/dac/dither_mixer_en'	, message: $('#dac_dither_mixer_enable').bootstrapSwitch('state') ? '1' : '0'});
-   socket.emit('prop_wr', { file: cur_root + '/rf/dac/dither_sra_sel'   , message: $('#dac_dither_amplitude_select').val()});
+   //socket.emit('prop_wr', { file: cur_root + '/rf/dac/dither_en'	    , message: $('#dac_dither_enable').bootstrapSwitch('state') ? '1' : '0'});
+   //socket.emit('prop_wr', { file: cur_root + '/rf/dac/dither_mixer_en'	, message: $('#dac_dither_mixer_enable').bootstrapSwitch('state') ? '1' : '0'});
+   //socket.emit('prop_wr', { file: cur_root + '/rf/dac/dither_sra_sel'   , message: $('#dac_dither_amplitude_select').val()});
    socket.emit('prop_wr', { file: cur_root + '/rf/freq/val'   		    , message: $('#synth_freq').val()});
    socket.emit('prop_wr', { file: cur_root + '/dsp/nco_adj'   		    , message: $('#dsp_nco').val()});
    socket.emit('prop_wr', { file: cur_root + '/dsp/rate'      		    , message: $('#sr').val()});
    socket.emit('prop_wr', { file: cur_root + '/link/port'     		    , message: $('#port').val()});
    socket.emit('prop_wr', { file: cur_root + '/link/vita_en'  		    , message: $('#vita_enable').bootstrapSwitch('state') ? '1' : '0'});
-   socket.emit('prop_wr', { file: cur_root + '/rf/freq/lut_en'  	    , message: $('#lut_switch').bootstrapSwitch('state') ? '1' : '0'});
+   //socket.emit('prop_wr', { file: cur_root + '/rf/freq/lut_en'  	    , message: $('#lut_switch').bootstrapSwitch('state') ? '1' : '0'});
    
    //NEW HDR Write and Channel Enable Write
-   socket.emit('prop_wr', { file: '/gpio/hdr/' + hdr_chan + '/pwr'           , message: $('#hdr_pwr').bootstrapSwitch('state') ? 'true' : 'false'});
-   socket.emit('prop_wr', { file: '/gpio/hdr/sw_override_en'                 , message: $('#sw_ovr').bootstrapSwitch('state') ? 'true' : 'false'});
+   //socket.emit('prop_wr', { file: '/gpio/hdr/' + hdr_chan + '/pwr'           , message: $('#hdr_pwr').bootstrapSwitch('state') ? 'true' : 'false'});
+   //socket.emit('prop_wr', { file: '/gpio/hdr/sw_override_en'                 , message: $('#sw_ovr').bootstrapSwitch('state') ? 'true' : 'false'});
    socket.emit('prop_wr', { file: '/gpio/hdr/' + hdr_chan + '/isolation_en'  , message: $('#hdr_iso').bootstrapSwitch('state') ? 'true' : 'false'});
-   socket.emit('prop_wr', { file: '/gpio/hdr/' + hdr_chan + '/rf/atten/val'  , message: $('#hdr_atten_range').val()});
+   //socket.emit('prop_wr', { file: '/gpio/hdr/' + hdr_chan + '/atten'  , message: $('#hdr_atten_range').val()});
+   
+   socket.emit('prop_wr', { file: 'gpio/hdr/' + hdr_chan + '/atten64', message: '1' });
+   socket.emit('prop_wr', { file: 'gpio/hdr/' + hdr_chan + '/atten32', message: '0' });
+   socket.emit('prop_wr', { file: 'gpio/hdr/' + hdr_chan + '/atten16', message: '0' });
+   socket.emit('prop_wr', { file: 'gpio/hdr/' + hdr_chan + '/atten8',  message: '0' });
+   socket.emit('prop_wr', { file: 'gpio/hdr/' + hdr_chan + '/atten4',  message: '0' });
+   socket.emit('prop_wr', { file: 'gpio/hdr/' + hdr_chan + '/atten2',  message: '0' });
+   socket.emit('prop_wr', { file: 'gpio/hdr/' + hdr_chan + '/atten1',  message: '0' });
 }
 
 // Loading config data
@@ -1411,29 +1450,29 @@ function load_rx (isLoad) {
    socket.emit('prop_rd', { file: cur_root + '/trigger/trig_sel'        ,debug: isLoad});
    socket.emit('prop_rd', { file: cur_root + '/trigger/edge_backoff'    ,debug: isLoad});
    socket.emit('prop_rd', { file: cur_root + '/trigger/edge_sample_num' ,debug: isLoad});
-   socket.emit('prop_rd', { file: cur_root + '/rf/freq/lut_en'     	    	,debug: isLoad});
+   //socket.emit('prop_rd', { file: cur_root + '/rf/freq/lut_en'     	    	,debug: isLoad});
 }
 
 function load_tx (isLoad) {
    socket.emit('prop_rd', { file: cur_root + '/pwr'           			,debug: isLoad});
-   socket.emit('prop_rd', { file: cur_root + '/rf/freq/i_bias'			,debug: isLoad});
-   socket.emit('prop_rd', { file: cur_root + '/rf/freq/q_bias'			,debug: isLoad});
+   //socket.emit('prop_rd', { file: cur_root + '/rf/freq/i_bias'			,debug: isLoad});
+   //socket.emit('prop_rd', { file: cur_root + '/rf/freq/q_bias'			,debug: isLoad});
    socket.emit('prop_rd', { file: cur_root + '/rf/freq/band'  			,debug: isLoad});
    socket.emit('prop_rd', { file: cur_root + '/rf/freq/val'   			,debug: isLoad});
    socket.emit('prop_rd', { file: cur_root + '/rf/gain/val'   			,debug: isLoad});
    socket.emit('prop_rd', { file: cur_root + '/rf/dac/nco'    			,debug: isLoad});
-   socket.emit('prop_rd', { file: cur_root + '/rf/dac/dither_en'		,debug: isLoad});
-   socket.emit('prop_rd', { file: cur_root + '/rf/dac/dither_mixer_en'	,debug: isLoad});
-   socket.emit('prop_rd', { file: cur_root + '/rf/dac/dither_sra_sel'	,debug: isLoad});
+   //socket.emit('prop_rd', { file: cur_root + '/rf/dac/dither_en'		,debug: isLoad});
+   //socket.emit('prop_rd', { file: cur_root + '/rf/dac/dither_mixer_en'	,debug: isLoad});
+   //socket.emit('prop_rd', { file: cur_root + '/rf/dac/dither_sra_sel'	,debug: isLoad});
    socket.emit('prop_rd', { file: cur_root + '/dsp/nco_adj'   			,debug: isLoad});
    socket.emit('prop_rd', { file: cur_root + '/dsp/rate'      			,debug: isLoad});
    socket.emit('prop_rd', { file: cur_root + '/link/port'     			,debug: isLoad});
    socket.emit('prop_rd', { file: cur_root + '/link/vita_en'     	    ,debug: isLoad});
-   socket.emit('prop_rd', { file: cur_root + '/rf/freq/lut_en'     	    ,debug: isLoad});
+   //socket.emit('prop_rd', { file: cur_root + '/rf/freq/lut_en'     	    ,debug: isLoad});
    
-   var dac_dither_en = $('#dac_dither_enable').bootstrapSwitch('state') == 'on' ? true : false;
-   $('#dac_dither_mixer_enable').bootstrapSwitch('readonly', ! dac_dither_en );
-   $("#dac_dither_amplitude_select").prop('disabled', ! dac_dither_en );
+   //var dac_dither_en = $('#dac_dither_enable').bootstrapSwitch('state') == 'on' ? true : false;
+   //$('#dac_dither_mixer_enable').bootstrapSwitch('readonly', ! dac_dither_en );
+   //$("#dac_dither_amplitude_select").prop('disabled', ! dac_dither_en );
    
    socket.emit('prop_rd', { file: cur_root + '/trigger/sma_mode'        ,debug: isLoad});
    socket.emit('prop_rd', { file: cur_root + '/trigger/trig_sel'        ,debug: isLoad});
@@ -1441,11 +1480,18 @@ function load_tx (isLoad) {
    socket.emit('prop_rd', { file: cur_root + '/trigger/edge_sample_num' ,debug: isLoad});
    
    //Load hdr data
-   socket.emit('prop_rd', { file: '/gpio/hdr/' + hdr_chan + '/pwr'           ,debug: isLoad});
-   socket.emit('prop_rd', { file: '/gpio/hdr/sw_override_en'                 ,debug: isLoad});
+   //socket.emit('prop_rd', { file: '/gpio/hdr/' + hdr_chan + '/pwr'           ,debug: isLoad});
+   //socket.emit('prop_rd', { file: '/gpio/hdr/sw_override_en'                 ,debug: isLoad});
    socket.emit('prop_rd', { file: '/gpio/hdr/' + hdr_chan + '/isolation_en'  ,debug: isLoad});
-   socket.emit('prop_rd', { file: '/gpio/hdr/' + hdr_chan + '/rf/atten/val'  ,debug: isLoad});
-}
+   //socket.emit('prop_rd', { file: '/gpio/hdr/' + hdr_chan + '/rf/atten/val'  ,debug: isLoad});
+   socket.emit('prop_rd', { file: 'gpio/hdr/' + hdr_chan + '/atten64'   ,debug: isLoad });
+   socket.emit('prop_rd', { file: 'gpio/hdr/' + hdr_chan + '/atten32'   ,debug: isLoad });
+   socket.emit('prop_rd', { file: 'gpio/hdr/' + hdr_chan + '/atten16'   ,debug: isLoad });
+   socket.emit('prop_rd', { file: 'gpio/hdr/' + hdr_chan + '/atten8'    ,debug: isLoad });
+   socket.emit('prop_rd', { file: 'gpio/hdr/' + hdr_chan + '/atten4'    ,debug: isLoad });
+   socket.emit('prop_rd', { file: 'gpio/hdr/' + hdr_chan + '/atten2'    ,debug: isLoad });
+   socket.emit('prop_rd', { file: 'gpio/hdr/' + hdr_chan + '/atten1'    ,debug: isLoad });
+}                                                                      
 
 function load_clock (isLoad) {
    //write to the lockdetect/lossoflock to update the directories 
@@ -1468,9 +1514,9 @@ function disableElements (state) {
     
    $("#chan_en_indiv").bootstrapSwitch('readonly', state);
    $("#rf_band").bootstrapSwitch('readonly', state);
-   $("#dac_dither_enable").bootstrapSwitch('readonly', state);
-   $('#dac_dither_mixer_enable').bootstrapSwitch('readonly', state);
-   $('#dac_dither_amplitude_select').prop('disabled', state);
+   //$("#dac_dither_enable").bootstrapSwitch('readonly', state);
+   //$('#dac_dither_mixer_enable').bootstrapSwitch('readonly', state);
+   //$('#dac_dither_amplitude_select').prop('disabled', state);
    $("#synth_freq").prop('disabled', state);
    $("#synth_freq_set").prop('disabled', state);
    $("#dac_nco").prop('disabled', state);
@@ -1503,12 +1549,12 @@ function disableHdrElements (state) {
 //hides/shows webpage elements based on 'state' boolean parameter
 function disableBoardTriggElements (state) {
  
-   $("#lut_switch").bootstrapSwitch('readonly', state);
+   //$("#lut_switch").bootstrapSwitch('readonly', state);
    $("#sma_mode").bootstrapSwitch('readonly', state);
    $("#trig_sel_sma").bootstrapSwitch('readonly', state);
    $('#jesdsync').prop('disabled', state);
    $('#dac_dump').prop('disabled', state);
-   $('#gpiox_dump').prop('disabled', state);
+   //$('#gpiox_dump').prop('disabled', state);
    $('#led').prop('disabled', state);
    $('#version').prop('disabled', state);
    $('#temperature').prop('disabled', state);

@@ -97,6 +97,12 @@ block content
                .col-md-4.top-buffer-5
                   button.btn.btn-default.btn-xs.btn-block#diagnostic Get
             br
+            b Software Override
+            .row
+                .col-md-4.top-buffer-5
+                  input(type="checkbox", name='en', unchecked)#sw_ovr
+            
+            br
          .col-md-2
             b Board Version
             .row
@@ -108,17 +114,10 @@ block content
                .col-md-6.top-buffer-5
                   button.btn.btn-default.btn-xs.btn-block#temperature Get
             br
-            b FPGA
+            b FPGA Reset
             .row
                .col-md-6.top-buffer-5
                   button.btn.btn-default.btn-xs.btn-block#reset_fpga Reset
-               .col-md-6.top-buffer-5
-                  | FPGA Reset
-            .row
-               .col-md-6.top-buffer-5
-                  button.btn.btn-default.btn-xs.btn-block Get
-               .col-md-6.top-buffer-5
-                  | JESD Status
          .col-md-7
             b Console Output
             br

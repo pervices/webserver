@@ -40,40 +40,43 @@ block content
             input.input-xs.width-100(type="text")#dac_nco
             |  Hz &nbsp;&nbsp;
             button.btn.btn-default.btn-xs#dac_nco_set Set
-         .col-md-3.right-pad-0
-            p
-               b IQ Voltage Bias
-            .row
-               .col-md-5.align-right.no-padding#ibias_display I:
-               .col-md-7
-                  input(type='range', min='0', max='2400', step='100')#ibias_range
-            .row
-               .col-md-5.align-right.no-padding#qbias_display Q:
-               .col-md-7
-                  input(type='range', min='0', max='2400', step='100')#qbias_range
-            p
-               .inline-block
-         .col-md-4
+         .col-md-4.right-pad-0
             p
                b TX Gain - PE43704
             input(type='range', min='0', max='127', step='1')#gain_range
             p
                #gain_display.inline-block
-      .row
-         .col-md-1
-            p
-               b Dither
-            input(type="checkbox", name='dither-en', unchecked)#dac_dither_enable
-         .col-md-2
-            p
-               b Dither Up-Conversion (+Fs/2)
-            input(type="checkbox", name='dither-mixer-en', unchecked)#dac_dither_mixer_enable
-         .col-md-3
-            p
-               b Dither Amplitude
-            input(type="range", min=6, max=96, step=6, name='dither-sra-sel')#dac_dither_amplitude_select
-            p
-               #dac_dither_amplitude_display.inline-block
+         
+         
+       //  .col-md-3.right-pad-0
+       //     p
+       //        b IQ Voltage Bias
+       //     .row
+       //        .col-md-5.align-right.no-padding#ibias_display I:
+       //        .col-md-7
+       //           input(type='range', min='0', max='2400', step='100')#ibias_range
+       //     .row
+       //        .col-md-5.align-right.no-padding#qbias_display Q:
+       //        .col-md-7
+       //           input(type='range', min='0', max='2400', step='100')#qbias_range
+       //     p
+       //        .inline-block
+
+      //.row
+      //   .col-md-1
+      //      p
+      //         b Dither
+      //      input(type="checkbox", name='dither-en', unchecked)#dac_dither_enable
+      //   .col-md-2
+      //      p
+      //         b Dither Up-Conversion (+Fs/2)
+      //      input(type="checkbox", name='dither-mixer-en', unchecked)#dac_dither_mixer_enable
+      //   .col-md-3
+      //      p
+      //         b Dither Amplitude
+      //      input(type="range", min=6, max=96, step=6, name='dither-sra-sel')#dac_dither_amplitude_select
+      //      p
+      //         #dac_dither_amplitude_display.inline-block
                   
    img(src="/img/tx_chain.svg", style="width: 100%; height: 100%;").center
    h3 TX DSP Chain
@@ -153,20 +156,12 @@ block content
                .col-md-3.top-buffer-5.right-pad-0
                   | DAC
                .col-md-3.top-buffer-5.right-pad-0
-                  | GPIOX
-               .col-md-3.top-buffer-5.right-pad-0
                   | LED
-               .col-md-3.top-buffer-5.right-pad-0
-                  | Synth Cal.
             .row
                .col-md-3.top-buffer-5.right-pad-0
                   button.btn.btn-default.btn-xs.btn-block#dac_dump Dump
                .col-md-3.top-buffer-5.right-pad-0
-                  button.btn.btn-default.btn-xs.btn-block#gpiox_dump Dump
-               .col-md-3.top-buffer-5.right-pad-0
                   button.btn.btn-default.btn-xs.btn-block#led Test
-               .col-md-3.top-buffer-5.right-pad-0
-                  input(type="checkbox", name='lut-en', unchecked)#lut_switch
          .col-md-2
             b Board Version
             .row
