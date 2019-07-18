@@ -1,90 +1,83 @@
 $(document).ready(function() {
     
-   // bootstrap switches
-   $("[name='en']").bootstrapSwitch({
-      onText: 'ON',
-      offText: 'OFF',
-      size: 'mini',
-      onColor: 'success'
-      //offColor: 'danger'
-   });
+    //Bootstrap Switches
+    $("[name='en']").bootstrapSwitch({
+    onText: 'ON',
+    offText: 'OFF',
+    size: 'mini',
+    onColor: 'success'
+    //offColor: 'danger'
+    });
 
-   $("[name='hi-low']").bootstrapSwitch({
-      onText: 'HIGH',
-      offText: 'LOW',
-      size: 'mini',
-      onColor: 'success'
-   });
+    $("[name='hi-low']").bootstrapSwitch({
+    onText: 'HIGH',
+    offText: 'LOW',
+    size: 'mini',
+    onColor: 'success'
+    });
 
-   $("[name='dither-en']").bootstrapSwitch({
-      onText: 'ON',
-      offText: 'OFF',
-      size: 'mini',
-      onColor: 'success'
-   });
+    $("[name='dither-en']").bootstrapSwitch({
+    onText: 'ON',
+    offText: 'OFF',
+    size: 'mini',
+    onColor: 'success'
+    });
 
-   $("[name='dither-mixer-en']").bootstrapSwitch({
-      onText: 'ON',
-      offText: 'OFF',
-      size: 'mini',
-      onColor: 'success'
-   });
+    $("[name='dither-mixer-en']").bootstrapSwitch({
+    onText: 'ON',
+    offText: 'OFF',
+    size: 'mini',
+    onColor: 'success'
+    });
     
-   $("[name='vita-en']").bootstrapSwitch({
-      onText: 'ON',
-      offText: 'OFF',
-      size: 'mini',
-      onColor: 'success'
-   });
+    $("[name='vita-en']").bootstrapSwitch({
+    onText: 'ON',
+    offText: 'OFF',
+    size: 'mini',
+    onColor: 'success'
+    });
 
-   $("[name='lut-en']").bootstrapSwitch({
-      onText: 'ON',
-      offText: 'OFF',
-      size: 'mini',
-      onColor: 'success'
-   });
+    $("[name='lut-en']").bootstrapSwitch({
+    onText: 'ON',
+    offText: 'OFF',
+    size: 'mini',
+    onColor: 'success'
+    });
 
-   $("[name='sma-dir']").bootstrapSwitch({
-      onText: 'IN',
-      offText: 'OUT',
-      size: 'mini',
-      onColor: 'success'
-   });
+    $("[name='sma-dir']").bootstrapSwitch({
+    onText: 'IN',
+    offText: 'OUT',
+    size: 'mini',
+    onColor: 'success'
+    });
 
-   $("[name='sma-mode']").bootstrapSwitch({
-      onText: 'EDGE',
-      offText: 'LEVEL',
-      size: 'mini',
-      onColor: 'success'
-   });
+    $("[name='sma-mode']").bootstrapSwitch({
+    onText: 'EDGE',
+    offText: 'LEVEL',
+    size: 'mini',
+    onColor: 'success'
+    });
 
-   $("[name='sma-pol']").bootstrapSwitch({
-      onText: '+VE',
-      offText: '-VE',
-      size: 'mini',
-      onColor: 'success'
-   });
+    $("[name='sma-pol']").bootstrapSwitch({
+    onText: '+VE',
+    offText: '-VE',
+    size: 'mini',
+    onColor: 'success'
+    });
 
-   $("[name='trig-sel-sma']").bootstrapSwitch({
-      onText: 'ON',
-      offText: 'OFF',
-      size: 'mini',
-      onColor: 'success'
-   });
-   
+    $("[name='trig-sel-sma']").bootstrapSwitch({
+    onText: 'ON',
+    offText: 'OFF',
+    size: 'mini',
+    onColor: 'success'
+    });
    
 });
 
-// socket.io connection
+//socket.io connection
 var socket = io.connect();
 
-//                                                                              CHANNEL ROOT AND PATHWAY - PROPERTIES                                                                                                                 // 
-//********************************************************************************************BEGIN***********************************************************************************************************************************//
-//************************************************************************************************************************************************************************************************************************************//
-//************************************************************************************************************************************************************************************************************************************//
-//************************************************************************************************************************************************************************************************************************************//
-
-// current channel and board/page
+//current channel and board/page initialization
 var cur_path = 'a';
 var cur_chan = 'a';
 var cur_board = 'tx';
@@ -95,8 +88,7 @@ var pathname = window.location.pathname;
 var channels = ['tx_a','tx_e','tx_i',"tx_m","tx_b","tx_f","tx_j","tx_n","tx_c","tx_g","tx_k","tx_o","tx_d","tx_h","tx_l","tx_p"];
 
 //variables to hold the value of the low and high power channels
-var lowPowerChan = 0;
-var highPowerChan = 0;
+var channelSelector = 0;
 
 // Switch channel views
 // This function will load the current states of the channel onto the page
@@ -273,7 +265,6 @@ $("#chan_hp").click(function() {
         cur_root = 'tx_p';
         cur_chan = 'p';
    }
-   
    load_tx();
    
 });
@@ -353,24 +344,24 @@ $("#hdr_iso").on('switchChange.bootstrapSwitch', function(event, state) {
 //        if (cur_chan == "a" || cur_chan == "c" || cur_chan == "e" || cur_chan == "g" || cur_chan == "i" || cur_chan == "k" || cur_chan == "m" || cur_chan == "o") {
 //            for (var i = 0; i<channels.length; i++) {
 //                if (channels[i] == cur_root)
-//                    lowPowerChan = i;
+//                    channelSelector = i;
 //            }
 //            //DEBUG ONLY
-//            //socket.emit('prop_wr', {file:  '/pwr', message: state ? ('rfe_control ' + lowPowerChan + ' on | tee /usr/bin') : ('rfe_control ' + lowPowerChan + ' off | tee /usr/bin') });
+//            //socket.emit('prop_wr', {file:  '/pwr', message: state ? ('rfe_control ' + channelSelector + ' on | tee /usr/bin') : ('rfe_control ' + channelSelector + ' off | tee /usr/bin') });
 //            socket.emit('prop_wr', {file: 'gpio/hdr/' + hdr_chan + '/pwr_en', message: state ? 'true' : 'false' });
-//            socket.emit('systctl', { message: state ? ('rfe_control ' + lowPowerChan + ' on | tee /usr/bin') : ('rfe_control ' + lowPowerChan + ' off | tee /usr/bin') });
+//            socket.emit('systctl', { message: state ? ('rfe_control ' + channelSelector + ' on | tee /usr/bin') : ('rfe_control ' + channelSelector + ' off | tee /usr/bin') });
 //        }
 //        
 //        //determine if channel is high power
 //        else if (cur_chan == "b" || cur_chan == "d" || cur_chan == "f" || cur_chan == "h" || cur_chan == "j" || cur_chan == "l" || cur_chan == "n" || cur_chan == "p") {
 //            for (var i = 0; i<channels.length; i++) {
 //                if (channels[i] == cur_root)
-//                    highPowerChan = i;
+//                    channelSelector = i;
 //            }
 //            //DEBUG ONLY
-//            //socket.emit('prop_wr', {file:  '/pwr', message: state ? ('rfe_control ' + highPowerChan + ' on | tee /usr/bin') : ('rfe_control ' + highPowerChan + ' off | tee /usr/bin') });
+//            //socket.emit('prop_wr', {file:  '/pwr', message: state ? ('rfe_control ' + channelSelector + ' on | tee /usr/bin') : ('rfe_control ' + channelSelector + ' off | tee /usr/bin') });
 //            socket.emit('prop_wr', {file: 'gpio/hdr/' + hdr_chan + '/high_pwr_en', message: state ? 'true' : 'false' });
-//            socket.emit('systctl', { message: state ? ('rfe_control ' + highPowerChan + ' on | tee /usr/bin') : ('rfe_control ' + highPowerChan + ' off | tee /usr/bin') });
+//            socket.emit('systctl', { message: state ? ('rfe_control ' + channelSelector + ' on | tee /usr/bin') : ('rfe_control ' + channelSelector + ' off | tee /usr/bin') });
 //        }
 //    }
 //});
@@ -451,26 +442,26 @@ $("#chan_en").on('switchChange.bootstrapSwitch', function(event, state) {
    if (cur_chan == "a" || cur_chan == "c" || cur_chan == "e" || cur_chan == "g" || cur_chan == "i" || cur_chan == "k" || cur_chan == "m" || cur_chan == "o") {
             for (var i = 0; i<channels.length; i++) {
                 if (channels[i] == cur_root)
-                    lowPowerChan = i;
+                    channelSelector = i;
             }
             //DEBUG ONLY
-            //socket.emit('prop_wr', {file:  '/pwr', message: state ? ('rfe_control ' + lowPowerChan + ' on | tee /usr/bin') : ('rfe_control ' + lowPowerChan + ' off | tee /usr/bin') });
+            //socket.emit('prop_wr', {file:  '/pwr', message: state ? ('rfe_control ' + channelSelector + ' on | tee /usr/bin') : ('rfe_control ' + channelSelector + ' off | tee /usr/bin') });
             socket.emit('prop_wr', {file: 'gpio/hdr/' + hdr_chan + '/pwr_en', message: state ? 'true' : 'false' });
-            socket.emit('systctl', { message: state ? ('rfe_control ' + lowPowerChan + ' on | tee /usr/bin') : ('rfe_control ' + lowPowerChan + ' off | tee /usr/bin') });
-            //socket.emit('systctl', { message: state ? ('rfe_control ' + (lowPowerChan+4) + ' on | tee /usr/bin') : ('rfe_control ' + (lowPowerChan+4) + ' off | tee /usr/bin') });
+            socket.emit('systctl', { message: state ? ('rfe_control ' + channelSelector + ' on | tee /usr/bin') : ('rfe_control ' + channelSelector + ' off | tee /usr/bin') });
+            //socket.emit('systctl', { message: state ? ('rfe_control ' + (channelSelector+4) + ' on | tee /usr/bin') : ('rfe_control ' + (channelSelector+4) + ' off | tee /usr/bin') });
    }
    
    //turns on the high power channel based on root
    else if (cur_chan == "b" || cur_chan == "d" || cur_chan == "f" || cur_chan == "h" || cur_chan == "j" || cur_chan == "l" || cur_chan == "n" || cur_chan == "p") {
             for (var i = 0; i<channels.length; i++) {
                 if (channels[i] == cur_root)
-                    highPowerChan = i;
+                    channelSelector = i;
             }
             //DEBUG ONLY
-            //socket.emit('prop_wr', {file:  '/pwr', message: state ? ('rfe_control ' + highPowerChan + ' on | tee /usr/bin') : ('rfe_control ' + highPowerChan + ' off | tee /usr/bin') });
+            //socket.emit('prop_wr', {file:  '/pwr', message: state ? ('rfe_control ' + channelSelector + ' on | tee /usr/bin') : ('rfe_control ' + channelSelector + ' off | tee /usr/bin') });
             socket.emit('prop_wr', {file: 'gpio/hdr/' + hdr_chan + '/high_pwr_en', message: state ? 'true' : 'false' });
-            socket.emit('systctl', { message: state ? ('rfe_control ' + highPowerChan + ' on | tee /usr/bin') : ('rfe_control ' + highPowerChan + ' off | tee /usr/bin') });
-            //socket.emit('systctl', { message: state ? ('rfe_control ' + (highPowerChan-4) + ' on | tee /usr/bin') : ('rfe_control ' + (highPowerChan-4) + ' off | tee /usr/bin') });
+            socket.emit('systctl', { message: state ? ('rfe_control ' + channelSelector + ' on | tee /usr/bin') : ('rfe_control ' + channelSelector + ' off | tee /usr/bin') });
+            //socket.emit('systctl', { message: state ? ('rfe_control ' + (channelSelector-4) + ' on | tee /usr/bin') : ('rfe_control ' + (channelSelector-4) + ' off | tee /usr/bin') });
             
    }
    
@@ -1607,13 +1598,13 @@ function disableBoardTriggElements (state) {
 window.onload = function() {
    $("#chan_en").bootstrapSwitch('readonly', true); 
    // current channel and board/page
-   var cur_path = 'a';
-   var cur_chan = 'a';
-   var cur_board = 'tx';
-   var cur_root = 'tx_a';
+   //var cur_path = 'a';
+   //var cur_chan = 'a';
+   //var cur_board = 'tx';
+   //var cur_root = 'tx_a';
    var pathname = window.location.pathname; 
-   $(this).parent().parent().children().removeClass('active');
-   $(this).parent().attr('class', 'active'); 
+   //$(this).parent().parent().children().removeClass('active');
+   //$(this).parent().attr('class', 'active'); 
    var loadFunc;
    var refreshFunc;
    
