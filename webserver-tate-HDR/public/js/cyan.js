@@ -280,8 +280,8 @@ $("#chan_hp").click(function() {
          cur_root = 'tx_p';
          cur_chan = 'p';
     }
-    load_tx();
    
+    load_tx();
 });
 
  //HDR (High Dynamic Range) Channel 
@@ -314,6 +314,7 @@ $("#chan_hdr").click(function() {
     //Update root and channel properties 
     cur_root = 'tx_' + cur_path;
     cur_chan = hdr_chan;
+    
 });
 
 
@@ -333,82 +334,6 @@ $("#hdr_pwr").on('switchChange.bootstrapSwitch', function(event, state) {
 $("#hdr_iso").on('switchChange.bootstrapSwitch', function(event, state) {
     //switch that keeps the high power channel on
 });
-
-
-//////////////////////////////////////////////////////////////////////////////////////////DEBUG AND OLD DEV CODE/////////////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-////individual channel enable switch                                                                                                                                                                   //
-//$("#chan_en_indiv").on('switchChange.bootstrapSwitch', function(event, state) {                                                                                                                      //
-//                                                                                                                                                                                                     //
-//    //only allows individual channel enabling if the group channel enable is in the 'OFF' state                                                                                                      //
-//    if(!($('#chan_en').bootstrapSwitch('state'))) {                                                                                                                                                  //
-//                                                                                                                                                                                                     //
-//        //on                                                                                                                                                                                         //
-//        if(state == true) {                                                                                                                                                                          //
-//            document.getElementById("chan_status").style.visibility = "hidden";                                                                                                                      //
-//            write_tx();                                                                                                                                                                              //
-//            activateControls_tx(true);                                                                                                                                                               //
-//        }                                                                                                                                                                                            //
-//                                                                                                                                                                                                     //
-//        //off                                                                                                                                                                                        //
-//        else if (state == false) {                                                                                                                                                                   //
-//            document.getElementById("chan_status").style.visibility = "visible";                                                                                                                     //
-//            activateControls_tx(false);                                                                                                                                                              //
-//        }                                                                                                                                                                                            //
-//                                                                                                                                                                                                     //
-//        //determine if channel is low power                                                                                                                                                          //
-//        if (cur_chan == "a" || cur_chan == "c" || cur_chan == "e" || cur_chan == "g" || cur_chan == "i" || cur_chan == "k" || cur_chan == "m" || cur_chan == "o") {                                  //
-//            for (var i = 0; i<channels.length; i++) {                                                                                                                                                //
-//                if (channels[i] == cur_root)                                                                                                                                                         //
-//                    channelSelector = i;                                                                                                                                                             //
-//            }                                                                                                                                                                                        //
-//            //DEBUG ONLY                                                                                                                                                                             //
-//            //socket.emit('prop_wr', {file:  '/pwr', message: state ? ('rfe_control ' + channelSelector + ' on | tee /usr/bin') : ('rfe_control ' + channelSelector + ' off | tee /usr/bin') });     //
-//            socket.emit('prop_wr', {file: 'gpio/hdr/' + hdr_chan + '/pwr_en', message: state ? 'true' : 'false' });                                                                                  //
-//            socket.emit('systctl', { message: state ? ('rfe_control ' + channelSelector + ' on | tee /usr/bin') : ('rfe_control ' + channelSelector + ' off | tee /usr/bin') });                     //
-//        }                                                                                                                                                                                            //
-//                                                                                                                                                                                                     //
-//        //determine if channel is high power                                                                                                                                                         //
-//        else if (cur_chan == "b" || cur_chan == "d" || cur_chan == "f" || cur_chan == "h" || cur_chan == "j" || cur_chan == "l" || cur_chan == "n" || cur_chan == "p") {                             //
-//            for (var i = 0; i<channels.length; i++) {                                                                                                                                                //
-//                if (channels[i] == cur_root)                                                                                                                                                         //
-//                    channelSelector = i;                                                                                                                                                             //
-//            }                                                                                                                                                                                        //
-//            //DEBUG ONLY                                                                                                                                                                             //
-//            //socket.emit('prop_wr', {file:  '/pwr', message: state ? ('rfe_control ' + channelSelector + ' on | tee /usr/bin') : ('rfe_control ' + channelSelector + ' off | tee /usr/bin') });     //
-//            socket.emit('prop_wr', {file: 'gpio/hdr/' + hdr_chan + '/high_pwr_en', message: state ? 'true' : 'false' });                                                                             //
-//            socket.emit('systctl', { message: state ? ('rfe_control ' + channelSelector + ' on | tee /usr/bin') : ('rfe_control ' + channelSelector + ' off | tee /usr/bin') });                     //
-//        }                                                                                                                                                                                            //
-//    }                                                                                                                                                                                                //
-//});                                                                                                                                                                                                  //
-//                                                                                                                                                                                                     //
-////individually enable the HDR channel                                                                                                                                                                //
-//$("#hdr_chan_en").on('switchChange.bootstrapSwitch', function(event, state) {                                                                                                                        //
-//                                                                                                                                                                                                     //
-//    //only allows individual channel enabling if the group channel enable is in the 'OFF' state                                                                                                      //
-//    if(!($('#chan_en').bootstrapSwitch('state'))) {                                                                                                                                                  //
-//                                                                                                                                                                                                     //
-//        //switch position either writes true or false to /hdr/pwr                                                                                                                                    //
-//        socket.emit('prop_wr', {file: 'gpio/hdr/' + hdr_chan + '/pwr_en', message: state ? 'true' : 'false' });                                                                                      //
-//                                                                                                                                                                                                     //
-//        //on                                                                                                                                                                                         //
-//        if(state == true) {                                                                                                                                                                          //
-//            document.getElementById("chan_status").style.visibility = "hidden";                                                                                                                      //
-//            write_tx();                                                                                                                                                                              //
-//            activateControls_tx(true);                                                                                                                                                               //
-//        }                                                                                                                                                                                            //
-//                                                                                                                                                                                                     //
-//        //off                                                                                                                                                                                        //
-//        else if (state == false) {                                                                                                                                                                   //
-//            document.getElementById("chan_status").style.visibility = "visible";                                                                                                                     //
-//            activateControls_tx(false);                                                                                                                                                              //
-//        }                                                                                                                                                                                            //
-//    }                                                                                                                                                                                                //
-//});                                                                                                                                                                                                  //
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 //Enable and disable channels
 $("#chan_en").on('switchChange.bootstrapSwitch', function(event, state) {
@@ -444,34 +369,40 @@ $("#chan_en").on('switchChange.bootstrapSwitch', function(event, state) {
         
     }
     
-    
-    //Turns on/off the low power channel based on root
-    if (cur_chan == "a" || cur_chan == "c" || cur_chan == "e" || cur_chan == "g" || cur_chan == "i" || cur_chan == "k" || cur_chan == "m" || cur_chan == "o") {
+    if (cur_chan == "b" || cur_chan == "d" || cur_chan == "f" || cur_chan == "h" || cur_chan == "j" || cur_chan == "l" || cur_chan == "n" || cur_chan == "p") {
+        
+        //Turns on/off the channel based on root
         for (var i = 0; i<channels.length; i++) {
-            if (channels[i] == cur_root)
-                channelSelector = i;
-        }
-        //DEBUG ONLY
-        //socket.emit('prop_wr', {file:  '/pwr', message: state ? ('rfe_control ' + channelSelector + ' on | tee /usr/bin') : ('rfe_control ' + channelSelector + ' off | tee /usr/bin') });
-        socket.emit('prop_wr', {file: 'gpio/hdr/' + hdr_chan + '/pwr_en', message: state ? 'true' : 'false' });
-        socket.emit('systctl', { message: state ? ('rfe_control ' + channelSelector + ' on | tee /usr/bin') : ('rfe_control ' + channelSelector + ' off | tee /usr/bin') });
-        //uncomment to turn on/off the high power channel at the same time
-        //socket.emit('systctl', { message: state ? ('rfe_control ' + (channelSelector+4) + ' on | tee /usr/bin') : ('rfe_control ' + (channelSelector+4) + ' off | tee /usr/bin') });
-    }
-    
-    //Turns on/off the high power channel based on root
-    else if (cur_chan == "b" || cur_chan == "d" || cur_chan == "f" || cur_chan == "h" || cur_chan == "j" || cur_chan == "l" || cur_chan == "n" || cur_chan == "p") {
-        for (var i = 0; i<channels.length; i++) {
-            if (channels[i] == cur_root)
-                channelSelector = i;
+                if (channels[i] == cur_root)
+                    channelSelector = i;
         }
         //DEBUG ONLY
         //socket.emit('prop_wr', {file:  '/pwr', message: state ? ('rfe_control ' + channelSelector + ' on | tee /usr/bin') : ('rfe_control ' + channelSelector + ' off | tee /usr/bin') });
         socket.emit('prop_wr', {file: 'gpio/hdr/' + hdr_chan + '/high_pwr_en', message: state ? 'true' : 'false' });
-        socket.emit('systctl', { message: state ? ('rfe_control ' + channelSelector + ' on | tee /usr/bin') : ('rfe_control ' + channelSelector + ' off | tee /usr/bin') });
-        //uncomment to turn on/off low power channel at the same time
-        //socket.emit('systctl', { message: state ? ('rfe_control ' + (channelSelector-4) + ' on | tee /usr/bin') : ('rfe_control ' + (channelSelector-4) + ' off | tee /usr/bin') });
-             
+        socket.emit('systctl', { message: state ? ('rfe_control ' + (channelSelector) + ' on | tee /usr/bin') : ('rfe_control ' + (channelSelector) + ' off | tee /usr/bin') });
+        
+        if (!($('#hdr_iso').bootstrapSwitch('state'))) {
+            socket.emit('prop_wr', {file: 'gpio/hdr/' + hdr_chan + '/pwr_en', message: state ? 'true' : 'false' });
+            socket.emit('systctl', { message: state ? ('rfe_control ' + (channelSelector-4) + ' on | tee /usr/bin') : ('rfe_control ' + (channelSelector-4) + ' off | tee /usr/bin') });
+        }
+    }
+    
+    else if (cur_chan == "a" || cur_chan == "c" || cur_chan == "e" || cur_chan == "g" || cur_chan == "i" || cur_chan == "k" || cur_chan == "m" || cur_chan == "o") {
+        
+        //Turns on/off the channel based on root
+        for (var i = 0; i<channels.length; i++) {
+                if (channels[i] == cur_root)
+                    channelSelector = i;
+        }
+        //DEBUG ONLY
+        //socket.emit('prop_wr', {file:  '/pwr', message: state ? ('rfe_control ' + channelSelector + ' on | tee /usr/bin') : ('rfe_control ' + channelSelector + ' off | tee /usr/bin') });
+        socket.emit('prop_wr', {file: 'gpio/hdr/' + hdr_chan + '/high_pwr_en', message: state ? 'true' : 'false' });
+        socket.emit('systctl', { message: state ? ('rfe_control ' + (channelSelector+4) + ' on | tee /usr/bin') : ('rfe_control ' + (channelSelector+4) + ' off | tee /usr/bin') });
+        
+        if (!($('#hdr_iso').bootstrapSwitch('state'))) {
+            socket.emit('prop_wr', {file: 'gpio/hdr/' + hdr_chan + '/pwr_en', message: state ? 'true' : 'false' });
+            socket.emit('systctl', { message: state ? ('rfe_control ' + channelSelector + ' on | tee /usr/bin') : ('rfe_control ' + channelSelector + ' off | tee /usr/bin') });
+        }
     }
     
     //Old code from Crimson that intiializes the tx board and activates its controls
@@ -686,7 +617,7 @@ $("#hdr_atten_range").change(function() {
     $("#hdr_atten_display").text('-' + ($(this).val()) + ' dB');
     
     //assign variable for attenuation value
-    var attenValue = $(this).val();
+    var value = $(this).val();
     
     ////////////////////////////////////////////////////////DEBUG///////////////////////////////////////////////////////////
     //The line below will output the input value for verification, chande message: to different variables for debugging   //
@@ -694,7 +625,7 @@ $("#hdr_atten_range").change(function() {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     
     //variables for determining binary value and variable for binary column holder
-    var calculatedVal;
+    var calculatedVal = 0;
     var multiplier = 64;
     
     //array with each of the 7 bits in the order of writing 
@@ -702,7 +633,6 @@ $("#hdr_atten_range").change(function() {
     
     //loop through to determine '1' or '0' for each bit (7 bits)
     for( var x = 0; x <7; x++) {
-        
         //if the entered attenuation is equal to the multiplier then the bit will be assigned 1
         if (value == multiplier) {
             
@@ -896,7 +826,7 @@ $("#sfpb_set").click( function() {
 
 //go to the load clock function
 $("#refreshClock").click( function() {
-   load_clock(true);
+    load_clock(true);
 });
 
 $("#mgmt_set").click( function() {
@@ -1198,7 +1128,31 @@ socket.on('prop_ret', function (data) {
       $('#atten_range').val(parseInt(data.message));
       $('#atten_display').text('-' + (parseInt(data.message) / 4) + ' dB');
       $("#atten_range").prop('disabled', !($('#rf_band').bootstrapSwitch('state') && $('#chan_en').bootstrapSwitch('state')));
-   } else if (data.file == '/gpio/hdr/' + hdr_chan + '/atten/val') {
+   } else if (data.file == '/gpio/hdr/' + hdr_chan + '/atten64') {
+      $('#hdr_atten_range').val(parseInt(data.message));
+      $('#hdr_atten_display').text('-' + (parseInt(data.message)) + ' dB');
+      $("#hdr_atten_range").prop('disabled', !($('#chan_en').bootstrapSwitch('state')));
+   } else if (data.file == '/gpio/hdr/' + hdr_chan + '/atten32') {
+      $('#hdr_atten_range').val(parseInt(data.message));
+      $('#hdr_atten_display').text('-' + (parseInt(data.message)) + ' dB');
+      $("#hdr_atten_range").prop('disabled', !($('#chan_en').bootstrapSwitch('state')));
+   } else if (data.file == '/gpio/hdr/' + hdr_chan + '/atten16') {
+      $('#hdr_atten_range').val(parseInt(data.message));
+      $('#hdr_atten_display').text('-' + (parseInt(data.message)) + ' dB');
+      $("#hdr_atten_range").prop('disabled', !($('#chan_en').bootstrapSwitch('state')));
+   } else if (data.file == '/gpio/hdr/' + hdr_chan + '/atten8') {
+      $('#hdr_atten_range').val(parseInt(data.message));
+      $('#hdr_atten_display').text('-' + (parseInt(data.message)) + ' dB');
+      $("#hdr_atten_range").prop('disabled', !($('#chan_en').bootstrapSwitch('state')));
+   } else if (data.file == '/gpio/hdr/' + hdr_chan + '/atten4') {
+      $('#hdr_atten_range').val(parseInt(data.message));
+      $('#hdr_atten_display').text('-' + (parseInt(data.message)) + ' dB');
+      $("#hdr_atten_range").prop('disabled', !($('#chan_en').bootstrapSwitch('state')));
+   } else if (data.file == '/gpio/hdr/' + hdr_chan + '/atten2') {
+      $('#hdr_atten_range').val(parseInt(data.message));
+      $('#hdr_atten_display').text('-' + (parseInt(data.message)) + ' dB');
+      $("#hdr_atten_range").prop('disabled', !($('#chan_en').bootstrapSwitch('state')));
+   } else if (data.file == '/gpio/hdr/' + hdr_chan + '/atten1') {
       $('#hdr_atten_range').val(parseInt(data.message));
       $('#hdr_atten_display').text('-' + (parseInt(data.message)) + ' dB');
       $("#hdr_atten_range").prop('disabled', !($('#chan_en').bootstrapSwitch('state')));
@@ -1249,101 +1203,261 @@ socket.on('prop_ret', function (data) {
       var trig_sel_sma = 1 == ( (trig_sel >> 0) & 1 );
       $('#trig_sel_sma').bootstrapSwitch('state', trig_sel_sma, true);
       
-   } else if (data.file == cur_root + '/status/lmk_lockdetect_jesd_pll1') {
-      
-       if(clock_msg.includes("PLL1 Locked")) {
-        document.getElementById("jesd_pll1_ok").style.visibility = "visible";   
-        document.getElementById("jesd_pll1_no").style.visibility = "hidden";
-        clock_msg = "";
-      }
-      else if(clock_msg.includes("PLL1 Unlocked")) {
-        document.getElementById("jesd_pll1_ok").style.visibility = "hidden";  
-        document.getElementById("jesd_pll1_no").style.visibility = "visible";
-        clock_msg = ""; 
-      }
-      
-   } else if (data.file == cur_root + '/status/lmk_lockdetect_jesd_pll2') {
-       if(debug_msg.includes("PLL2 Locked")) {
-         document.getElementById("jesd_pll2_ok").style.visibility = "visible"; 
-         document.getElementById("jesd_pll2_no").style.visibility = "hidden";
-         clock_msg = "";
-       }
-       else if(debug_msg.includes("PLL2 Unlocked")) {
-         document.getElementById("jesd_pll2_ok").style.visibility = "hidden"; 
-         document.getElementById("jesd_pll2_no").style.visibility = "visible";
-         clock_msg = "";
-       }
-       
-   } else if (data.file == cur_root + '/status/lmk_lockdetect_pll_pll1') {  
-       if(debug_msg.includes("PLL1 Locked")) {
-         document.getElementById("pll_pll1_ok").style.visibility = "visible"; 
-         document.getElementById("pll_pll1_no").style.visibility = "hidden";
-         clock_msg = "";
-       }
-       else if(debug_msg.includes("PLL1 Unlocked")) {
-         document.getElementById("pll_pll1_ok").style.visibility = "hidden"; 
-         document.getElementById("pll_pll1_no").style.visibility = "visible";
-         clock_msg = "";
-       }
-        
-   } else if (data.file == cur_root + '/status/lmk_lockdetect_pll_pll2') {
-       if(clock_msg.includes("PLL2 Locked")) {
-         document.getElementById("pll_pll2_ok").style.visibility = "visible"; 
-         document.getElementById("pll_pll2_no").style.visibility = "hidden";
-         clock_msg = "";
-       }
-       else if(clock_msg.includes("PLL2 Unlocked")) {
-         document.getElementById("pll_pll2_ok").style.visibility = "hidden";  
-         document.getElementById("pll_pll2_no").style.visibility = "visible";
-         clock_msg = ""; 
-       }
-       
-   } else if (data.file == cur_root + '/status/lmk_lossoflock_jesd_pll1') {
-       if(debug_msg.includes("PLL1 Synchronous Lock")) {
-         document.getElementById("lol_jesd_pll1_ok").style.visibility = "visible";
-         document.getElementById("lol_jesd_pll1_no").style.visibility = "hidden";
-         clock_msg = "";
-       }
-       else if(debug_msg.includes("PLL1 Interupted Lock")) {
-         document.getElementById("lol_jesd_pll1_ok").style.visibility = "hidden"; 
-         document.getElementById("lol_jesd_pll1_no").style.visibility = "visible";
-         clock_msg = "";
-       }
-       
-   } else if (data.file == cur_root + '/status/lmk_lossoflock_jesd_pll2') {  
-       if(debug_msg.includes("PLL2 Synchronous Lock")) {
-         document.getElementById("lol_jesd_pll2_ok").style.visibility = "visible";
-         document.getElementById("lol_jesd_pll2_no").style.visibility = "hidden";
-         clock_msg = "";
-       }
-       else if(debug_msg.includes("PLL2 Interupted Lock")) {
-         document.getElementById("lol_jesd_pll2_ok").style.visibility = "hidden";
-         document.getElementById("lol_jesd_pll2_no").style.visibility = "visible";
-         clock_msg = "";
-       }
-   } else if (data.file == cur_root + '/status/lmk_lossoflock_pll_pll1') {  
-       if(debug_msg.includes("PLL1 Synchronous Lock")) {
-         document.getElementById("lol_pll_pll1_ok").style.visibility = "visible";
-         document.getElementById("lol_pll_pll1_no").style.visibility = "hidden";
-         clock_msg = "";
-       }
-       else if(debug_msg.includes("PLL1 Interupted Lock")) {
-         document.getElementById("lol_pll_pll1_ok").style.visibility = "hidden";
-         document.getElementById("lol_pll_pll1_no").style.visibility = "visible";
-         clock_msg = "";
-       }
-   } else if (data.file == cur_root + '/status/lmk_lossoflock_pll_pll2') {  
-       if(debug_msg.includes("PLL2 Synchronous Lock")) {
-         document.getElementById("lol_pll_pll2_ok").style.visibility = "visible"
-         document.getElementById("lol_pll_pll2_no").style.visibility = "hidden";
-         clock_msg = "";
-       }
-       else if(debug_msg.includes("PLL2 Interupted Lock")) {
-         document.getElementById("lol_pll_pll2_ok").style.visibility = "hidden";
-         document.getElementById("lol_pll_pll2_no").style.visibility = "visible"
-         clock_msg = "";
-       }
-   } else if (data.file == '/gpio/hdr/' + hdr_chan + '/pwr_en') {
+   } 
+   
+   /***********************************LMK_LOCKDETECT*******************************************************/
+   //////////////////////////////////////////////////////////////////////////////////////////////////////////
+   //////////////////////////////////////////////////////////////////////////////////////////////////////////
+   else if (data.file == cur_root + '/status/lmk_lockdetect_jesd0_pll1') {                              
+                                                                                                        
+       if(clock_msg.includes("PLL1 Locked")) {                                                          
+        document.getElementById("jesd1_pll1_ok").style.visibility = "visible";                          
+        document.getElementById("jesd1_pll1_no").style.visibility = "hidden";                           
+        clock_msg = "";                                                                                 
+      }                                                                                                 
+      else if(clock_msg.includes("PLL1 Unlocked")) {                                                    
+        document.getElementById("jesd1_pll1_ok").style.visibility = "hidden";                           
+        document.getElementById("jesd1_pll1_no").style.visibility = "visible";                          
+        clock_msg = "";                                                                                 
+      }                                                                                                 
+                                                                                                        
+   } else if (data.file == cur_root + '/status/lmk_lockdetect_jesd0_pll2') {                            
+       if(debug_msg.includes("PLL2 Locked")) {                                                          
+         document.getElementById("jesd1_pll2_ok").style.visibility = "visible";                         
+         document.getElementById("jesd1_pll2_no").style.visibility = "hidden";                          
+         clock_msg = "";                                                                                
+       }                                                                                                
+       else if(debug_msg.includes("PLL2 Unlocked")) {                                                   
+         document.getElementById("jesd1_pll2_ok").style.visibility = "hidden";                          
+         document.getElementById("jesd1_pll2_no").style.visibility = "visible";                         
+         clock_msg = "";                                                                                
+       }                                                                                                
+                                                                                                        
+   } else if (data.file == cur_root + '/status/lmk_lockdetect_jesd1_pll1') {                            
+       if(debug_msg.includes("PLL1 Locked")) {                                                        
+         document.getElementById("jesd2_pll1_ok").style.visibility = "visible";                       
+         document.getElementById("jesd2_pll1_no").style.visibility = "hidden";                        
+         clock_msg = "";                                                                              
+       }                                                                                              
+       else if(debug_msg.includes("PLL1 Unlocked")) {                                                 
+         document.getElementById("jesd2_pll1_ok").style.visibility = "hidden";                        
+         document.getElementById("jesd2_pll1_no").style.visibility = "visible";                       
+         clock_msg = "";                                                                              
+       }                                                                                              
+                                                                                                      
+   } else if (data.file == cur_root + '/status/lmk_lockdetect_jesd1_pll2') {                          
+       if(clock_msg.includes("PLL2 Locked")) {                                                        
+         document.getElementById("jesd2_pll2_ok").style.visibility = "visible";                       
+         document.getElementById("jesd2_pll2_no").style.visibility = "hidden";                        
+         clock_msg = "";                                                                              
+       }                                                                                              
+       else if(clock_msg.includes("PLL2 Unlocked")) {                                                 
+         document.getElementById("jesd2_pll2_ok").style.visibility = "hidden";            
+         document.getElementById("jesd2_pll2_no").style.visibility = "visible";           
+         clock_msg = "";                                                                  
+       }                                                                                  
+                                                                                          
+   } else if (data.file == cur_root + '/status/lmk_lockdetect_jesd2_pll1') {              
+       if(debug_msg.includes("PLL1 Locked")) {                                            
+         document.getElementById("jesd3_pll1_ok").style.visibility = "visible";        
+         document.getElementById("jesd3_pll1_no").style.visibility = "hidden";         
+         clock_msg = "";                                                                  
+       }                                                                                  
+       else if(debug_msg.includes("PLL1 Unlocked")) {                                     
+         document.getElementById("jesd3_pll1_ok").style.visibility = "hidden";         
+         document.getElementById("jesd3_pll1_no").style.visibility = "visible";                      
+         clock_msg = "";                                                                                
+       }                                                                                                
+                                                                                                        
+   } else if (data.file == cur_root + '/status/lmk_lockdetect_jesd2_pll2') {                            
+       if(debug_msg.includes("PLL2 Locked")) {                                                
+         document.getElementById("jesd3_pll2_ok").style.visibility = "visible";                      
+         document.getElementById("jesd3_pll2_no").style.visibility = "hidden";                       
+         clock_msg = "";                                                                                
+       }                                                                                                
+       else if(debug_msg.includes("PLL2 Unlocked")) {                                            
+         document.getElementById("jesd3_pll2_ok").style.visibility = "hidden";                       
+         document.getElementById("jesd3_pll2_no").style.visibility = "visible";                      
+         clock_msg = "";                                                                                
+       }                                                                                                
+   } else if (data.file == cur_root + '/status/lmk_lockdetect_pll0_pll1') {                             
+       if(debug_msg.includes("PLL1 Locked")) {                                                
+         document.getElementById("pll1_pll1_ok").style.visibility = "visible";                       
+         document.getElementById("pll1_pll1_no").style.visibility = "hidden";                        
+         clock_msg = "";                                                                                
+       }                                                                                                
+       else if(debug_msg.includes("PLL1 Unlocked")) {                                            
+         document.getElementById("pll1_pll1_ok").style.visibility = "hidden";                        
+         document.getElementById("pll1_pll1_no").style.visibility = "visible";                       
+         clock_msg = "";                                                                                
+       }                                                                                                
+   } else if (data.file == cur_root + '/status/lmk_lockdetect_pll0_pll2') {                             
+       if(debug_msg.includes("PLL2 Locked")) {                                                
+         document.getElementById("pll1_pll2_ok").style.visibility = "visible"                        
+         document.getElementById("pll1_pll2_no").style.visibility = "hidden";                        
+         clock_msg = "";                                                                                
+       }                                                                                                
+       else if(debug_msg.includes("PLL2 Unlocked")) {                                            
+         document.getElementById("pll1_pll2_ok").style.visibility = "hidden";                        
+         document.getElementById("pll1_pll2_no").style.visibility = "visible"                        
+         clock_msg = "";                                                                                
+       }                                                                                                
+   } else if (data.file == cur_root + '/status/lmk_lockdetect_pll1_pll1') {                             
+       if(debug_msg.includes("PLL1 Locked")) {                                                
+         document.getElementById("pll2_pll1_ok").style.visibility = "visible";                       
+         document.getElementById("pll2_pll1_no").style.visibility = "hidden";                        
+         clock_msg = "";                                                                                
+       }                                                                                                
+       else if(debug_msg.includes("PLL1 Unlocked")) {                                            
+         document.getElementById("pll2_pll1_ok").style.visibility = "hidden";                        
+         document.getElementById("pll2_pll1_no").style.visibility = "visible";                       
+         clock_msg = "";                                                                                
+       }                                                                                                
+   } else if (data.file == cur_root + '/status/lmk_lockdetect_pll1_pll2') {                             
+       if(debug_msg.includes("PLL2 Locked")) {                                                
+         document.getElementById("pll2_pll2_ok").style.visibility = "visible"                        
+         document.getElementById("pll2_pll2_no").style.visibility = "hidden";                        
+         clock_msg = "";                                                                                
+       }                                                                                                
+       else if(debug_msg.includes("PLL2 Unlocked")) {                                            
+         document.getElementById("pll2_pll2_ok").style.visibility = "hidden";                        
+         document.getElementById("pll2_pll2_no").style.visibility = "visible"                        
+         clock_msg = "";                                                                                
+       }                                                                                                
+   }                                                                                                    
+   /////////////////////////////////////////////////////////////////////////////////////////////////////
+   /////////////////////////////////////////////////////////////////////////////////////////////////////
+   
+   
+   /***********************************LMK_LOSS OF LOCK************************************************/
+   /////////////////////////////////////////////////////////////////////////////////////////////////////
+   /////////////////////////////////////////////////////////////////////////////////////////////////////
+   
+   else if (data.file == cur_root + '/status/lmk_lossoflock_jesd0_pll1') {                              
+                                                                                                        
+       if(clock_msg.includes("PLL1 Synchronous Lock")) {   
+           
+        document.getElementById("lol_jesd1_pll1_ok").style.visibility = "visible";                          
+        document.getElementById("lol_jesd1_pll1_no").style.visibility = "hidden";                           
+        clock_msg = "";                                                                                 
+      }                                                                                                 
+      else if(clock_msg.includes("PLL1 Interupted Lock")) {                                                    
+        document.getElementById("lol_jesd1_pll1_ok").style.visibility = "hidden";                           
+        document.getElementById("lol_jesd1_pll1_no").style.visibility = "visible";                          
+        clock_msg = "";                                                                                 
+      }                                                                                                 
+                                                                                                        
+   } else if (data.file == cur_root + '/status/lmk_lossoflock_jesd0_pll2') {                            
+       if(debug_msg.includes("PLL2 Synchronous Lock")) {                                                          
+         document.getElementById("lol_jesd1_pll2_ok").style.visibility = "visible";                         
+         document.getElementById("lol_jesd1_pll2_no").style.visibility = "hidden";                          
+         clock_msg = "";                                                                                
+       }                                                                                                
+       else if(debug_msg.includes("PLL2 Interupted Lock")) {                                                   
+         document.getElementById("lol_jesd1_pll2_ok").style.visibility = "hidden";                          
+         document.getElementById("lol_jesd1_pll2_no").style.visibility = "visible";                         
+         clock_msg = "";                                                                                
+       }                                                                                                
+                                                                                                        
+   } else if (data.file == cur_root + '/status/lmk_lossoflock_jesd1_pll1') {                            
+       if(debug_msg.includes("PLL1 Synchronous Lock")) {                                                        
+         document.getElementById("lol_jesd2_pll1_ok").style.visibility = "visible";                       
+         document.getElementById("lol_jesd2_pll1_no").style.visibility = "hidden";                        
+         clock_msg = "";                                                                              
+       }                                                                                              
+       else if(debug_msg.includes("PLL1 Interupted Lock")) {                                                 
+         document.getElementById("lol_jesd2_pll1_ok").style.visibility = "hidden";                        
+         document.getElementById("lol_jesd2_pll1_no").style.visibility = "visible";                       
+         clock_msg = "";                                                                              
+       }                                                                                              
+                                                                                                      
+   } else if (data.file == cur_root + '/status/lmk_lossoflock_jesd1_pll2') {                          
+       if(clock_msg.includes("PLL2 Synchronous Lock")) {                                                        
+         document.getElementById("lol_jesd2_pll2_ok").style.visibility = "visible";                       
+         document.getElementById("lol_jesd2_pll2_no").style.visibility = "hidden";                        
+         clock_msg = "";                                                                              
+       }                                                                                              
+       else if(clock_msg.includes("PLL2 Interupted Lock")) {                                                 
+         document.getElementById("lol_jesd2_pll2_ok").style.visibility = "hidden";            
+         document.getElementById("lol_jesd2_pll2_no").style.visibility = "visible";           
+         clock_msg = "";                                                                  
+       }                                                                                  
+                                                                                          
+   } else if (data.file == cur_root + '/status/lmk_lossoflock_jesd2_pll1') {              
+       if(debug_msg.includes("PLL1 Synchronous Lock")) {                                            
+         document.getElementById("lol_jesd3_pll1_ok").style.visibility = "visible";        
+         document.getElementById("lol_jesd3_pll1_no").style.visibility = "hidden";         
+         clock_msg = "";                                                                  
+       }                                                                                  
+       else if(debug_msg.includes("PLL1 Interupted Lock")) {                                     
+         document.getElementById("lol_jesd3_pll1_ok").style.visibility = "hidden";         
+         document.getElementById("lol_jesd3_pll1_no").style.visibility = "visible";                      
+         clock_msg = "";                                                                                
+       }                                                                                                
+                                                                                                        
+   } else if (data.file == cur_root + '/status/lmk_lossoflock_jesd2_pll2') {                            
+       if(debug_msg.includes("PLL2 Synchronous Lock")) {                                                
+         document.getElementById("lol_jesd3_pll2_ok").style.visibility = "visible";                      
+         document.getElementById("lol_jesd3_pll2_no").style.visibility = "hidden";                       
+         clock_msg = "";                                                                                
+       }                                                                                                
+       else if(debug_msg.includes("PLL2 Interupted Lock")) {                                            
+         document.getElementById("lol_jesd3_pll2_ok").style.visibility = "hidden";                       
+         document.getElementById("lol_jesd3_pll2_no").style.visibility = "visible";                      
+         clock_msg = "";                                                                                
+       }                                                                                                
+   } else if (data.file == cur_root + '/status/lmk_lossoflock_pll0_pll1') {                             
+       if(debug_msg.includes("PLL1 Synchronous Lock")) {                                                
+         document.getElementById("lol_pll1_pll1_ok").style.visibility = "visible";                       
+         document.getElementById("lol_pll1_pll1_no").style.visibility = "hidden";                        
+         clock_msg = "";                                                                                
+       }                                                                                                
+       else if(debug_msg.includes("PLL1 Interupted Lock")) {                                            
+         document.getElementById("lol_pll1_pll1_ok").style.visibility = "hidden";                        
+         document.getElementById("lol_pll1_pll1_no").style.visibility = "visible";                       
+         clock_msg = "";                                                                                
+       }                                                                                                
+   } else if (data.file == cur_root + '/status/lmk_lossoflock_pll0_pll2') {                             
+       if(debug_msg.includes("PLL2 Synchronous Lock")) {                                                
+         document.getElementById("lol_pll1_pll2_ok").style.visibility = "visible"                        
+         document.getElementById("lol_pll1_pll2_no").style.visibility = "hidden";                        
+         clock_msg = "";                                                                                
+       }                                                                                                
+       else if(debug_msg.includes("PLL2 Interupted Lock")) {                                            
+         document.getElementById("lol_pll1_pll2_ok").style.visibility = "hidden";                        
+         document.getElementById("lol_pll1_pll2_no").style.visibility = "visible"                        
+         clock_msg = "";                                                                                
+       }                                                                                                
+   } else if (data.file == cur_root + '/status/lmk_lossoflock_pll1_pll1') {                             
+       if(debug_msg.includes("PLL1 Synchronous Lock")) {                                                
+         document.getElementById("lol_pll2_pll1_ok").style.visibility = "visible";                       
+         document.getElementById("lol_pll2_pll1_no").style.visibility = "hidden";                        
+         clock_msg = "";                                                                                
+       }                                                                                                
+       else if(debug_msg.includes("PLL1 Interupted Lock")) {                                            
+         document.getElementById("lol_pll2_pll1_ok").style.visibility = "hidden";                        
+         document.getElementById("lol_pll2_pll1_no").style.visibility = "visible";                       
+         clock_msg = "";                                                                                
+       }                                                                                                
+   } else if (data.file == cur_root + '/status/lmk_lossoflock_pll1_pll2') {                             
+       if(debug_msg.includes("PLL2 Synchronous Lock")) {                                                
+         document.getElementById("lol_pll2_pll2_ok").style.visibility = "visible"                        
+         document.getElementById("lol_pll2_pll2_no").style.visibility = "hidden";                        
+         clock_msg = "";                                                                                
+       }                                                                                                
+       else if(debug_msg.includes("PLL2 Interupted Lock")) {                                            
+         document.getElementById("lol_pll2_pll2_ok").style.visibility = "hidden";                        
+         document.getElementById("lol_pll2_pll2_no").style.visibility = "visible"                        
+         clock_msg = "";                                                                                
+       }                                                                                                
+   }                                                                                                    
+   /////////////////////////////////////////////////////////////////////////////////////////////////////
+   /////////////////////////////////////////////////////////////////////////////////////////////////////
+   
+   
+   
+   
+   else if (data.file == '/gpio/hdr/' + hdr_chan + '/pwr_en') {
       $('#hdr_pwr').bootstrapSwitch('state', parseInt(data.message) != 0, true);
    } else if (data.file == '/gpio/override_en') {
       $('#sw_ovr').bootstrapSwitch('state', parseInt(data.message) != 0, true);
@@ -1538,16 +1652,30 @@ function load_clock (isLoad) {
    //write to the lockdetect/lossoflock to update the directories 
    socket.emit('prop_wr', { file: cur_root + '/status/lmk_lockdetect' ,message: '0'});
    socket.emit('prop_wr', { file: cur_root + '/status/lmk_lossoflock' ,message: '0'});
-
-   //read from all of the directories
-   socket.emit('prop_rd', { file: cur_root + '/status/lmk_lockdetect_jesd_pll1' ,debug: isLoad});
-   socket.emit('prop_rd', { file: cur_root + '/status/lmk_lockdetect_jesd_pll2'  ,debug: isLoad});
-   socket.emit('prop_rd', { file: cur_root + '/status/lmk_lockdetect_pll_pll1' ,debug: isLoad});
-   socket.emit('prop_rd', { file: cur_root + '/status/lmk_lockdetect_pll_pll2'  ,debug: isLoad});
-   socket.emit('prop_rd', { file: cur_root + '/status/lmk_lossoflock_jesd_pll1' ,debug: isLoad});
-   socket.emit('prop_rd', { file: cur_root + '/status/lmk_lossoflock_jesd_pll2' ,debug: isLoad});
-   socket.emit('prop_rd', { file: cur_root + '/status/lmk_lossoflock_pll_pll1'  ,debug: isLoad});
-   socket.emit('prop_rd', { file: cur_root + '/status/lmk_lossoflock_pll_pll2'  ,debug: isLoad});
+   
+   //read from lmk_lockdetect
+   socket.emit('prop_rd', { file: cur_root + '/status/lmk_lockdetect_jesd0_pll1'  ,debug: isLoad});
+   socket.emit('prop_rd', { file: cur_root + '/status/lmk_lockdetect_jesd0_pll2'  ,debug: isLoad});
+   socket.emit('prop_rd', { file: cur_root + '/status/lmk_lockdetect_jesd1_pll1'  ,debug: isLoad});
+   socket.emit('prop_rd', { file: cur_root + '/status/lmk_lockdetect_jesd1_pll2'  ,debug: isLoad});
+   socket.emit('prop_rd', { file: cur_root + '/status/lmk_lockdetect_jesd2_pll1'  ,debug: isLoad});
+   socket.emit('prop_rd', { file: cur_root + '/status/lmk_lockdetect_jesd2_pll2'  ,debug: isLoad});
+   socket.emit('prop_rd', { file: cur_root + '/status/lmk_lockdetect_pll0_pll1'   ,debug: isLoad});
+   socket.emit('prop_rd', { file: cur_root + '/status/lmk_lockdetect_pll0_pll2'   ,debug: isLoad});
+   socket.emit('prop_rd', { file: cur_root + '/status/lmk_lockdetect_pll1_pll1'   ,debug: isLoad});
+   socket.emit('prop_rd', { file: cur_root + '/status/lmk_lockdetect_pll1_pll2'   ,debug: isLoad});
+   
+   //read from lmk_lossoflock
+   socket.emit('prop_rd', { file: cur_root + '/status/lmk_lossoflock_jesd0_pll1'  ,debug: isLoad});
+   socket.emit('prop_rd', { file: cur_root + '/status/lmk_lossoflock_jesd0_pll2'  ,debug: isLoad});
+   socket.emit('prop_rd', { file: cur_root + '/status/lmk_lossoflock_jesd1_pll1'  ,debug: isLoad});
+   socket.emit('prop_rd', { file: cur_root + '/status/lmk_lossoflock_jesd1_pll2'  ,debug: isLoad});
+   socket.emit('prop_rd', { file: cur_root + '/status/lmk_lossoflock_jesd2_pll1'  ,debug: isLoad});
+   socket.emit('prop_rd', { file: cur_root + '/status/lmk_lossoflock_jesd2_pll2'  ,debug: isLoad});
+   socket.emit('prop_rd', { file: cur_root + '/status/lmk_lossoflock_pll0_pll1'   ,debug: isLoad});
+   socket.emit('prop_rd', { file: cur_root + '/status/lmk_lossoflock_pll0_pll2'   ,debug: isLoad});
+   socket.emit('prop_rd', { file: cur_root + '/status/lmk_lossoflock_pll1_pll1'   ,debug: isLoad});
+   socket.emit('prop_rd', { file: cur_root + '/status/lmk_lossoflock_pll1_pll2'   ,debug: isLoad}); 
 }
 
 //hides/shows webpage elements based on 'state' boolean parameter
@@ -1607,8 +1735,7 @@ function disableBoardTriggElements (state) {
 
 // determine which page is currently loaded
 window.onload = function() {
-    
-   $("#chan_en").bootstrapSwitch('readonly', true); 
+     
    var pathname = window.location.pathname; 
 
    var loadFunc;
@@ -1633,6 +1760,7 @@ window.onload = function() {
       
    } else if (pathname.indexOf('tx') > -1) {
    
+      $("#chan_en").bootstrapSwitch('readonly', true);
       //alert the user to select either hdr,low power or high power to operate on
       document.getElementById("chan_alert").style.visibility = "visible";
       document.getElementById("chan_alert2").style.visibility = "visible";
