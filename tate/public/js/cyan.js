@@ -829,102 +829,259 @@ socket.on('prop_ret', function (data) {
       var trig_sel = parseInt(data.message);
       var trig_sel_sma = 1 == ( (trig_sel >> 0) & 1 );
       $('#trig_sel_sma').bootstrapSwitch('state', trig_sel_sma, true);
-      
-   } else if (data.file == cur_root + '/status/lmk_lockdetect_jesd_pll1') {
-      
-       if(clock_msg.includes("PLL1 Locked")) {
-        document.getElementById("jesd_pll1_ok").style.visibility = "visible";   
-        document.getElementById("jesd_pll1_no").style.visibility = "hidden";
-        clock_msg = "";
-      }
-      else if(clock_msg.includes("PLL1 Unlocked")) {
-        document.getElementById("jesd_pll1_ok").style.visibility = "hidden";  
-        document.getElementById("jesd_pll1_no").style.visibility = "visible";
-        clock_msg = ""; 
-      }
-      
-   } else if (data.file == cur_root + '/status/lmk_lockdetect_jesd_pll2') {
-       if(debug_msg.includes("PLL2 Locked")) {
-         document.getElementById("jesd_pll2_ok").style.visibility = "visible"; 
-         document.getElementById("jesd_pll2_no").style.visibility = "hidden";
-         clock_msg = "";
-       }
-       else if(debug_msg.includes("PLL2 Unlocked")) {
-         document.getElementById("jesd_pll2_ok").style.visibility = "hidden"; 
-         document.getElementById("jesd_pll2_no").style.visibility = "visible";
-         clock_msg = "";
-       }
-       
-   } else if (data.file == cur_root + '/status/lmk_lockdetect_pll_pll1') {  
-       if(debug_msg.includes("PLL1 Locked")) {
-         document.getElementById("pll_pll1_ok").style.visibility = "visible"; 
-         document.getElementById("pll_pll1_no").style.visibility = "hidden";
-         clock_msg = "";
-       }
-       else if(debug_msg.includes("PLL1 Unlocked")) {
-         document.getElementById("pll_pll1_ok").style.visibility = "hidden"; 
-         document.getElementById("pll_pll1_no").style.visibility = "visible";
-         clock_msg = "";
-       }
-        
-   } else if (data.file == cur_root + '/status/lmk_lockdetect_pll_pll2') {
-       if(clock_msg.includes("PLL2 Locked")) {
-         document.getElementById("pll_pll2_ok").style.visibility = "visible"; 
-         document.getElementById("pll_pll2_no").style.visibility = "hidden";
-         clock_msg = "";
-       }
-       else if(clock_msg.includes("PLL2 Unlocked")) {
-         document.getElementById("pll_pll2_ok").style.visibility = "hidden";  
-         document.getElementById("pll_pll2_no").style.visibility = "visible";
-         clock_msg = ""; 
-       }
-       
-   } else if (data.file == cur_root + '/status/lmk_lossoflock_jesd_pll1') {
-       if(debug_msg.includes("PLL1 Synchronous Lock")) {
-         document.getElementById("lol_jesd_pll1_ok").style.visibility = "visible";
-         document.getElementById("lol_jesd_pll1_no").style.visibility = "hidden";
-         clock_msg = "";
-       }
-       else if(debug_msg.includes("PLL1 Interupted Lock")) {
-         document.getElementById("lol_jesd_pll1_ok").style.visibility = "hidden"; 
-         document.getElementById("lol_jesd_pll1_no").style.visibility = "visible";
-         clock_msg = "";
-       }
-       
-   } else if (data.file == cur_root + '/status/lmk_lossoflock_jesd_pll2') {  
-       if(debug_msg.includes("PLL2 Synchronous Lock")) {
-         document.getElementById("lol_jesd_pll2_ok").style.visibility = "visible";
-         document.getElementById("lol_jesd_pll2_no").style.visibility = "hidden";
-         clock_msg = "";
-       }
-       else if(debug_msg.includes("PLL2 Interupted Lock")) {
-         document.getElementById("lol_jesd_pll2_ok").style.visibility = "hidden";
-         document.getElementById("lol_jesd_pll2_no").style.visibility = "visible";
-         clock_msg = "";
-       }
-   } else if (data.file == cur_root + '/status/lmk_lossoflock_pll_pll1') {  
-       if(debug_msg.includes("PLL1 Synchronous Lock")) {
-         document.getElementById("lol_pll_pll1_ok").style.visibility = "visible";
-         document.getElementById("lol_pll_pll1_no").style.visibility = "hidden";
-         clock_msg = "";
-       }
-       else if(debug_msg.includes("PLL1 Interupted Lock")) {
-         document.getElementById("lol_pll_pll1_ok").style.visibility = "hidden";
-         document.getElementById("lol_pll_pll1_no").style.visibility = "visible";
-         clock_msg = "";
-       }
-   } else if (data.file == cur_root + '/status/lmk_lossoflock_pll_pll2') {  
-       if(debug_msg.includes("PLL2 Synchronous Lock")) {
-         document.getElementById("lol_pll_pll2_ok").style.visibility = "visible"
-         document.getElementById("lol_pll_pll2_no").style.visibility = "hidden";
-         clock_msg = "";
-       }
-       else if(debug_msg.includes("PLL2 Interupted Lock")) {
-         document.getElementById("lol_pll_pll2_ok").style.visibility = "hidden";
-         document.getElementById("lol_pll_pll2_no").style.visibility = "visible"
-         clock_msg = "";
-       }
    } 
+   
+   /***********************************LMK_LOCKDETECT***************************************************/
+   //////////////////////////////////////////////////////////////////////////////////////////////////////
+   //////////////////////////////////////////////////////////////////////////////////////////////////////
+   else if (data.file == cur_root + '/status/lmk_lockdetect_jesd0_pll1') {                            //  
+                                                                                                      //  
+       if(clock_msg.includes("PLL1 Locked")) {                                                        //  
+        document.getElementById("jesd1_pll1_ok").style.visibility = "visible";                        //  
+        document.getElementById("jesd1_pll1_no").style.visibility = "hidden";                         //  
+        clock_msg = "";                                                                               //  
+      }                                                                                               //  
+      else if(clock_msg.includes("PLL1 Unlocked")) {                                                  //  
+        document.getElementById("jesd1_pll1_ok").style.visibility = "hidden";                         //  
+        document.getElementById("jesd1_pll1_no").style.visibility = "visible";                        //  
+        clock_msg = "";                                                                               //  
+      }                                                                                               //  
+                                                                                                      //  
+   } else if (data.file == cur_root + '/status/lmk_lockdetect_jesd0_pll2') {                          //  
+       if(debug_msg.includes("PLL2 Locked")) {                                                        //  
+         document.getElementById("jesd1_pll2_ok").style.visibility = "visible";                       //  
+         document.getElementById("jesd1_pll2_no").style.visibility = "hidden";                        //  
+         clock_msg = "";                                                                              //  
+       }                                                                                              //  
+       else if(debug_msg.includes("PLL2 Unlocked")) {                                                 //  
+         document.getElementById("jesd1_pll2_ok").style.visibility = "hidden";                        //  
+         document.getElementById("jesd1_pll2_no").style.visibility = "visible";                       //  
+         clock_msg = "";                                                                              //  
+       }                                                                                              //  
+                                                                                                      //  
+   } else if (data.file == cur_root + '/status/lmk_lockdetect_jesd1_pll1') {                          //  
+       if(debug_msg.includes("PLL1 Locked")) {                                                        //
+         document.getElementById("jesd2_pll1_ok").style.visibility = "visible";                       //
+         document.getElementById("jesd2_pll1_no").style.visibility = "hidden";                        //
+         clock_msg = "";                                                                              //
+       }                                                                                              //
+       else if(debug_msg.includes("PLL1 Unlocked")) {                                                 //
+         document.getElementById("jesd2_pll1_ok").style.visibility = "hidden";                        //
+         document.getElementById("jesd2_pll1_no").style.visibility = "visible";                       //
+         clock_msg = "";                                                                              //
+       }                                                                                              //
+                                                                                                      //
+   } else if (data.file == cur_root + '/status/lmk_lockdetect_jesd1_pll2') {                          //
+       if(clock_msg.includes("PLL2 Locked")) {                                                        //
+         document.getElementById("jesd2_pll2_ok").style.visibility = "visible";                       //
+         document.getElementById("jesd2_pll2_no").style.visibility = "hidden";                        //
+         clock_msg = "";                                                                              //
+       }                                                                                              //
+       else if(clock_msg.includes("PLL2 Unlocked")) {                                                 //
+         document.getElementById("jesd2_pll2_ok").style.visibility = "hidden";                        //
+         document.getElementById("jesd2_pll2_no").style.visibility = "visible";                       //
+         clock_msg = "";                                                                              //
+       }                                                                                              //
+                                                                                                      //
+   } else if (data.file == cur_root + '/status/lmk_lockdetect_jesd2_pll1') {                          //
+       if(debug_msg.includes("PLL1 Locked")) {                                                        //
+         document.getElementById("jesd3_pll1_ok").style.visibility = "visible";                       //
+         document.getElementById("jesd3_pll1_no").style.visibility = "hidden";                        //
+         clock_msg = "";                                                                              //
+       }                                                                                              //
+       else if(debug_msg.includes("PLL1 Unlocked")) {                                                 //
+         document.getElementById("jesd3_pll1_ok").style.visibility = "hidden";                        //
+         document.getElementById("jesd3_pll1_no").style.visibility = "visible";                       //
+         clock_msg = "";                                                                              //  
+       }                                                                                              //  
+                                                                                                      //  
+   } else if (data.file == cur_root + '/status/lmk_lockdetect_jesd2_pll2') {                          //  
+       if(debug_msg.includes("PLL2 Locked")) {                                                        //
+         document.getElementById("jesd3_pll2_ok").style.visibility = "visible";                       //
+         document.getElementById("jesd3_pll2_no").style.visibility = "hidden";                        //
+         clock_msg = "";                                                                              //  
+       }                                                                                              //  
+       else if(debug_msg.includes("PLL2 Unlocked")) {                                                 //
+         document.getElementById("jesd3_pll2_ok").style.visibility = "hidden";                        //
+         document.getElementById("jesd3_pll2_no").style.visibility = "visible";                       //
+         clock_msg = "";                                                                              //  
+       }                                                                                              //  
+   } else if (data.file == cur_root + '/status/lmk_lockdetect_pll0_pll1') {                           //  
+       if(debug_msg.includes("PLL1 Locked")) {                                                        //
+         document.getElementById("pll1_pll1_ok").style.visibility = "visible";                        //
+         document.getElementById("pll1_pll1_no").style.visibility = "hidden";                         //
+         clock_msg = "";                                                                              //  
+       }                                                                                              //  
+       else if(debug_msg.includes("PLL1 Unlocked")) {                                                 //
+         document.getElementById("pll1_pll1_ok").style.visibility = "hidden";                         //
+         document.getElementById("pll1_pll1_no").style.visibility = "visible";                        //
+         clock_msg = "";                                                                              //  
+       }                                                                                              //  
+   } else if (data.file == cur_root + '/status/lmk_lockdetect_pll0_pll2') {                           //  
+       if(debug_msg.includes("PLL2 Locked")) {                                                        //
+         document.getElementById("pll1_pll2_ok").style.visibility = "visible"                         //
+         document.getElementById("pll1_pll2_no").style.visibility = "hidden";                         //
+         clock_msg = "";                                                                              //  
+       }                                                                                              //  
+       else if(debug_msg.includes("PLL2 Unlocked")) {                                                 //
+         document.getElementById("pll1_pll2_ok").style.visibility = "hidden";                         //
+         document.getElementById("pll1_pll2_no").style.visibility = "visible"                         //
+         clock_msg = "";                                                                              //  
+       }                                                                                              //  
+   } else if (data.file == cur_root + '/status/lmk_lockdetect_pll1_pll1') {                           //  
+       if(debug_msg.includes("PLL1 Locked")) {                                                        //
+         document.getElementById("pll2_pll1_ok").style.visibility = "visible";                        //
+         document.getElementById("pll2_pll1_no").style.visibility = "hidden";                         //
+         clock_msg = "";                                                                              //  
+       }                                                                                              //  
+       else if(debug_msg.includes("PLL1 Unlocked")) {                                                 //
+         document.getElementById("pll2_pll1_ok").style.visibility = "hidden";                         //
+         document.getElementById("pll2_pll1_no").style.visibility = "visible";                        //
+         clock_msg = "";                                                                              //  
+       }                                                                                              //  
+   } else if (data.file == cur_root + '/status/lmk_lockdetect_pll1_pll2') {                           //  
+       if(debug_msg.includes("PLL2 Locked")) {                                                        //
+         document.getElementById("pll2_pll2_ok").style.visibility = "visible"                         //
+         document.getElementById("pll2_pll2_no").style.visibility = "hidden";                         //
+         clock_msg = "";                                                                              //  
+       }                                                                                              //  
+       else if(debug_msg.includes("PLL2 Unlocked")) {                                                 //
+         document.getElementById("pll2_pll2_ok").style.visibility = "hidden";                         //
+         document.getElementById("pll2_pll2_no").style.visibility = "visible"                         //
+         clock_msg = "";                                                                              //  
+       }                                                                                              //  
+   }                                                                                                  //  
+   /////////////////////////////////////////////////////////////////////////////////////////////////////
+   /////////////////////////////////////////////////////////////////////////////////////////////////////
+   
+   
+   /***********************************LMK_LOSS OF LOCK************************************************/
+   /////////////////////////////////////////////////////////////////////////////////////////////////////
+   /////////////////////////////////////////////////////////////////////////////////////////////////////
+                                                                                                      //
+   else if (data.file == cur_root + '/status/lmk_lossoflock_jesd0_pll1') {                            //  
+                                                                                                      //  
+       if(clock_msg.includes("PLL1 Synchronous Lock")) {                                              //
+                                                                                                      //
+        document.getElementById("lol_jesd1_pll1_ok").style.visibility = "visible";                    //      
+        document.getElementById("lol_jesd1_pll1_no").style.visibility = "hidden";                     //      
+        clock_msg = "";                                                                               //  
+      }                                                                                               //  
+      else if(clock_msg.includes("PLL1 Interupted Lock")) {                                           //         
+        document.getElementById("lol_jesd1_pll1_ok").style.visibility = "hidden";                     //      
+        document.getElementById("lol_jesd1_pll1_no").style.visibility = "visible";                    //      
+        clock_msg = "";                                                                               //  
+      }                                                                                               //  
+                                                                                                      //  
+   } else if (data.file == cur_root + '/status/lmk_lossoflock_jesd0_pll2') {                          //  
+       if(debug_msg.includes("PLL2 Synchronous Lock")) {                                              //            
+         document.getElementById("lol_jesd1_pll2_ok").style.visibility = "visible";                   //      
+         document.getElementById("lol_jesd1_pll2_no").style.visibility = "hidden";                    //      
+         clock_msg = "";                                                                              //  
+       }                                                                                              //  
+       else if(debug_msg.includes("PLL2 Interupted Lock")) {                                          //         
+         document.getElementById("lol_jesd1_pll2_ok").style.visibility = "hidden";                    //      
+         document.getElementById("lol_jesd1_pll2_no").style.visibility = "visible";                   //      
+         clock_msg = "";                                                                              //  
+       }                                                                                              //  
+                                                                                                      //  
+   } else if (data.file == cur_root + '/status/lmk_lossoflock_jesd1_pll1') {                          //  
+       if(debug_msg.includes("PLL1 Synchronous Lock")) {                                              //          
+         document.getElementById("lol_jesd2_pll1_ok").style.visibility = "visible";                   //    
+         document.getElementById("lol_jesd2_pll1_no").style.visibility = "hidden";                    //    
+         clock_msg = "";                                                                              //
+       }                                                                                              //
+       else if(debug_msg.includes("PLL1 Interupted Lock")) {                                          //       
+         document.getElementById("lol_jesd2_pll1_ok").style.visibility = "hidden";                    //    
+         document.getElementById("lol_jesd2_pll1_no").style.visibility = "visible";                   //    
+         clock_msg = "";                                                                              //
+       }                                                                                              //
+                                                                                                      //
+   } else if (data.file == cur_root + '/status/lmk_lossoflock_jesd1_pll2') {                          //
+       if(clock_msg.includes("PLL2 Synchronous Lock")) {                                              //          
+         document.getElementById("lol_jesd2_pll2_ok").style.visibility = "visible";                   //    
+         document.getElementById("lol_jesd2_pll2_no").style.visibility = "hidden";                    //    
+         clock_msg = "";                                                                              //
+       }                                                                                              //
+       else if(clock_msg.includes("PLL2 Interupted Lock")) {                                          //       
+         document.getElementById("lol_jesd2_pll2_ok").style.visibility = "hidden";                    //
+         document.getElementById("lol_jesd2_pll2_no").style.visibility = "visible";                   //
+         clock_msg = "";                                                                              //
+       }                                                                                              //
+                                                                                                      //
+   } else if (data.file == cur_root + '/status/lmk_lossoflock_jesd2_pll1') {                          //
+       if(debug_msg.includes("PLL1 Synchronous Lock")) {                                              //
+         document.getElementById("lol_jesd3_pll1_ok").style.visibility = "visible";                   //
+         document.getElementById("lol_jesd3_pll1_no").style.visibility = "hidden";                    //
+         clock_msg = "";                                                                              //
+       }                                                                                              //
+       else if(debug_msg.includes("PLL1 Interupted Lock")) {                                          //
+         document.getElementById("lol_jesd3_pll1_ok").style.visibility = "hidden";                    //
+         document.getElementById("lol_jesd3_pll1_no").style.visibility = "visible";                   //   
+         clock_msg = "";                                                                              //  
+       }                                                                                              //  
+                                                                                                      //  
+   } else if (data.file == cur_root + '/status/lmk_lossoflock_jesd2_pll2') {                          //  
+       if(debug_msg.includes("PLL2 Synchronous Lock")) {                                              //  
+         document.getElementById("lol_jesd3_pll2_ok").style.visibility = "visible";                   //   
+         document.getElementById("lol_jesd3_pll2_no").style.visibility = "hidden";                    //   
+         clock_msg = "";                                                                              //  
+       }                                                                                              //  
+       else if(debug_msg.includes("PLL2 Interupted Lock")) {                                          //  
+         document.getElementById("lol_jesd3_pll2_ok").style.visibility = "hidden";                    //   
+         document.getElementById("lol_jesd3_pll2_no").style.visibility = "visible";                   //   
+         clock_msg = "";                                                                              //  
+       }                                                                                              //  
+   } else if (data.file == cur_root + '/status/lmk_lossoflock_pll0_pll1') {                           //  
+       if(debug_msg.includes("PLL1 Synchronous Lock")) {                                              //  
+         document.getElementById("lol_pll1_pll1_ok").style.visibility = "visible";                    //   
+         document.getElementById("lol_pll1_pll1_no").style.visibility = "hidden";                     //   
+         clock_msg = "";                                                                              //  
+       }                                                                                              //  
+       else if(debug_msg.includes("PLL1 Interupted Lock")) {                                          //  
+         document.getElementById("lol_pll1_pll1_ok").style.visibility = "hidden";                     //   
+         document.getElementById("lol_pll1_pll1_no").style.visibility = "visible";                    //   
+         clock_msg = "";                                                                              //  
+       }                                                                                              //  
+   } else if (data.file == cur_root + '/status/lmk_lossoflock_pll0_pll2') {                           //  
+       if(debug_msg.includes("PLL2 Synchronous Lock")) {                                              //  
+         document.getElementById("lol_pll1_pll2_ok").style.visibility = "visible"                     //   
+         document.getElementById("lol_pll1_pll2_no").style.visibility = "hidden";                     //   
+         clock_msg = "";                                                                              //  
+       }                                                                                              //  
+       else if(debug_msg.includes("PLL2 Interupted Lock")) {                                          //  
+         document.getElementById("lol_pll1_pll2_ok").style.visibility = "hidden";                     //   
+         document.getElementById("lol_pll1_pll2_no").style.visibility = "visible"                     //   
+         clock_msg = "";                                                                              //  
+       }                                                                                              //  
+   } else if (data.file == cur_root + '/status/lmk_lossoflock_pll1_pll1') {                           //  
+       if(debug_msg.includes("PLL1 Synchronous Lock")) {                                              //  
+         document.getElementById("lol_pll2_pll1_ok").style.visibility = "visible";                    //   
+         document.getElementById("lol_pll2_pll1_no").style.visibility = "hidden";                     //   
+         clock_msg = "";                                                                              //  
+       }                                                                                              //  
+       else if(debug_msg.includes("PLL1 Interupted Lock")) {                                          //  
+         document.getElementById("lol_pll2_pll1_ok").style.visibility = "hidden";                     //   
+         document.getElementById("lol_pll2_pll1_no").style.visibility = "visible";                    //   
+         clock_msg = "";                                                                              //  
+       }                                                                                              //  
+   } else if (data.file == cur_root + '/status/lmk_lossoflock_pll1_pll2') {                           //  
+       if(debug_msg.includes("PLL2 Synchronous Lock")) {                                              //  
+         document.getElementById("lol_pll2_pll2_ok").style.visibility = "visible"                     //   
+         document.getElementById("lol_pll2_pll2_no").style.visibility = "hidden";                     //   
+         clock_msg = "";                                                                              //  
+       }                                                                                              //  
+       else if(debug_msg.includes("PLL2 Interupted Lock")) {                                          //  
+         document.getElementById("lol_pll2_pll2_ok").style.visibility = "hidden";                     //   
+         document.getElementById("lol_pll2_pll2_no").style.visibility = "visible"                     //   
+         clock_msg = "";                                                                              //  
+       }                                                                                              //  
+   }                                                                                                  //  
+   /////////////////////////////////////////////////////////////////////////////////////////////////////
+   /////////////////////////////////////////////////////////////////////////////////////////////////////
+   
+   
+   
 });
 
 
@@ -1086,15 +1243,29 @@ function load_clock (isLoad) {
    socket.emit('prop_wr', { file: cur_root + '/status/lmk_lockdetect' ,message: '0'});
    socket.emit('prop_wr', { file: cur_root + '/status/lmk_lossoflock' ,message: '0'});
 
-   //read from all of the directories
-   socket.emit('prop_rd', { file: cur_root + '/status/lmk_lockdetect_jesd_pll1' ,debug: isLoad});
-   socket.emit('prop_rd', { file: cur_root + '/status/lmk_lockdetect_jesd_pll2'  ,debug: isLoad});
-   socket.emit('prop_rd', { file: cur_root + '/status/lmk_lockdetect_pll_pll1' ,debug: isLoad});
-   socket.emit('prop_rd', { file: cur_root + '/status/lmk_lockdetect_pll_pll2'  ,debug: isLoad});
-   socket.emit('prop_rd', { file: cur_root + '/status/lmk_lossoflock_jesd_pll1' ,debug: isLoad});
-   socket.emit('prop_rd', { file: cur_root + '/status/lmk_lossoflock_jesd_pll2' ,debug: isLoad});
-   socket.emit('prop_rd', { file: cur_root + '/status/lmk_lossoflock_pll_pll1'  ,debug: isLoad});
-   socket.emit('prop_rd', { file: cur_root + '/status/lmk_lossoflock_pll_pll2'  ,debug: isLoad});
+   //read from lmk_lockdetect
+   socket.emit('prop_rd', { file: cur_root + '/status/lmk_lockdetect_jesd0_pll1'  ,debug: isLoad});
+   socket.emit('prop_rd', { file: cur_root + '/status/lmk_lockdetect_jesd0_pll2'  ,debug: isLoad});
+   socket.emit('prop_rd', { file: cur_root + '/status/lmk_lockdetect_jesd1_pll1'  ,debug: isLoad});
+   socket.emit('prop_rd', { file: cur_root + '/status/lmk_lockdetect_jesd1_pll2'  ,debug: isLoad});
+   socket.emit('prop_rd', { file: cur_root + '/status/lmk_lockdetect_jesd2_pll1'  ,debug: isLoad});
+   socket.emit('prop_rd', { file: cur_root + '/status/lmk_lockdetect_jesd2_pll2'  ,debug: isLoad});
+   socket.emit('prop_rd', { file: cur_root + '/status/lmk_lockdetect_pll0_pll1'   ,debug: isLoad});
+   socket.emit('prop_rd', { file: cur_root + '/status/lmk_lockdetect_pll0_pll2'   ,debug: isLoad});
+   socket.emit('prop_rd', { file: cur_root + '/status/lmk_lockdetect_pll1_pll1'   ,debug: isLoad});
+   socket.emit('prop_rd', { file: cur_root + '/status/lmk_lockdetect_pll1_pll2'   ,debug: isLoad});
+   
+   //read from lmk_lossoflock
+   socket.emit('prop_rd', { file: cur_root + '/status/lmk_lossoflock_jesd0_pll1'  ,debug: isLoad});
+   socket.emit('prop_rd', { file: cur_root + '/status/lmk_lossoflock_jesd0_pll2'  ,debug: isLoad});
+   socket.emit('prop_rd', { file: cur_root + '/status/lmk_lossoflock_jesd1_pll1'  ,debug: isLoad});
+   socket.emit('prop_rd', { file: cur_root + '/status/lmk_lossoflock_jesd1_pll2'  ,debug: isLoad});
+   socket.emit('prop_rd', { file: cur_root + '/status/lmk_lossoflock_jesd2_pll1'  ,debug: isLoad});
+   socket.emit('prop_rd', { file: cur_root + '/status/lmk_lossoflock_jesd2_pll2'  ,debug: isLoad});
+   socket.emit('prop_rd', { file: cur_root + '/status/lmk_lossoflock_pll0_pll1'   ,debug: isLoad});
+   socket.emit('prop_rd', { file: cur_root + '/status/lmk_lossoflock_pll0_pll2'   ,debug: isLoad});
+   socket.emit('prop_rd', { file: cur_root + '/status/lmk_lossoflock_pll1_pll1'   ,debug: isLoad});
+   socket.emit('prop_rd', { file: cur_root + '/status/lmk_lossoflock_pll1_pll2'   ,debug: isLoad}); 
 }
 
 // determine which page is currently loaded
