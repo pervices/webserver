@@ -1,4 +1,4 @@
-#Developer Notes: LOCAL Developement and Important Guidlines
+# Developer Notes: LOCAL Developement and Important Guidlines
 **Date: June 14 2019** 
 
 **LOCAL:**
@@ -9,7 +9,7 @@ This will ensure you can traverse the different tabs while testing the code loca
 
 **DO NOT push any changes appearing on node_modules in the git repo.**
 
-##CYAN HDR WEBSITE:
+## CYAN HDR WEBSITE:
 
 **CHANNEL UPDATES: SETTING THE NUMBER OF RX OR TX CHANNELS**
 
@@ -42,7 +42,7 @@ page and read/write to the correct directories based on this.
 
 NOTE: If there are any issues relating to turning channels on or off. Look for the chan_en and the chan_lp/chan_hp functions and make changes accordingly. The current working process for Cyan HDR turns on both the high power and low power channels using the channel enable button. It also ensures that the high power channel can be isolated using the high power isolation button. In the chan_lp/chan-hp functions the actions that occur when you click on the tab are shown. After understanding what happens when one of these tabs is pressed, changes can be added/removed. 
 
-##WRITING TO FILES NOT IN THE STATE DIRECTORY
+## WRITING TO FILES THAT ARE NOT IN THE STATE DIRECTORY
 
 The following code was added into **prop.js** in order to allow for commands to be sent to files that are not within the state directory. 
 
@@ -75,6 +75,7 @@ Turning on and off the TX channels on CYAN and CYAN HDR:
 ```
 socket.emit('systctl', { message: state ? ('rfe_control ' + chanNum + ' on | tee /usr/bin') : ('rfe_control ' + chanNum + ' off | tee /usr/bin') });
 ```
+****************************************************************************************************************************************************
 
 
 
