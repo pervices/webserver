@@ -326,8 +326,9 @@ $("#hdr_pwr").on('switchChange.bootstrapSwitch', function(event, state) {
     socket.emit('prop_wr', {file: 'gpio/hdr/' + hdr_chan + '/pwr_en', message: state ? 'true' : 'false' });
 });
 
+//high power enable
 $("#hdr_iso").on('switchChange.bootstrapSwitch', function(event, state) {
-    //switch that keeps the high power channel on
+   socket.emit('prop_wr', {file: 'gpio/hdr/' + hdr_chan + '/high_pwr_en', message: state ? 'true' : 'false' }); 
 });
 
 //Enable and disable channels
