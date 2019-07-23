@@ -165,12 +165,12 @@ $("#chan_lp").click(function() {
     
     /////////////////////////////////////////****USER INTERFACE ACTIONS****///////////////////////////////////////
                                                                                                                 //
-    //high power isolation is on which disables the low power functionality                                     //
-    if ($('#hdr_iso').bootstrapSwitch('state')) {                                                               //
-         disableElements(true);                                                                                 //
-    }                                                                                                           //
-    else {                                                                                                      //
-                                                                                                                //
+    ////high power isolation is on which disables the low power functionality                                     //
+    //if ($('#hdr_iso').bootstrapSwitch('state')) {                                                               //
+    //     disableElements(true);                                                                                 //
+    //}                                                                                                           //
+    //else {                                                                                                      //
+    //                                                                                                            //
          $("#chan_en").bootstrapSwitch('readonly', false);                                                      //
          //deactivate the hdr channel                                                                           //
          $("#chan_hdr").parent().attr('class','inactive');                                                      //
@@ -223,65 +223,75 @@ $("#chan_lp").click(function() {
          }
          
          load_tx();
-    }
+    //}
     
 });
 
 //High Power Channel
 $("#chan_hp").click(function() {
     
-    /////////////////////////////////////////****USER INTERFACE ACTIONS****/////////////////////////////////////// 
-    $("#chan_en").bootstrapSwitch('readonly', false);                                                           //
-    //deactivate the hdr channel                                                                                //
-    $("#chan_hdr").parent().attr('class','inactive');                                                           //
-    disableHdrElements(true);                                                                                   //
-    document.getElementById("hdr_img").style.opacity = 0.2;                                                     //
-                                                                                                                //
-    //enable hp elements                                                                                        //
-    disableElements(false);                                                                                     //
-    document.getElementById("tx_chain").style.opacity = 1;                                                      //
-    document.getElementById("tx_dsp_chain").style.opacity = 1;                                                  //
-                                                                                                                //
-    //hide the alert to choose a channel                                                                        //
-    document.getElementById("chan_alert2").style.visibility = "hidden";                                         //
-    document.getElementById("chan_alert").style.visibility = "visible";                                         //
-                                                                                                                //
-    $(this).parent().parent().children().removeClass('active');                                                 //
-    $(this).parent().attr('class', 'active');                                                                   //
-                                                                                                                //
-    //enable board and trigger elements                                                                         //
-    disableBoardTriggElements(false);                                                                           //
-    disableHdrElements(true);                                                                                   //
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////****USER INTERFACE ACTIONS****///////////////////////////////////////////
+                                                                                                                    //
+    //high power isolation is on which disables the low power functionality                                         //
+    if (!$('#hdr_iso').bootstrapSwitch('state')) {                                                                  //
+         disableElements(true);                                                                                     //
+    }                                                                                                               //
+    //                                                                                                              //
+    else {                                                                                                          //
+                                                                                                                    //
+                                                                                                                    //
+        $("#chan_en").bootstrapSwitch('readonly', false);                                                           //
+        //deactivate the hdr channel                                                                                //
+        $("#chan_hdr").parent().attr('class','inactive');                                                           //
+        disableHdrElements(true);                                                                                   //
+        document.getElementById("hdr_img").style.opacity = 0.2;                                                     //
+                                                                                                                    //
+        //enable hp elements                                                                                        //
+        disableElements(false);                                                                                     //
+        document.getElementById("tx_chain").style.opacity = 1;                                                      //
+        document.getElementById("tx_dsp_chain").style.opacity = 1;                                                  //
+                                                                                                                    //
+        //hide the alert to choose a channel                                                                        //
+        document.getElementById("chan_alert2").style.visibility = "hidden";                                         //
+        document.getElementById("chan_alert").style.visibility = "visible";                                         //
+                                                                                                                    //
+        $(this).parent().parent().children().removeClass('active');                                                 //
+        $(this).parent().attr('class', 'active');                                                                   //
+                                                                                                                    //
+        //enable board and trigger elements                                                                         //
+        disableBoardTriggElements(false);                                                                           //
+        disableHdrElements(true);                                                                                   //
+        //////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        
+        //Look through all of the possible channel locations with their corresponding roots 
+        if (cur_path == 'a') {
+            cur_root = 'tx_b';
+            cur_chan = 'b';
+        } else if (cur_path == 'b') {
+            cur_root = 'tx_d';
+            cur_chan = 'd';
+        } else if (cur_path == 'c') {
+            cur_root = 'tx_f';
+            cur_chan = 'f';
+        } else if (cur_path == 'd') {
+            cur_root = 'tx_h';
+            cur_chan = 'h';
+        } else if (cur_path == 'e') {
+            cur_root = 'tx_j';
+            cur_chan = 'j';
+        } else if (cur_path == 'f') {
+            cur_root = 'tx_l';
+            cur_chan = 'l';
+        } else if (cur_path == 'g') {
+            cur_root = 'tx_n';
+            cur_chan = 'n';
+        } else if (cur_path == 'h') {
+            cur_root = 'tx_p';
+            cur_chan = 'p';
+        }
     
-    //Look through all of the possible channel locations with their corresponding roots 
-    if (cur_path == 'a') {
-         cur_root = 'tx_b';
-         cur_chan = 'b';
-    } else if (cur_path == 'b') {
-         cur_root = 'tx_d';
-         cur_chan = 'd';
-    } else if (cur_path == 'c') {
-         cur_root = 'tx_f';
-         cur_chan = 'f';
-    } else if (cur_path == 'd') {
-         cur_root = 'tx_h';
-         cur_chan = 'h';
-    } else if (cur_path == 'e') {
-         cur_root = 'tx_j';
-         cur_chan = 'j';
-    } else if (cur_path == 'f') {
-         cur_root = 'tx_l';
-         cur_chan = 'l';
-    } else if (cur_path == 'g') {
-         cur_root = 'tx_n';
-         cur_chan = 'n';
-    } else if (cur_path == 'h') {
-         cur_root = 'tx_p';
-         cur_chan = 'p';
+        load_tx();
     }
-   
-    load_tx();
 });
 
  //HDR (High Dynamic Range) Channel 
@@ -328,7 +338,43 @@ $("#hdr_pwr").on('switchChange.bootstrapSwitch', function(event, state) {
 
 //high power enable
 $("#hdr_iso").on('switchChange.bootstrapSwitch', function(event, state) {
-   socket.emit('prop_wr', {file: 'gpio/hdr/' + hdr_chan + '/high_pwr_en', message: state ? 'true' : 'false' }); 
+    
+    if (cur_path == 'a') {
+            cur_root = 'tx_b';
+            cur_chan = 'b';
+    } else if (cur_path == 'b') {
+        cur_root = 'tx_d';
+        cur_chan = 'd';
+    } else if (cur_path == 'c') {
+        cur_root = 'tx_f';
+        cur_chan = 'f';
+    } else if (cur_path == 'd') {
+        cur_root = 'tx_h';
+        cur_chan = 'h';
+    } else if (cur_path == 'e') {
+        cur_root = 'tx_j';
+        cur_chan = 'j';
+    } else if (cur_path == 'f') {
+        cur_root = 'tx_l';
+        cur_chan = 'l';
+    } else if (cur_path == 'g') {
+        cur_root = 'tx_n';
+        cur_chan = 'n';
+    } else if (cur_path == 'h') {
+        cur_root = 'tx_p';
+        cur_chan = 'p';
+    }
+
+    //Turns on/off the channel based on root
+    for (var i = 0; i<channels.length; i++) {
+            if (channels[i] == cur_root)
+                channelSelector = i;
+    }
+    //DEBUG ONLY
+    //socket.emit('prop_wr', {file:  '/pwr', message: state ? ('rfe_control ' + channelSelector + ' on | tee /usr/bin') : ('rfe_control ' + channelSelector + ' off | tee /usr/bin') });
+    socket.emit('prop_wr', {file: 'gpio/hdr/' + hdr_chan + '/high_pwr_en', message: state ? 'true' : 'false' });
+    socket.emit('systctl', { message: state ? ('rfe_control ' + (channelSelector) + ' on | tee /usr/bin') : ('rfe_control ' + (channelSelector) + ' off | tee /usr/bin') });
+   
 });
 
 //Enable and disable channels
@@ -365,40 +411,19 @@ $("#chan_en").on('switchChange.bootstrapSwitch', function(event, state) {
         
     }
     
-    if (cur_chan == "b" || cur_chan == "d" || cur_chan == "f" || cur_chan == "h" || cur_chan == "j" || cur_chan == "l" || cur_chan == "n" || cur_chan == "p") {
-        
-        //Turns on/off the channel based on root
-        for (var i = 0; i<channels.length; i++) {
-                if (channels[i] == cur_root)
-                    channelSelector = i;
-        }
-        //DEBUG ONLY
-        //socket.emit('prop_wr', {file:  '/pwr', message: state ? ('rfe_control ' + channelSelector + ' on | tee /usr/bin') : ('rfe_control ' + channelSelector + ' off | tee /usr/bin') });
-        socket.emit('prop_wr', {file: 'gpio/hdr/' + hdr_chan + '/high_pwr_en', message: state ? 'true' : 'false' });
-        socket.emit('systctl', { message: state ? ('rfe_control ' + (channelSelector) + ' on | tee /usr/bin') : ('rfe_control ' + (channelSelector) + ' off | tee /usr/bin') });
-        
-        if (!($('#hdr_iso').bootstrapSwitch('state'))) {
-            socket.emit('prop_wr', {file: 'gpio/hdr/' + hdr_chan + '/pwr_en', message: state ? 'true' : 'false' });
-            socket.emit('systctl', { message: state ? ('rfe_control ' + (channelSelector-4) + ' on | tee /usr/bin') : ('rfe_control ' + (channelSelector-4) + ' off | tee /usr/bin') });
-        }
+    //Turns on/off the channel based on root
+    for (var i = 0; i<channels.length; i++) {
+            if (channels[i] == cur_root)
+                channelSelector = i;
     }
+    //DEBUG ONLY
+    //socket.emit('prop_wr', {file:  '/pwr', message: state ? ('rfe_control ' + channelSelector + ' on | tee /usr/bin') : ('rfe_control ' + channelSelector + ' off | tee /usr/bin') });
+    socket.emit('prop_wr', {file: 'gpio/hdr/' + hdr_chan + '/pwr_en', message: state ? 'true' : 'false' });
+    socket.emit('systctl', { message: state ? ('rfe_control ' + (channelSelector) + ' on | tee /usr/bin') : ('rfe_control ' + (channelSelector) + ' off | tee /usr/bin') });
     
-    else if (cur_chan == "a" || cur_chan == "c" || cur_chan == "e" || cur_chan == "g" || cur_chan == "i" || cur_chan == "k" || cur_chan == "m" || cur_chan == "o") {
-        
-        //Turns on/off the channel based on root
-        for (var i = 0; i<channels.length; i++) {
-                if (channels[i] == cur_root)
-                    channelSelector = i;
-        }
-        //DEBUG ONLY
-        //socket.emit('prop_wr', {file:  '/pwr', message: state ? ('rfe_control ' + channelSelector + ' on | tee /usr/bin') : ('rfe_control ' + channelSelector + ' off | tee /usr/bin') });
+    if ($('#hdr_iso').bootstrapSwitch('state')) {
         socket.emit('prop_wr', {file: 'gpio/hdr/' + hdr_chan + '/high_pwr_en', message: state ? 'true' : 'false' });
         socket.emit('systctl', { message: state ? ('rfe_control ' + (channelSelector+4) + ' on | tee /usr/bin') : ('rfe_control ' + (channelSelector+4) + ' off | tee /usr/bin') });
-        
-        if (!($('#hdr_iso').bootstrapSwitch('state'))) {
-            socket.emit('prop_wr', {file: 'gpio/hdr/' + hdr_chan + '/pwr_en', message: state ? 'true' : 'false' });
-            socket.emit('systctl', { message: state ? ('rfe_control ' + channelSelector + ' on | tee /usr/bin') : ('rfe_control ' + channelSelector + ' off | tee /usr/bin') });
-        }
     }
     
     //Old code from Crimson that intiializes the tx board and activates its controls
