@@ -1,5 +1,5 @@
-# Developer Notes: LOCAL Developement and Important Guidlines
-**Date: June 14 2019** 
+# Developer Notes: LOCAL Development and Important Guidlines
+**Date: August 23 2019** 
 
 **LOCAL:**
 
@@ -75,6 +75,27 @@ Turning on and off the TX channels on CYAN and CYAN HDR:
 ```
 socket.emit('systctl', { message: state ? ('rfe_control ' + chanNum + ' on | tee /usr/bin') : ('rfe_control ' + chanNum + ' off | tee /usr/bin') });
 ```
+
+## GENERAL PROGRAMMING NOTES/ WEBSERVER STRUCTURE
+
+To effectively contribute and add/remove web elements follow this structure. 
+
+cyan.js/crimson.js -> the main file that contains all of the web element functions. This file is written in javascript and connects the server.js, prop.js and all jade files together. 
+
+prop.js -> "properties.js" This file contains the main functions used in server.js and crimson.js/cyan.js, it outlines certain properties like writing to files, reading from files, sending commands etc. 
+
+server.js -> the "main method file" this file calls all the other files in this webserver setup and is the "server" to run this web server, this file is executed using the command "node server.js" 
+
+All jade files -> these are the web elements on the actual web page. These are our "html files". Jade is a template engine that converts a simpler programming style into html. There are several jade documents online and jade to html converters online that will help with editing the jade files. when adding any new elements to the webserver, the first step is to play with the jade files and experiment with the output on the browser.
+
+There are seperate servers for three types of units: Cyan, Crimson and Cyan HDR. Based on whatever unit you are working with, use the webserver files associated with that type of unit. They are separated into three folders and labelled within the pv/webserver directory
+
+-> Crimson - 8 Channels in Total
+-> Tate - 16 Channels in Total
+-> webserver-tate-HDR - 16 Channels in Total
+
+The HDR version that is currently commited is the version with 16 TX channels and 0 RX channels. The documentation above explains how to add new channels whether they are RX or TX on any fo the units.
+
 ****************************************************************************************************************************************************
 
 
