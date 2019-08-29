@@ -12,6 +12,9 @@ variables:
 stages:
     - build
 
+# Dpcker image brings in git, build-essential, curl; runs bash
+image: cfriedt/toolchain:xenial
+
 #################
 ##### BUILD #####
 #################
@@ -33,9 +36,9 @@ build-website:
         - dir=$(pwd)
         - cd $DUMPDIR
         - NEW_TAR=$PROJECT-$COMPONENT-build-$DATE.tar.gz
-        - tar -cvzf $dir/$NEW_TAR *
+        - tar -cvzf $dir/$NEW_TAR * || true
         - cd $dir
-        - sh ftp-stage-tarball.sh $NEW_TAR
+        - sh .ci/ftp-stage-tarball.sh $dir $NEW_TAR
         - rm $NEW_TAR
         - rm -rf $DUMPDIR
 
