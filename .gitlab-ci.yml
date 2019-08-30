@@ -22,7 +22,7 @@ image: cfriedt/toolchain:xenial
 build-website:
     stage:  build
     before_script:
-        - apt get update && apt-get install ftp
+        - apt-get update && apt-get install ftp
     script: 
         # Capture current date
         - DATE=$(TZ=UTC date +%F-s%s | tr - _)
