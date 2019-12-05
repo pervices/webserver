@@ -1,5 +1,5 @@
 var fs = require('fs');
-var state_dir = '/var/crimson/state/';
+var state_dir = '/var/volatile/crimson/state/';
 var sys = require('util');
 var exec = require('child_process').exec;
 
