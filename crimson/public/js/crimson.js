@@ -448,7 +448,7 @@ $("#sfpb_set").click( function() {
 //go to the load clock function
 $("#refreshClock").click( function() {
    write_clock();
-   setTimeout( load_clock(true), 500 );
+   load_clock(true);
 });
 
 $("#mgmt_set").click( function() {
